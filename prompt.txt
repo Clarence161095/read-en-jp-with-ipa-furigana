@@ -1,0 +1,20 @@
+------ PTOMPT 1 ------
+Hiện tại sample này đang hiển thị tooltip bị blank hãy fix lại giúp tôi.
+
+Sample này được tạo từ prompt này mà chưa hoàn hảo nên hãy fix lại giúp tôi.
+```
+Tôi đang cần đọc mẩu truyện sau mà có hỗ trợ IPA theo giọng anh Mỹ. Giờ hãy giúp tôi tạo một file html có sẵn ipa cho mẩu truyện này nhé. ipa được bỏ trong thẻ ruby để dễ dàng đọc.
+
+- Với các cấu (Câu được định nghĩa là cách nhau bởi dấu phẩy chứ ko phải là mỗi đoạn) thì cần thêm thuộc tính title vào và nội dung của thuộc tính tile chính là phần dịch tiếng Việt chuẩn chỉnh của câu đó sao cho chuẩn nhất có thể. Kiểu dạng tooltip khi người đọc hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu chứ ko phải theo từng đoạn. Hãy dùng tooltip đơn giản mặc định trong html5 chứ đừng tự custom nó ra nhé, hoặc dùng một thự viện tooltip nào đó bằng cdn là ok.
+
+- Có nút bong bóng để setting độ lớn nhỏ của ipa của chữ, màu của chữ, cỡ chữ màu chữ tooltip, ... cho trang để tiện đọc hơn (Có sẵn nút reset để đẩy về mặt định setting ban đầu).
+```
+
+------ PTOMPT 2 ------
+không phải hiện tại nó ko phải chỉ blank mà ko thấy nội dung trong tooltip luôn. Bạn hãy fix lại để khi hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu nhé. Hãy fix lại sao cho hoàn hảo nhé.
+
+------ PTOMPT 3 ------
+Ok nhưng cho tooltip xuống dưới chữ hay hơn.
+
+------ PTOMPT 4 ------
+Phần setting có sẵn các theme để chọn ví dụ: dark, light, dracula,... một số theme nổi tiếng, và cho phép người dùng chỉnh font chữ, màu chữ, cỡ chữ, màu nền tooltip,... mức độ lớn bé của các thẻ h1, h2, h3, p,.... ở setting addvance. Và thông tin setting được lưu tại localStorage theo key là "storySettings" để lần sau người dùng vào lại sẽ tự động load setting đã lưu trước đó. Hãy fix lại giúp tôi nhé.

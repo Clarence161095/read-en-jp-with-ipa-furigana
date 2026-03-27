@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA Reading Practice</title>
+
+    <style>
+        :root {
+            --body-bg: #f9f9f9;
+            --content-bg: #ffffff;
+            --font-family: Arial, sans-serif;
+            --text-size: 24px;
+            --text-color: #000000;
+            --ipa-size: 14px;
+            --ipa-color: #555555;
+            --tooltip-size: 16px;
+            --tooltip-color: #ffffff;
+            --tooltip-bg: #333333;
+            --h1-size: 32px;
+            --h2-size: 28px;
+            --h3-size: 22px;
+            --p-size: 24px;
+        }
+
+        body {
+            font-family: var(--font-family);
+            padding: 40px 20px;
+            background-color: var(--body-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .story-content {
+            font-size: var(--text-size);
+            color: var(--text-color);
+            max-width: 800px;
+            margin: auto;
+            line-height: 2.5;
+            background: var(--content-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .story-content p  { margin-bottom: 20px; font-size: var(--p-size); }
+        .story-content h1 { font-size: var(--h1-size); }
+        .story-content h2 { font-size: var(--h2-size); }
+        .story-content h3 { font-size: var(--h3-size); }
+
+        ruby { margin-right: 5px; }
+
+        rt {
+            font-size: var(--ipa-size);
+            color: var(--ipa-color);
+            font-weight: normal;
+        }
+
+        .phrase {
+            cursor: pointer;
+            border-bottom: 2px dashed transparent;
+            transition: border-color 0.2s;
+            padding-bottom: 2px;
+        }
+        .phrase:hover { border-bottom: 2px dashed #007bff; }
+
+        /* Custom Tooltip */
+        #custom-tooltip {
+            position: absolute;
+            display: none;
+            background: var(--tooltip-bg);
+            color: var(--tooltip-color);
+            font-size: var(--tooltip-size);
+            padding: 8px 12px;
+            border-radius: 6px;
+            z-index: 9999;
+            pointer-events: none;
+            max-width: 320px;
+            word-break: break-word;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            transform: translate(-50%, 14px);
+        }
+
+        /* Settings button */
+        .settings-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .settings-btn:hover { background: #0056b3; }
+
+        /* Settings panel */
+        .settings-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+            width: 310px;
+            font-family: sans-serif;
+            overflow: hidden;
+            max-height: 80vh;
+        }
+        .settings-panel.active { display: flex; }
+
+        .sp-header {
+            padding: 14px 18px 10px;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        .sp-header h3 { margin: 0 0 10px; font-size: 15px; }
+
+        .tab-bar { display: flex; gap: 6px; }
+        .tab-btn {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .tab-btn.active { background: #007bff; color: white; border-color: #007bff; }
+
+        .sp-body {
+            padding: 12px 18px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .section-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #999;
+            margin: 12px 0 7px;
+            font-weight: bold;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .theme-btn {
+            padding: 7px 4px;
+            border: 2px solid #e0e0e0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: center;
+            background: #fafafa;
+            transition: all 0.2s;
+            line-height: 1.4;
+        }
+        .theme-btn:hover { border-color: #007bff; }
+        .theme-btn.active { border-color: #007bff; background: #e8f0ff; font-weight: bold; }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 9px;
+            font-size: 13px;
+            color: #333;
+        }
+        .setting-item input[type="number"] {
+            width: 62px; padding: 4px 6px;
+            border: 1px solid #ccc; border-radius: 4px; font-size: 13px;
+        }
+        .setting-item input[type="color"] {
+            border: 1px solid #ddd; width: 34px; height: 28px;
+            cursor: pointer; padding: 1px; border-radius: 4px;
+        }
+        .setting-item select {
+            padding: 4px 6px; border: 1px solid #ccc;
+            border-radius: 4px; font-size: 12px; max-width: 150px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .sp-footer {
+            padding: 10px 18px 14px;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        .reset-btn {
+            width: 100%; padding: 9px;
+            background: #dc3545; color: white;
+            border: none; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 13px;
+        }
+        .reset-btn:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+
+    <div class="story-content">
+        <p>
+            <span class="phrase" data-tooltip="Chương II"><ruby>CHAPTER<rt>ˈʧæptər</rt></ruby> <ruby>II<rt>tu</rt></ruby></span>
+        </p>
+        <p>
+            <span class="phrase" data-tooltip="Cha Nuôi Của Tôi"><ruby>MY<rt>maɪ</rt></ruby> <ruby>ADOPTED<rt>əˈdɑptəd</rt></ruby> <ruby>FATHER<rt>ˈfɑðər</rt></ruby></span>
+        </p>
+        <p>
+            <span class="phrase" data-tooltip="Mẹ Barberin hôn chồng bà;"><ruby>Mother<rt>ˈmʌðər</rt></ruby> <ruby>Barberin<rt>bɑrbərɪn</rt></ruby> <ruby>kissed<rt>kɪst</rt></ruby> <ruby>her<rt>hɜr</rt></ruby> <ruby>husband<rt>ˈhʌzbənd</rt></ruby>;</span>
+            <span class="phrase" data-tooltip="Tôi định làm thế thì ông ta đưa gậy ra cản tôi lại."><ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>about<rt>əˈbaʊt</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>do<rt>du</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>same<rt>seɪm</rt></ruby> <ruby>when<rt>wɛn</rt></ruby> <ruby>he<rt>hi</rt></ruby> <ruby>put<rt>pʊt</rt></ruby> <ruby>out<rt>aʊt</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>stick<rt>stɪk</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>stopped<rt>stɑpt</rt></ruby> <ruby>me<rt>mi</rt></ruby>.</span>
+        </p>
+        <p>
+            <span class="phrase" data-tooltip="Cái gì thế này?...">"<ruby>What's<rt>wʌts</rt></ruby> <ruby>this<rt>ðɪs</rt></ruby>?...</span>
+            <span class="phrase" data-tooltip="bà đã bảo tôi...."><ruby>you<rt>ju</rt></ruby> <ruby>told<rt>toʊld</rt></ruby> <ruby>me<rt>mi</rt></ruby>...."</span>
+        </p>
+        <p>
+            <span class="phrase" data-tooltip="À,">"<ruby>Well<rt>wɛl</rt></ruby>,</span>
+            <span class="phrase" data-tooltip="vâng,"><ruby>yes<rt>jɛs</rt></ruby>,</span>
+            <span class="phrase" data-tooltip="nhưng điều đó không đúng..."><ruby>but<rt>bʌt</rt></ruby> <ruby>it<rt>ɪt</rt></ruby> <ruby>isn't<rt>ˈɪzənt</rt></ruby> <ruby>true<rt>tru</rt></ruby> ...</span>
+            <span class="phrase" data-tooltip="bởi vì...."><ruby>because<rt>bɪˈkɔz</rt></ruby>...."</span>
+        </p>
+        <p>
+            <span class="phrase" data-tooltip="À,">"<ruby>Ah<rt>ɑ</rt></ruby>,</span>
+            <span class="phrase" data-tooltip="không đúng à,"><ruby>it<rt>ɪt</rt></ruby> <ruby>isn't<rt>ˈɪzənt</rt></ruby> <ruby>true<rt>tru</rt></ruby>,</span>
+            <span class="phrase" data-tooltip="hả?"><ruby>eh<rt>eɪ</rt></ruby>?"</span>
+        </p>
+        <p>
+            <span class="phrase" data-tooltip="Ông ta bước về phía tôi với cây gậy vung lên;"><ruby>He<rt>hi</rt></ruby> <ruby>stepped<rt>stɛpt</rt></ruby> <ruby>towards<rt>təˈwɔrdz</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>stick<rt>stɪk</rt></ruby> <ruby>raised<rt>reɪzd</rt></ruby>;</span>
+            <span class="phrase" data-tooltip="theo bản năng tôi lùi lại."><ruby>instinctively<rt>ɪnˈstɪŋktɪvli</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>shrunk<rt>ʃrʌŋk</rt></ruby> <ruby>back<rt>bæk</rt></ruby>.</span>
+            <span class="phrase" data-tooltip="Tôi đã làm gì sai chứ?"><ruby>What<rt>wʌt</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>done<rt>dʌn</rt></ruby>?</span>
+            <span class="phrase" data-tooltip="Chẳng có gì sai,"><ruby>Nothing<rt>ˈnʌθɪŋ</rt></ruby> <ruby>wrong<rt>rɔŋ</rt></ruby>,</span>
+            <span class="phrase" data-tooltip="chắc chắn là vậy!"><ruby>surely<rt>ˈʃʊrli</rt></ruby>!</span>
+            <span class="phrase" data-tooltip="Tôi chỉ định hôn ông ta thôi mà."><ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>going<rt>ˈgoʊɪŋ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>kiss<rt>kɪs</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>.</span>
+            <span class="phrase" data-tooltip="Tôi rụt rè nhìn ông ta,"><ruby>I<rt>aɪ</rt></ruby> <ruby>looked<rt>lʊkt</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>timidly<rt>ˈtɪmɪdli</rt></ruby>,</span>
+            <span class="phrase" data-tooltip="nhưng ông ta đã quay mặt đi và đang nói chuyện với Mẹ Barberin."><ruby>but<rt>bʌt</rt></ruby> <ruby>he<rt>hi</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>turned<rt>tɜrnd</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>speaking<rt>ˈspikɪŋ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>Mother<rt>ˈmʌðər</rt></ruby> <ruby>Barberin<rt>bɑrbərɪn</rt></ruby>.</span>
+        </p>
+        <p>
+            <span class="phrase" data-tooltip="Vậy ra bà đang làm tiệc Thứ Ba Béo,">"<ruby>So<rt>soʊ</rt></ruby> <ruby>you're<rt>jʊr</rt></ruby> <ruby>keeping<rt>ˈkipɪŋ</rt></ruby> <ruby>Shrove<rt>ʃroʊv</rt></ruby> <ruby>Tuesday<rt>ˈtuzdeɪ</rt></ruby>,"</span>
+            <span class="phrase" data-tooltip="ông ta nói."><ruby>he<rt>hi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>.</span>
+            <span class="phrase" data-tooltip="Tôi mừng đấy,">"<ruby>I'm<rt>aɪm</rt></ruby> <ruby>glad<rt>glæd</rt></ruby>,</span>
+            <span class="phrase" data-tooltip="vì tôi đang chết đói đây."><ruby>for<rt>fɔr</rt></ruby> <ruby>I'm<rt>aɪm</rt></ruby> <ruby>famished<rt>ˈfæmɪʃt</rt></ruby>.</span>
+            <span class="phrase" data-tooltip="Bà có gì cho bữa tối thế?"><ruby>What<rt>wʌt</rt></ruby> <ruby>have<rt>hæv</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>got<rt>gɑt</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>supper<rt>ˈsʌpər</rt></ruby>?"</span>
+        </p>
+    </div>
+
+    <button class="settings-btn" id="settings-btn">⚙️</button>
+
+    <div class="settings-panel" id="settings-panel">
+        <div class="sp-header">
+            <h3>⚙️ Cài Đặt Hiển Thị</h3>
+            <div class="tab-bar">
+                <button class="tab-btn active" data-tab="basic">Cơ Bản</button>
+                <button class="tab-btn" data-tab="advanced">Nâng Cao</button>
+            </div>
+        </div>
+        <div class="sp-body">
+            <!-- Basic Tab -->
+            <div class="tab-content active" id="tab-basic">
+                <div class="section-label">Chủ đề</div>
+                <div class="theme-grid">
+                    <button class="theme-btn" data-theme="light">☀️<br>Light</button>
+                    <button class="theme-btn" data-theme="dark">🌙<br>Dark</button>
+                    <button class="theme-btn" data-theme="dracula">🧛<br>Dracula</button>
+                    <button class="theme-btn" data-theme="solarized">🌅<br>Solarized</button>
+                    <button class="theme-btn" data-theme="nord">❄️<br>Nord</button>
+                    <button class="theme-btn" data-theme="monokai">🎨<br>Monokai</button>
+                </div>
+                <div class="section-label">Văn bản</div>
+                <div class="setting-item">
+                    <label>Font chữ</label>
+                    <select id="inp-font-family">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>Cỡ chữ (px)</label>
+                    <input type="number" id="inp-text-size" min="10" max="60">
+                </div>
+                <div class="setting-item">
+                    <label>Màu chữ</label>
+                    <input type="color" id="inp-text-color">
+                </div>
+                <div class="setting-item">
+                    <label>Cỡ chữ IPA (px)</label>
+                    <input type="number" id="inp-ipa-size" min="8" max="40">
+                </div>
+                <div class="setting-item">
+                    <label>Màu IPA</label>
+                    <input type="color" id="inp-ipa-color">
+                </div>
+                <div class="section-label">Tooltip</div>
+                <div class="setting-item">
+                    <label>Cỡ chữ (px)</label>
+                    <input type="number" id="inp-tooltip-size" min="8" max="40">
+                </div>
+                <div class="setting-item">
+                    <label>Màu chữ</label>
+                    <input type="color" id="inp-tooltip-color">
+                </div>
+                <div class="setting-item">
+                    <label>Màu nền</label>
+                    <input type="color" id="inp-tooltip-bg">
+                </div>
+            </div>
+            <!-- Advanced Tab -->
+            <div class="tab-content" id="tab-advanced">
+                <div class="section-label">Cỡ chữ theo thẻ (px)</div>
+                <div class="setting-item">
+                    <label>Thẻ &lt;h1&gt;</label>
+                    <input type="number" id="inp-h1-size" min="10" max="80">
+                </div>
+                <div class="setting-item">
+                    <label>Thẻ &lt;h2&gt;</label>
+                    <input type="number" id="inp-h2-size" min="10" max="70">
+                </div>
+                <div class="setting-item">
+                    <label>Thẻ &lt;h3&gt;</label>
+                    <input type="number" id="inp-h3-size" min="10" max="60">
+                </div>
+                <div class="setting-item">
+                    <label>Thẻ &lt;p&gt;</label>
+                    <input type="number" id="inp-p-size" min="10" max="60">
+                </div>
+                <div class="section-label">Màu nền</div>
+                <div class="setting-item">
+                    <label>Nền trang</label>
+                    <input type="color" id="inp-body-bg">
+                </div>
+                <div class="setting-item">
+                    <label>Nền nội dung</label>
+                    <input type="color" id="inp-content-bg">
+                </div>
+            </div>
+        </div>
+        <div class="sp-footer">
+            <button class="reset-btn" id="reset-btn">Khôi phục mặc định</button>
+        </div>
+    </div>
+
+    <script>
+        // ── Tooltip ──────────────────────────────────────────────
+        const tooltip = document.createElement('div');
+        tooltip.id = 'custom-tooltip';
+        document.body.appendChild(tooltip);
+
+        document.querySelectorAll('.phrase').forEach(el => {
+            const showTooltip = () => {
+                const text = el.dataset.tooltip;
+                if (!text) return;
+                tooltip.textContent = text;
+                tooltip.style.display = 'block';
+                const rect = el.getBoundingClientRect();
+                const scrollY = window.scrollY || window.pageYOffset;
+                const scrollX = window.scrollX || window.pageXOffset;
+                tooltip.style.left = (rect.left + rect.width / 2 + scrollX) + 'px';
+                tooltip.style.top  = (rect.bottom + scrollY) + 'px';
+            };
+            el.addEventListener('mouseenter', showTooltip);
+            el.addEventListener('mousemove',  showTooltip);
+            el.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+        });
+
+        // ── Theme Presets ─────────────────────────────────────────
+        const THEMES = {
+            light: {
+                '--body-bg':'#f9f9f9','--content-bg':'#ffffff',
+                '--font-family':'Arial, sans-serif',
+                '--text-size':'24','--text-color':'#000000',
+                '--ipa-size':'14','--ipa-color':'#555555',
+                '--tooltip-size':'16','--tooltip-color':'#ffffff','--tooltip-bg':'#333333',
+                '--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24'
+            },
+            dark: {
+                '--body-bg':'#1a1a2e','--content-bg':'#16213e',
+                '--font-family':'Arial, sans-serif',
+                '--text-size':'24','--text-color':'#e0e0e0',
+                '--ipa-size':'14','--ipa-color':'#9e9e9e',
+                '--tooltip-size':'16','--tooltip-color':'#ffffff','--tooltip-bg':'#444444',
+                '--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24'
+            },
+            dracula: {
+                '--body-bg':'#282a36','--content-bg':'#21222c',
+                '--font-family':"'Courier New', monospace",
+                '--text-size':'24','--text-color':'#f8f8f2',
+                '--ipa-size':'14','--ipa-color':'#6272a4',
+                '--tooltip-size':'16','--tooltip-color':'#f8f8f2','--tooltip-bg':'#44475a',
+                '--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24'
+            },
+            solarized: {
+                '--body-bg':'#002b36','--content-bg':'#073642',
+                '--font-family':'Georgia, serif',
+                '--text-size':'24','--text-color':'#839496',
+                '--ipa-size':'14','--ipa-color':'#586e75',
+                '--tooltip-size':'16','--tooltip-color':'#fdf6e3','--tooltip-bg':'#073642',
+                '--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24'
+            },
+            nord: {
+                '--body-bg':'#2e3440','--content-bg':'#3b4252',
+                '--font-family':'Arial, sans-serif',
+                '--text-size':'24','--text-color':'#d8dee9',
+                '--ipa-size':'14','--ipa-color':'#81a1c1',
+                '--tooltip-size':'16','--tooltip-color':'#eceff4','--tooltip-bg':'#4c566a',
+                '--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24'
+            },
+            monokai: {
+                '--body-bg':'#272822','--content-bg':'#1e1f1c',
+                '--font-family':"'Courier New', monospace",
+                '--text-size':'24','--text-color':'#f8f8f2',
+                '--ipa-size':'14','--ipa-color':'#75715e',
+                '--tooltip-size':'16','--tooltip-color':'#f8f8f2','--tooltip-bg':'#75715e',
+                '--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24'
+            }
+        };
+        const DEFAULT_THEME = 'light';
+        const STORAGE_KEY   = 'storySettings';
+        const root = document.documentElement;
+
+        // ── Input map ─────────────────────────────────────────────
+        const inputMap = {
+            '--font-family' : document.getElementById('inp-font-family'),
+            '--text-size'   : document.getElementById('inp-text-size'),
+            '--text-color'  : document.getElementById('inp-text-color'),
+            '--ipa-size'    : document.getElementById('inp-ipa-size'),
+            '--ipa-color'   : document.getElementById('inp-ipa-color'),
+            '--tooltip-size': document.getElementById('inp-tooltip-size'),
+            '--tooltip-color': document.getElementById('inp-tooltip-color'),
+            '--tooltip-bg'  : document.getElementById('inp-tooltip-bg'),
+            '--h1-size'     : document.getElementById('inp-h1-size'),
+            '--h2-size'     : document.getElementById('inp-h2-size'),
+            '--h3-size'     : document.getElementById('inp-h3-size'),
+            '--p-size'      : document.getElementById('inp-p-size'),
+            '--body-bg'     : document.getElementById('inp-body-bg'),
+            '--content-bg'  : document.getElementById('inp-content-bg'),
+        };
+
+        // ── Helpers ───────────────────────────────────────────────
+        function setCSSVar(name, value) {
+            root.style.setProperty(name, name.includes('size') ? value + 'px' : value);
+        }
+
+        function applySettings(settings) {
+            Object.keys(settings).forEach(key => {
+                if (key === '_theme') return;
+                setCSSVar(key, settings[key]);
+                const el = inputMap[key];
+                if (el) el.value = settings[key];
+            });
+        }
+
+        function getCurrentSettings() {
+            const s = {};
+            Object.keys(inputMap).forEach(key => {
+                const el = inputMap[key];
+                if (el) s[key] = el.value;
+            });
+            return s;
+        }
+
+        function saveSettings(extra) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...getCurrentSettings(), ...extra }));
+        }
+
+        function loadSettings() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+        }
+
+        function setActiveThemeBtn(name) {
+            document.querySelectorAll('.theme-btn').forEach(b =>
+                b.classList.toggle('active', b.dataset.theme === name));
+        }
+
+        // ── Tab switching ─────────────────────────────────────────
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ── Theme buttons ─────────────────────────────────────────
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = THEMES[btn.dataset.theme];
+                if (!theme) return;
+                applySettings(theme);
+                setActiveThemeBtn(btn.dataset.theme);
+                saveSettings({ _theme: btn.dataset.theme });
+            });
+        });
+
+        // ── Live input changes ────────────────────────────────────
+        Object.keys(inputMap).forEach(key => {
+            const el = inputMap[key];
+            if (!el) return;
+            el.addEventListener('input', () => {
+                setCSSVar(key, el.value);
+                saveSettings({});
+            });
+        });
+
+        // ── Reset button ──────────────────────────────────────────
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            applySettings(THEMES[DEFAULT_THEME]);
+            setActiveThemeBtn(DEFAULT_THEME);
+            saveSettings({ _theme: DEFAULT_THEME });
+        });
+
+        // ── Toggle panel ──────────────────────────────────────────
+        const panel = document.getElementById('settings-panel');
+        document.getElementById('settings-btn').addEventListener('click', () =>
+            panel.classList.toggle('active'));
+
+        // ── Init: load saved or default ───────────────────────────
+        const saved = loadSettings();
+        if (saved) {
+            applySettings(saved);
+            if (saved._theme) setActiveThemeBtn(saved._theme);
+        } else {
+            applySettings(THEMES[DEFAULT_THEME]);
+            setActiveThemeBtn(DEFAULT_THEME);
+        }
+    </script>
+</body>
+</html>
