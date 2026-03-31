@@ -1,45 +1,41 @@
------- PTOMPT 1 ------
-Hiện tại sample này đang hiển thị tooltip bị blank hãy fix lại giúp tôi.
+Tôi muốn bạn tạo giúp tôi 1 app siêu đỉnh vip và đơn giản mục đích như sau:
+- Vì tôi có những file html như sample.html và cần show nó lên y như live server nhưng mà cũng muốn lưu các file html đó lại và crud chúng một cách dễ dàng. Tóm lại như là một phần mềm đọc báo tuy nhiên nội dung của tôi nhập vào ko phải là markdown hay là text mà là html là nội dung đầy đủ như file data/sample.html.
+- Hãy lưu nó lại trong 1 thư mực nào đó trong server này.
+- Lưu metadata của file đó sao cho sau này dễ dàng CRUD, search đọc nó và hiển thị nó lên app như một app đọc báo thông thường.
+- Có hỗ trợ trang admin.
+    - Tài khoản admin được lưu trong .env
+    - Từ tài khoản admin có thể CRUD các user khác, quản lý các file html đã lưu,... nói chung có toàn quyền quản lý app.
+    - App cũng sẽ có tài khoản editer là giống user nhưng có quyền thêm file html mới và chỉnh sửa file html, nói chung là CRUD các file html đã lưu nhưng không có quyền quản lý user.
+- DB thì để đơn giản sử dụng luôn SQLite để lưu mọi thông tin meta data của file html và thông tin user.... và các thông tin khác liên quan đến app.
+- App sẽ có giao diện đơn giản, dễ sử dụng, có thể sử dụng framework nextjs để xây dựng frontend và backend cùng một lúc.
+- Hoàn thiện app từ a-z sao cho đỉnh nhất có thể, ưu tiên dễ dàng sử dụng và hỗ trợ Mobile tốt. 
+- Có script hỗ trợ tôi deploy lên một máy chủ ec2 của AWS amazon/al2023-ami-2023.9.20251014.0-kernel-6.1-x86_64 một cách dễ dàng nhất có thể. Công việc của tôi là chỉ cần khởi động máy clone repo về, mở port cho security group 5678 và chạy script deploy là xong. Bổ sung thêm các script hỗ trợ update app và migration app để app trở nên dễ dàng bảo trì và nâng cấp sau này.
+- à vì ví dụ file sample thì đã có đầy đủ css vì vậy nên hãy theo phương châm là khi app chưa vào hiển thị html nào thì hãy để app đẹp dễ sử dụng và thân thiện với mobile trước. Khi vào đọc một file html được hiện thì chỉ hiển thị một nút back ở trên góc phải để quay lại trang trước đó, còn lại mọi thứ phải được hiển thị đúng như file html đó, khi đó ko được thêm bất kỳ css nào , magin padding gì vào file html đó cả, chỉ hiển thị đúng như file html đó đã được thiết kế sẵn nếu ko sẽ bị bể form.
 
-Sample này được tạo từ prompt này mà chưa hoàn hảo nên hãy fix lại giúp tôi.
-```
-Tôi đang cần đọc mẩu truyện sau mà có hỗ trợ IPA theo giọng anh Mỹ. Giờ hãy giúp tôi tạo một file html có sẵn ipa cho mẩu truyện này nhé. ipa được bỏ trong thẻ ruby để dễ dàng đọc.
+Đầu tiên hãy suy nghĩ thật kỹ app của tôi và lên kế hoạch chi tiết cho việc phát triển app này. Các tài liệu nội dung cần tham khảo hay check list các kiểu thì tạo file markdown để trong folder docs để dễ dàng follow và quản lý trong quá trình tôi và bạn giao tiếp và tiện cho Agent sử dụng để tạo app.
 
-- Với các cấu (Câu được định nghĩa là cách nhau bởi dấu phẩy chứ ko phải là mỗi đoạn) thì cần thêm thuộc tính title vào và nội dung của thuộc tính tile chính là phần dịch tiếng Việt chuẩn chỉnh của câu đó sao cho chuẩn nhất có thể. Kiểu dạng tooltip khi người đọc hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu chứ ko phải theo từng đoạn. Hãy dùng tooltip đơn giản mặc định trong html5 chứ đừng tự custom nó ra nhé, hoặc dùng một thự viện tooltip nào đó bằng cdn là ok.
+------
 
-- Có nút bong bóng để setting độ lớn nhỏ của ipa của chữ, màu của chữ, cỡ chữ màu chữ tooltip, ... cho trang để tiện đọc hơn (Có sẵn nút reset để đẩy về mặt định setting ban đầu).
-```
+Giờ hãy thực hiện tạo app một cách hoàn chỉnh toàn bộ a-z theo yêu cầu của tôi, sao cho chuẩn chỉnh nhất có thể, đưa ra checklist ít nhất 30 bước rồi thực hiện từng bước 1 trong đó cho tới khi hoàn thành app.
 
------- PTOMPT 2 ------
-không phải hiện tại nó ko phải chỉ blank mà ko thấy nội dung trong tooltip luôn. Bạn hãy fix lại để khi hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu nhé. Hãy fix lại sao cho hoàn hảo nhé.
+------
 
------- PTOMPT 3 ------
-Ok nhưng cho tooltip xuống dưới chữ hay hơn.
+Tôi gặp lỗi khi thực vào đọc một bài đọc. Hãy fix lại cho tôi sao cho tôi có thể có một bộ truyện không gia đình làm bộ truyện demo.
+Hãy update app này trở thành một app hoàn chỉnh kiểu tôi có thể quản lý các đầu tuyện hoặc các đầu bài báo theo tuyển tập, CRUD chỉnh sửa nó một cách hoàn chỉnh nhất có thể.
 
------- PTOMPT 4 ------
-Phần setting có sẵn các theme để chọn ví dụ: dark, light, dracula,... một số theme nổi tiếng, và cho phép người dùng chỉnh font chữ, màu chữ, cỡ chữ, màu nền tooltip,... mức độ lớn bé của các thẻ h1, h2, h3, p,.... ở setting addvance. Và thông tin setting được lưu tại localStorage theo key là "storySettings" để lần sau người dùng vào lại sẽ tự động load setting đã lưu trước đó. Hãy fix lại giúp tôi nhé.
+Và để app có data init được hoàn chỉnh tôi nhờ bạn hoàn thành bộ truyện không gia đình gồm 44 chương cho cả 2 phần. Và mỗi chương được lưu trong một file html và các sẽ được lưu thành các phần và các phần này lại lưu trong một bộ truyện, mà bạn phải làm sao đó để nó thật linh hoạt. Thực ra trong tương lai tôi có thể lưu nhiều bộ truyện khác theo kiểu này, nói chung là cho phép lưu các bài viết dưới dạng folder để có thể dễ truy vấn và bấm vào next chap các kiểu. Bạn hãy suy nghĩ làm sao để app trở nên perfect hơn để cover được yêu cầu của tôi.
 
------- PTOMPT 5 ------
-Tôi muốn có khả năng bật tắt IPA trong phần setting nữa nhé. Khi tắt IPA thì phần nội dung trong thẻ ruby sẽ chỉ hiển thị phần text bình thường mà không hiển thị phần IPA nữa. Nhưng khi click vào thì sẽ hiển thị IPA cho câu đó, còn cũng có một nút để bật tắt luôn phần hiển thị IPA ngoài cách bấm vào setting mà nút đó nằm bên trái để bật tắt nhanh IPA.
+Tôi muốn bạn thực hiện các việc sau bằng cách tạo ra một check list gồm các bước sau trong check list:
+1. Thực hiện update app trở thành một app perfect hơn để phục vụ cho yêu cầu của tôi giúp tôi có thể quản lý được các bài đọc của mình.
+2. Thực hiện tạo mẫu một bộ truyện không gia đình trong 44 step tiếp theo thực hiện dịch chuẩn chỉnh không được bỏ bất kỳ nội dung nào của bộ truyện "Không gia đình" này thành Tiếng Anh (sử dụng simple English) nhưng phải fit với nội dung tiếng việt. Theo format giống với format của data/khong-gia-dinh/part-1/chapter-2.html tôi đã làm sẵn rồi bạn chỉ cần làm theo đúng chapter-2.html chuẩn chỉnh chỉ cần đổi nội dung của <div class="story-content"> là được được còn lại nôi dung thì sẽ theo đúng kiểu là một bài viết/câu chuyện tiếng anh và có hỗ trợ ipa trên thẻ ruby và hover vào là nội dung tiếng việt.... Hoàn thiện 100% bộ truyện khôgn bỏ sót cái nào để làm một câu chuyện đầu tiên cho app. Hãy hoàn thành toàn bộ câu chuyện, phần tiếng việt chính là phần nội dung được để trong data/khong-gia-dinh/khong-gia-din-scratch.txt.
+3. Hoàn thiện app để tôi có một app hoàn chỉnh và tôi vào câu truyện không gia đình này vào đọc từng html đọc xong thì có nút để next sang nội dung tiếp theo. Nút đó nằm ở một bong bóng nằm ở góc trên bên phải nút đó khi click vào thì ra một menu kiểu: next chap, pre chap, back home,.... các kiểu.
 
------- PTOMPT 6 ------
-Bỏ chức năng bật tắt IPA khi click vào câu đó đi nhé, chỉ giữ lại nút bật tắt nhanh IPA bên trái thôi. Vì tính năng click vào chữ để bật tắt IPA cho câu đó đang bị lỗi. Nên thôi chỉ cần nút bật tắt nhanh IPA bên trái là được. 
+Hãy hoàn thiện app giúp tôi. Toàn bộ bước trên chắc khoảng 50 bước nó sẽ khá dài nhưng hãy làm đầu đủ 100% đừng bỏ qua cái gì cả. Thank you.
 
-Bổ sung thêm tầm 6 cái theme nữa vào phần setting nhé, những setting ok và đẹp nhất dễ đọc nhất có thể tôi cũng thích theme của claude anthropic, và thêm thêm chục font chữ đẹp nữa vào phần setting nhé. 
+---------------
 
------- PTOMPT 7 ------
-Phần container thì rất ok rồi nhưng tôi muốn được setting thêm phần margin và padding của container nữa để tôi có thể tùy chỉnh khoảng cách của container hoặc khoảng cách của viền để tối ưu hoá trải nghiệm đọc trên điện thoại nữa.
-
-Phần padding và margin của body nữa
-
------- PTOMPT 8 ------
-Khi ở điện thoại ky click 2 lần thì nó bị auto zoom tôi muốn tắt nó đi có được ko.
-
------- PTOMPT 9 ------
-Ở mobile thì khi tôi out hover nhưng vào câu đó thì phần tooltip vẫn hiện ra và không tắt đi được, tôi phải click vào button nào đó thì mới tắt được tooltip đó đi, điều này làm trải nghiệm đọc trên điện thoại rất tệ. Bạn hãy fix lại để khi out hover vào câu đó thì phần tooltip sẽ tự động tắt đi nhé. Cảm ơn bạn rất nhiều.
-
------- PTOMPT 10 ------
-Thêm một nút trong setting nữa giống nút reset setting nhưng nó là nút tối ưu cho mobile là sẽ setting như hình tôi đưa lên.
-Tiếp tục là khi chuyển theme ko làm thay đổi setting về cỡ chữ và advance setting nhé, chỉ thay đổi màu sắc của theme font chữ màu chữ các kiểu thôi nhé.
-
-Ok và sau đó là hoàn thành code để sao cho source được ngắn gọn nhất có thể nhé sao cho ngắn gọn nhất có thể nhưng vẫn phải giữ nguyên được những chức năng và tình năng cho tới bây giờ nhé. Nhưng phải tôi ưu nhất sao cho source code ngắn nhất có thể nhé.
+Hãy tiếp tục tạo nội dung của truyện khong-gia-dinh dựa theo data/khong-gia-dinh/khong-gia-din-scratch.txt:
+- data/khong-gia-dinh/part-1/chapter-1.html và data/khong-gia-dinh/part-1/chapter-3.html của bạn tạo quá tuyệt với rồi giờ hãy tạo toàn bộ chapter còn lại theo cách mà bạn đã tạo 2 chapter này. Ko cần suy nghĩ nhiều chỉ cần tạo mà thôi, chuẩn chỉnh đúng và hay như 2 chapter này là quá tuyệt với.
+- tạo lại chapter-2.html theo khong-gia-din-scratch.txt cho hay hơn.
+- Và tạo tiếp các chapter tiếp theo.
+- Mỗi step là một chapter có nghĩa là còn 42 chapter là part1 chapter 2 và part1 chapter4->21... và toàn bộ chapter 2. Hãy đưa ra 42 bước trong checklist và thực hiện toàn bộ nó.

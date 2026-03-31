@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  email     String    @unique
+  password  String
+  role      String    @default("user")
+
+  articles  Article[] @relation("AuthorArticles")
+  series    Series[]  @relation("AuthorSeries")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  slug      String    @unique
+
+  articles  Article[]
+
+  createdAt DateTime  @default(now())
+
+  @@map("categories")
+}
+
+model Article {
+  id           String    @id @default(uuid())
+  title        String
+  slug         String    @unique
+  description  String?
+  htmlFilePath String
+  tags         String?
+  isPublished  Boolean   @default(true)
+  viewCount    Int       @default(0)
+  orderInPart  Int       @default(0)
+
+  category     Category? @relation(fields: [categoryId], references: [id])
+  categoryId   String?
+
+  author       User      @relation("AuthorArticles", fields: [authorId], references: [id])
+  authorId     String
+
+  part         Part?     @relation(fields: [partId], references: [id])
+  partId       String?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([isPublished])
+  @@index([createdAt])
+  @@index([partId, orderInPart])
+  @@map("articles")
+}
+
+model Series {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String?
+  coverImage  String?
+  isPublished Boolean  @default(true)
+
+  author      User?    @relation("AuthorSeries", fields: [authorId], references: [id])
+  authorId    String?
+
+  parts       Part[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@map("series")
+}
+
+model Part {
+  id       String    @id @default(uuid())
+  title    String
+  order    Int       @default(0)
+
+  series   Series    @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  seriesId String
+
+  articles Article[]
+
+  @@index([seriesId, order])
+  @@map("parts")
+}

@@ -1,3 +1,30 @@
+Với input như vậy:
+
+```
+Tôi đang cần đọc mẩu truyện sau mà có hỗ trợ IPA theo giọng anh Mỹ. Giờ hãy giúp tôi tạo một file html có sẵn ipa cho mẩu truyện này nhé. ipa được bỏ trong thẻ ruby để dễ dàng đọc. 
+- Với các cấu (Câu được định nghĩa là cách nhau bởi dấu phẩy chứ ko phải là mỗi đoạn) thì cần thêm thuộc tính title vào và nội dung của thuộc tính tile chính là phần dịch tiếng Việt chuẩn chỉnh của câu đó sao cho chuẩn nhất có thể. Kiểu dạng tooltip khi người đọc hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu chứ ko phải theo từng đoạn. Hãy dùng tooltip đơn giản mặc định trong html5 chứ đừng tự custom nó ra nhé, hoặc dùng một thự viện tooltip nào đó bằng cdn là ok.
+- Có nút bong bóng để setting độ lớn nhỏ của ipa của chữ, màu của chữ, cỡ chữ màu chữ tooltip, ... cho trang để tiện đọc hơn (Có sẵn nút reset để đẩy về mặt định setting ban đầu).
+
+Ouput chỉ cần đưa tôi 1 file html được đặt trong 1 block code:
+
+```
+CHAPTER II
+MY ADOPTED FATHER
+Mother Barberin kissed her husband; I was about to do the same when he put out his stick and stopped me.
+
+"What's this?... you told me...."
+
+"Well, yes, but it isn't true ... because...."
+
+"Ah, it isn't true, eh?"
+
+He stepped towards me with his stick raised; instinctively I shrunk back. What had I done? Nothing wrong, surely! I was only going to kiss him. I looked at him timidly, but he had turned from me and was speaking to Mother Barberin.
+
+"So you're keeping Shrove Tuesday," he said. "I'm glad, for I'm famished. What have you got for supper?"
+```
+
+thì output sẽ là một file HTML như sau:
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -285,3 +312,16 @@ else{applyMap(DEFAULTS);markTheme('light');setIPA(true);}
 </script>
 </body>
 </html>
+```
+
+Giờ hãy tạo giúp tôi một file HTML mới với nội dung với phần tiếng Anh bên dưới đảm bảo các yêu cầu sau:
+1. Ouput chỉ là một file HTML hoàn chỉnh được để trong 1 block code và có cấu trúc y hết ở trên chỉ khác phần nội dung trong thẻ `<div class="story-content">...</div>` được thay bằng phần nội dung bên dưới của tôi cung cấp.
+2. Phần IPA phải là chuẩn Anh Mỹ.
+3. Phần dịch tiếng Việt phải hay và chính xác với nội dung tổng thể của toàn bộ đoạn Tiếng Anh mà tôi đưa cho bạn chứ ko dịch cứng nhắc chia rẽ từng câu mà sẽ dịch từng câu mà đọc vào thấy sự mạch lạc. Tuy nhiên phần hiển thị Tooltip phải của câu nào là của câu nấy chứ đừng dịch gộp hãy làm đúng như ví dụ ở trên, tôi chỉ nhắc để bạn dịch sang tiếng Việt hay hơn thôi vì ở trên phần dịch tiếng Việt hơi giở.
+4. Nhớ toàn bộ format và cấu trúc file phải giống 100% ở trên chỉ khác mỗi phần nội dung trong thẻ `<div class="story-content">...</div>` được thay bằng phần nội dung bên dưới của tôi cung cấp.
+
+Ok giờ hãy tạo html cho phần nội dung Tiếng Anh này:
+
+```
+XXXXX
+```

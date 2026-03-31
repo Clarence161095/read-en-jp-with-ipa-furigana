@@ -1,0 +1,45 @@
+------ PTOMPT 1 ------
+Hiện tại sample này đang hiển thị tooltip bị blank hãy fix lại giúp tôi.
+
+Sample này được tạo từ prompt này mà chưa hoàn hảo nên hãy fix lại giúp tôi.
+```
+Tôi đang cần đọc mẩu truyện sau mà có hỗ trợ IPA theo giọng anh Mỹ. Giờ hãy giúp tôi tạo một file html có sẵn ipa cho mẩu truyện này nhé. ipa được bỏ trong thẻ ruby để dễ dàng đọc.
+
+- Với các cấu (Câu được định nghĩa là cách nhau bởi dấu phẩy chứ ko phải là mỗi đoạn) thì cần thêm thuộc tính title vào và nội dung của thuộc tính tile chính là phần dịch tiếng Việt chuẩn chỉnh của câu đó sao cho chuẩn nhất có thể. Kiểu dạng tooltip khi người đọc hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu chứ ko phải theo từng đoạn. Hãy dùng tooltip đơn giản mặc định trong html5 chứ đừng tự custom nó ra nhé, hoặc dùng một thự viện tooltip nào đó bằng cdn là ok.
+
+- Có nút bong bóng để setting độ lớn nhỏ của ipa của chữ, màu của chữ, cỡ chữ màu chữ tooltip, ... cho trang để tiện đọc hơn (Có sẵn nút reset để đẩy về mặt định setting ban đầu).
+```
+
+------ PTOMPT 2 ------
+không phải hiện tại nó ko phải chỉ blank mà ko thấy nội dung trong tooltip luôn. Bạn hãy fix lại để khi hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu nhé. Hãy fix lại sao cho hoàn hảo nhé.
+
+------ PTOMPT 3 ------
+Ok nhưng cho tooltip xuống dưới chữ hay hơn.
+
+------ PTOMPT 4 ------
+Phần setting có sẵn các theme để chọn ví dụ: dark, light, dracula,... một số theme nổi tiếng, và cho phép người dùng chỉnh font chữ, màu chữ, cỡ chữ, màu nền tooltip,... mức độ lớn bé của các thẻ h1, h2, h3, p,.... ở setting addvance. Và thông tin setting được lưu tại localStorage theo key là "storySettings" để lần sau người dùng vào lại sẽ tự động load setting đã lưu trước đó. Hãy fix lại giúp tôi nhé.
+
+------ PTOMPT 5 ------
+Tôi muốn có khả năng bật tắt IPA trong phần setting nữa nhé. Khi tắt IPA thì phần nội dung trong thẻ ruby sẽ chỉ hiển thị phần text bình thường mà không hiển thị phần IPA nữa. Nhưng khi click vào thì sẽ hiển thị IPA cho câu đó, còn cũng có một nút để bật tắt luôn phần hiển thị IPA ngoài cách bấm vào setting mà nút đó nằm bên trái để bật tắt nhanh IPA.
+
+------ PTOMPT 6 ------
+Bỏ chức năng bật tắt IPA khi click vào câu đó đi nhé, chỉ giữ lại nút bật tắt nhanh IPA bên trái thôi. Vì tính năng click vào chữ để bật tắt IPA cho câu đó đang bị lỗi. Nên thôi chỉ cần nút bật tắt nhanh IPA bên trái là được. 
+
+Bổ sung thêm tầm 6 cái theme nữa vào phần setting nhé, những setting ok và đẹp nhất dễ đọc nhất có thể tôi cũng thích theme của claude anthropic, và thêm thêm chục font chữ đẹp nữa vào phần setting nhé. 
+
+------ PTOMPT 7 ------
+Phần container thì rất ok rồi nhưng tôi muốn được setting thêm phần margin và padding của container nữa để tôi có thể tùy chỉnh khoảng cách của container hoặc khoảng cách của viền để tối ưu hoá trải nghiệm đọc trên điện thoại nữa.
+
+Phần padding và margin của body nữa
+
+------ PTOMPT 8 ------
+Khi ở điện thoại ky click 2 lần thì nó bị auto zoom tôi muốn tắt nó đi có được ko.
+
+------ PTOMPT 9 ------
+Ở mobile thì khi tôi out hover nhưng vào câu đó thì phần tooltip vẫn hiện ra và không tắt đi được, tôi phải click vào button nào đó thì mới tắt được tooltip đó đi, điều này làm trải nghiệm đọc trên điện thoại rất tệ. Bạn hãy fix lại để khi out hover vào câu đó thì phần tooltip sẽ tự động tắt đi nhé. Cảm ơn bạn rất nhiều.
+
+------ PTOMPT 10 ------
+Thêm một nút trong setting nữa giống nút reset setting nhưng nó là nút tối ưu cho mobile là sẽ setting như hình tôi đưa lên.
+Tiếp tục là khi chuyển theme ko làm thay đổi setting về cỡ chữ và advance setting nhé, chỉ thay đổi màu sắc của theme font chữ màu chữ các kiểu thôi nhé.
+
+Ok và sau đó là hoàn thành code để sao cho source được ngắn gọn nhất có thể nhé sao cho ngắn gọn nhất có thể nhưng vẫn phải giữ nguyên được những chức năng và tình năng cho tới bây giờ nhé. Nhưng phải tôi ưu nhất sao cho source code ngắn nhất có thể nhé.

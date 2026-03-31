@@ -28,6 +28,21 @@ yarn-error.log*
 .env*.local
 .env
 
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# storage
+storage/articles/*
+!storage/articles/.gitkeep
+
+# backups
+backups/
+
 # vercel
 .vercel
 
