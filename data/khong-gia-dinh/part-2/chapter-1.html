@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPA Reading Practice</title>
+<style>
+:root{--body-bg:#f9f9f9;--content-bg:#ffffff;--body-padding-y:40px;--body-padding-x:20px;--body-margin-y:0px;--body-margin-x:0px;--font-family:Arial,sans-serif;--text-size:24px;--text-color:#000000;--ipa-size:14px;--ipa-color:#555555;--tooltip-size:16px;--tooltip-color:#ffffff;--tooltip-bg:#333333;--h1-size:32px;--h2-size:28px;--h3-size:22px;--p-size:24px;--container-padding:40px;--container-margin-top:0px;--container-margin-bottom:0px;--container-margin-lr:20px}
+body{font-family:var(--font-family);padding:var(--body-padding-y) var(--body-padding-x);margin:var(--body-margin-y) var(--body-margin-x);background:var(--body-bg);transition:background .3s,color .3s;touch-action:manipulation}
+.story-content{font-size:var(--text-size);color:var(--text-color);max-width:800px;margin:var(--container-margin-top) var(--container-margin-lr) var(--container-margin-bottom);line-height:2.5;background:var(--content-bg);padding:var(--container-padding);border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.05);transition:background .3s,color .3s}
+.story-content p{margin-bottom:20px;font-size:var(--p-size)}.story-content h1{font-size:var(--h1-size)}.story-content h2{font-size:var(--h2-size)}.story-content h3{font-size:var(--h3-size)}
+ruby{margin-right:5px}rt{font-size:var(--ipa-size);color:var(--ipa-color);font-weight:normal}
+.phrase{cursor:pointer;border-bottom:2px dashed transparent;transition:border-color .2s;padding-bottom:2px;touch-action:manipulation}.phrase:hover{border-bottom:2px dashed #007bff}
+body.ipa-hidden rt{display:none}
+.ipa-toggle-btn{position:fixed;bottom:30px;left:30px;background:#28a745;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:11px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.3;transition:background .2s;touch-action:manipulation}
+.ipa-toggle-btn:hover{background:#218838}.ipa-toggle-btn.ipa-off{background:#6c757d}.ipa-toggle-btn.ipa-off:hover{background:#5a6268}
+.switch{position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0}.switch input{opacity:0;width:0;height:0}
+.switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.25s}.switch .slider:before{position:absolute;content:'';height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.25s}
+.switch input:checked+.slider{background:#007bff}.switch input:checked+.slider:before{transform:translateX(18px)}
+#custom-tooltip{position:absolute;display:none;background:var(--tooltip-bg);color:var(--tooltip-color);font-size:var(--tooltip-size);padding:8px 12px;border-radius:6px;z-index:9999;pointer-events:none;max-width:320px;word-break:break-word;box-shadow:0 2px 8px rgba(0,0,0,.25);transform:translate(-50%,14px)}
+.settings-btn{position:fixed;bottom:30px;right:30px;background:#007bff;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:28px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;transition:background .2s;touch-action:manipulation}.settings-btn:hover{background:#0056b3}
+.settings-panel{position:fixed;bottom:100px;right:30px;background:#fff;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.18);display:none;flex-direction:column;z-index:999;width:310px;font-family:sans-serif;overflow:hidden;max-height:80vh}.settings-panel.active{display:flex}
+.sp-header{padding:14px 18px 10px;border-bottom:1px solid #eee;flex-shrink:0}.sp-header h3{margin:0 0 10px;font-size:15px}
+.tab-bar{display:flex;gap:6px}.tab-btn{flex:1;padding:6px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:12px;font-weight:bold;transition:all .2s}.tab-btn.active{background:#007bff;color:#fff;border-color:#007bff}
+.sp-body{padding:12px 18px;overflow-y:auto;flex:1}
+.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#999;margin:12px 0 7px;font-weight:bold}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px}
+.theme-btn{padding:7px 4px;border:2px solid #e0e0e0;border-radius:7px;cursor:pointer;font-size:11px;text-align:center;background:#fafafa;transition:all .2s;line-height:1.4}.theme-btn:hover{border-color:#007bff}.theme-btn.active{border-color:#007bff;background:#e8f0ff;font-weight:bold}
+.setting-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:13px;color:#333}
+.setting-item input[type=number]{width:62px;padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:13px}
+.setting-item input[type=color]{border:1px solid #ddd;width:34px;height:28px;cursor:pointer;padding:1px;border-radius:4px}
+.setting-item select{padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:12px;max-width:150px}
+.tab-content{display:none}.tab-content.active{display:block}
+.sp-footer{padding:10px 18px 14px;border-top:1px solid #eee;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.sp-footer button{width:100%;padding:9px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;color:#fff}
+#mobile-btn{background:#17a2b8}#mobile-btn:hover{background:#138496}
+#reset-btn{background:#dc3545}#reset-btn:hover{background:#c82333}
+</style>
+</head>
+<body>
+
+<div class="story-content">
+    <p>
+        <span class="phrase" data-tooltip="Phần II — Chương I"><ruby>PART<rt>pɑrt</rt></ruby> <ruby>II<rt>tu</rt></ruby> — <ruby>CHAPTER<rt>ˈʧæptər</rt></ruby> <ruby>I<rt>wʌn</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tiến Lên"><ruby>FORWARD<rt>ˈfɔrwərd</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tiến lên!"><ruby>Forward<rt>ˈfɔrwərd</rt></ruby>!</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Thế giới mở rộng trước mắt tôi, tôi có thể đi nam hoặc bắc, đông hoặc tây tùy lòng."><ruby>The<rt>ðə</rt></ruby> <ruby>world<rt>wɜrld</rt></ruby> <ruby>lay<rt>leɪ</rt></ruby> <ruby>open<rt>ˈoʊpən</rt></ruby> <ruby>before<rt>bɪˈfɔr</rt></ruby> <ruby>me<rt>mi</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>could<rt>kʊd</rt></ruby> <ruby>go<rt>goʊ</rt></ruby> <ruby>south<rt>saʊθ</rt></ruby> <ruby>or<rt>ɔr</rt></ruby> <ruby>north<rt>nɔrθ</rt></ruby>, <ruby>east<rt>ist</rt></ruby> <ruby>or<rt>ɔr</rt></ruby> <ruby>west<rt>wɛst</rt></ruby>, <ruby>as<rt>æz</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>pleased<rt>plizd</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Tôi chỉ là một đứa trẻ con, thế mà tôi đã làm chủ cuộc đời của tôi."><ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>child<rt>ʧaɪld</rt></ruby>, <ruby>yet<rt>jɛt</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>master<rt>ˈmæstər</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>own<rt>oʊn</rt></ruby> <ruby>life<rt>laɪf</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Than ôi! Chính điều ấy lại buồn trong cảnh ngộ tôi."><ruby>But<rt>bʌt</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>sad<rt>sæd</rt></ruby> <ruby>part<rt>pɑrt</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>situation<rt>ˌsɪʧuˈeɪʃən</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Biết bao nhiêu đứa trẻ tự nhủ: 'Giá ta được tự do! Giá ta được làm chủ lấy ta!'"><ruby>How<rt>haʊ</rt></ruby> <ruby>many<rt>ˈmɛni</rt></ruby> <ruby>children<rt>ˈʧɪldrən</rt></ruby> <ruby>say<rt>seɪ</rt></ruby>: "<ruby>If<rt>ɪf</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>were<rt>wɜr</rt></ruby> <ruby>free<rt>fri</rt></ruby>! <ruby>If<rt>ɪf</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>could<rt>kʊd</rt></ruby> <ruby>be<rt>bi</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>own<rt>oʊn</rt></ruby> <ruby>master<rt>ˈmæstər</rt></ruby>!"</span>
+        <span class="phrase" data-tooltip="Còn tôi thì tôi tự bảo: 'Ước gì có ai để chỉ bảo ta, hướng dẫn ta!'"><ruby>But<rt>bʌt</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>said<rt>sɛd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>myself<rt>maɪˈsɛlf</rt></ruby>: "<ruby>If<rt>ɪf</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>someone<rt>ˈsʌmwʌn</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>guide<rt>gaɪd</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>show<rt>ʃoʊ</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>way<rt>weɪ</rt></ruby>!"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Bởi vì giữa những đứa trẻ ấy với tôi có một sự khác nhau ghê gớm."><ruby>There<rt>ðɛr</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>terrible<rt>ˈtɛrəbəl</rt></ruby> <ruby>difference<rt>ˈdɪfərəns</rt></ruby> <ruby>between<rt>bɪˈtwin</rt></ruby> <ruby>those<rt>ðoʊz</rt></ruby> <ruby>children<rt>ˈʧɪldrən</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>me<rt>mi</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Nếu chúng làm điều dại dột thì sau lưng có người đỡ chúng khi chúng ngã."><ruby>If<rt>ɪf</rt></ruby> <ruby>they<rt>ðeɪ</rt></ruby> <ruby>made<rt>meɪd</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>foolish<rt>ˈfulɪʃ</rt></ruby> <ruby>mistake<rt>mɪsˈteɪk</rt></ruby>, <ruby>someone<rt>ˈsʌmwʌn</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>there<rt>ðɛr</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>catch<rt>kæʧ</rt></ruby> <ruby>them<rt>ðɛm</rt></ruby> <ruby>when<rt>wɛn</rt></ruby> <ruby>they<rt>ðeɪ</rt></ruby> <ruby>fell<rt>fɛl</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Còn tôi, đằng sau tôi không có ai. Nếu tôi ngã thì phải tự bò dậy một mình."><ruby>Behind<rt>bɪˈhaɪnd</rt></ruby> <ruby>me<rt>mi</rt></ruby>, <ruby>there<rt>ðɛr</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>no<rt>noʊ</rt></ruby> <ruby>one<rt>wʌn</rt></ruby>. <ruby>If<rt>ɪf</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>fell<rt>fɛl</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>get<rt>gɛt</rt></ruby> <ruby>up<rt>ʌp</rt></ruby> <ruby>alone<rt>əˈloʊn</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Trước khi lên đường, tôi định hỏi ý kiến bác Acquin là người đã coi tôi như con."><ruby>Before<rt>bɪˈfɔr</rt></ruby> <ruby>setting<rt>ˈsɛtɪŋ</rt></ruby> <ruby>out<rt>aʊt</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>wanted<rt>ˈwɑntɪd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>ask<rt>æsk</rt></ruby> <ruby>Father<rt>ˈfɑðər</rt></ruby> <ruby>Acquin<rt>əˈkwɪn</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>advice<rt>ædˈvaɪs</rt></ruby>, <ruby>the<rt>ðə</rt></ruby> <ruby>man<rt>mæn</rt></ruby> <ruby>who<rt>hu</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>treated<rt>ˈtritɪd</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>like<rt>laɪk</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>own<rt>oʊn</rt></ruby> <ruby>son<rt>sʌn</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Tôi không dám đi suốt Paris với con chó Capi lơn tơn bên gót, sợ cảnh sát hỏi."><ruby>I<rt>aɪ</rt></ruby> <ruby>did<rt>dɪd</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>dare<rt>dɛr</rt></ruby> <ruby>walk<rt>wɔk</rt></ruby> <ruby>through<rt>θru</rt></ruby> <ruby>Paris<rt>ˈpærɪs</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>Capi<rt>ˈkɑpi</rt></ruby> <ruby>loose<rt>lus</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>heels<rt>hilz</rt></ruby>, <ruby>fearing<rt>ˈfɪrɪŋ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>police<rt>pəˈlis</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Tôi kiếm chiếc dây buộc cổ con chó và dắt nó đi tìm nhà lao Clichy."><ruby>I<rt>aɪ</rt></ruby> <ruby>found<rt>faʊnd</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>leash<rt>liʃ</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>dog<rt>dɑg</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>went<rt>wɛnt</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>find<rt>faɪnd</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>Clichy<rt>kliˈʃi</rt></ruby> <ruby>prison<rt>ˈprɪzən</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Người ta đưa tôi vào một phòng khách không có cửa sắt, không có chấn song sắt như tôi tưởng."><ruby>They<rt>ðeɪ</rt></ruby> <ruby>led<rt>lɛd</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>into<rt>ˈɪntu</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>visiting<rt>ˈvɪzɪtɪŋ</rt></ruby> <ruby>room<rt>rum</rt></ruby> <ruby>without<rt>wɪˈθaʊt</rt></ruby> <ruby>iron<rt>ˈaɪərn</rt></ruby> <ruby>bars<rt>bɑrz</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>imagined<rt>ɪˈmæʤɪnd</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Giây lát sau thì bác Acquin đến, cũng không bị xích tay xiềng chân."><ruby>Soon<rt>sun</rt></ruby> <ruby>Father<rt>ˈfɑðər</rt></ruby> <ruby>Acquin<rt>əˈkwɪn</rt></ruby> <ruby>appeared<rt>əˈpɪrd</rt></ruby>, <ruby>without<rt>wɪˈθaʊt</rt></ruby> <ruby>chains<rt>ʧeɪnz</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>hands<rt>hændz</rt></ruby> <ruby>or<rt>ɔr</rt></ruby> <ruby>feet<rt>fit</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Bác mong cháu đến, Rémi ạ.">"<ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>hoping<rt>ˈhoʊpɪŋ</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>come<rt>kʌm</rt></ruby>, <ruby>Remi<rt>ˈrɛmi</rt></ruby>,"</span>
+        <span class="phrase" data-tooltip="bác nói."><ruby>he<rt>hi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Bác khuyên tôi đi làm thuê hơn là lang thang hát rong vì nguy hiểm."><ruby>He<rt>hi</rt></ruby> <ruby>advised<rt>ædˈvaɪzd</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>find<rt>faɪnd</rt></ruby> <ruby>work<rt>wɜrk</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>laborer<rt>ˈleɪbərər</rt></ruby> <ruby>rather<rt>ˈræðər</rt></ruby> <ruby>than<rt>ðæn</rt></ruby> <ruby>wander<rt>ˈwɑndər</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>street<rt>strit</rt></ruby> <ruby>musician<rt>mjuˈzɪʃən</rt></ruby> — <ruby>it<rt>ɪt</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>too<rt>tu</rt></ruby> <ruby>dangerous<rt>ˈdeɪnʤərəs</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Nhưng tôi đã hứa sẽ đi thăm anh chị em nhà bác và nhất là Lise."><ruby>But<rt>bʌt</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>promised<rt>ˈprɑmɪst</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>visit<rt>ˈvɪzɪt</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>scattered<rt>ˈskætərd</rt></ruby> <ruby>children<rt>ˈʧɪldrən</rt></ruby>, <ruby>especially<rt>ɪˈspɛʃəli</rt></ruby> <ruby>Lise<rt>liz</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Nếu tôi bỏ lời hứa vì sợ thì tôi chỉ nghĩ đến mình, chứ không nghĩ đến bác, đến Lise."><ruby>If<rt>ɪf</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>broke<rt>broʊk</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>promise<rt>ˈprɑmɪs</rt></ruby> <ruby>out<rt>aʊt</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>fear<rt>fɪr</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>be<rt>bi</rt></ruby> <ruby>thinking<rt>ˈθɪŋkɪŋ</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>myself<rt>maɪˈsɛlf</rt></ruby>, <ruby>not<rt>nɑt</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>them<rt>ðɛm</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Bác nắm hai tay tôi: 'Bác phải hôn cháu vì câu nói ấy. Cháu là người có tình có nghĩa.'"><ruby>He<rt>hi</rt></ruby> <ruby>took<rt>tʊk</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>hands<rt>hændz</rt></ruby>: "<ruby>I<rt>aɪ</rt></ruby> <ruby>must<rt>mʌst</rt></ruby> <ruby>kiss<rt>kɪs</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>that<rt>ðæt</rt></ruby>. <ruby>You<rt>ju</rt></ruby> <ruby>are<rt>ɑr</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>loyal<rt>ˈlɔɪəl</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>faithful<rt>ˈfeɪθfəl</rt></ruby> <ruby>boy<rt>bɔɪ</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Bác móc trong túi áo ra một chiếc đồng hồ quả quýt lớn."><ruby>He<rt>hi</rt></ruby> <ruby>took<rt>tʊk</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>vest<rt>vɛst</rt></ruby> <ruby>pocket<rt>ˈpɑkɪt</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>large<rt>lɑrʤ</rt></ruby> <ruby>pocket<rt>ˈpɑkɪt</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="'Cái đồng hồ của bác đây, bác biếu cháu. Nó là tất cả gia tài của bác.'">  "<ruby>This<rt>ðɪs</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>all<rt>ɔl</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>have<rt>hæv</rt></ruby> <ruby>left<rt>lɛft</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>give<rt>gɪv</rt></ruby> <ruby>it<rt>ɪt</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>you<rt>ju</rt></ruby>."</span>
+        <span class="phrase" data-tooltip="Bác nói thế rồi đặt đồng hồ vào tay tôi."><ruby>He<rt>hi</rt></ruby> <ruby>placed<rt>pleɪst</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>hand<rt>hænd</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Ở nhà tù bác có cần xem giờ làm gì đâu. Xem giờ càng thấy thời giờ đi chậm.'">  "<ruby>In<rt>ɪn</rt></ruby> <ruby>prison<rt>ˈprɪzən</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>have<rt>hæv</rt></ruby> <ruby>no<rt>noʊ</rt></ruby> <ruby>need<rt>nid</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>know<rt>noʊ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>time<rt>taɪm</rt></ruby>. <ruby>Watching<rt>ˈwɑʧɪŋ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>hours<rt>aʊərz</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>makes<rt>meɪks</rt></ruby> <ruby>them<rt>ðɛm</rt></ruby> <ruby>pass<rt>pæs</rt></ruby> <ruby>slower<rt>ˈsloʊər</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Chào cháu, Rémi. Cháu là một chú bé tốt. Cháu nhớ giữ cho được mãi mãi như thế.'">  "<ruby>Goodbye<rt>ˌgʊdˈbaɪ</rt></ruby>, <ruby>Remi<rt>ˈrɛmi</rt></ruby>. <ruby>You<rt>ju</rt></ruby> <ruby>are<rt>ɑr</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>good<rt>gʊd</rt></ruby> <ruby>boy<rt>bɔɪ</rt></ruby>. <ruby>Stay<rt>steɪ</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>way<rt>weɪ</rt></ruby> <ruby>always<rt>ˈɔlˌweɪz</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi có một chiếc đồng hồ! Một chiếc đồng hồ riêng của tôi!"><ruby>I<rt>aɪ</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby>! <ruby>A<rt>ə</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>very<rt>ˈvɛri</rt></ruby> <ruby>own<rt>oʊn</rt></ruby>!</span>
+        <span class="phrase" data-tooltip="Buồn bã, lo ngại, hãi hùng đều tiêu tan tức khắc."><ruby>Sadness<rt>ˈsædnɪs</rt></ruby>, <ruby>worry<rt>ˈwɜri</rt></ruby>, <ruby>and<rt>ænd</rt></ruby> <ruby>fear<rt>fɪr</rt></ruby> <ruby>vanished<rt>ˈvænɪʃt</rt></ruby> <ruby>instantly<rt>ˈɪnstəntli</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Tôi rút đồng hồ ra xem giờ: đúng trưa."><ruby>I<rt>aɪ</rt></ruby> <ruby>pulled<rt>pʊld</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby> <ruby>out<rt>aʊt</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>checked<rt>ʧɛkt</rt></ruby>: <ruby>exactly<rt>ɪgˈzæktli</rt></ruby> <ruby>noon<rt>nun</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Con Capi đứng thẳng lên, nhìn đồng hồ lâu lắm rồi sủa mười hai tiếng. Nó vẫn không quên!"><ruby>Capi<rt>ˈkɑpi</rt></ruby> <ruby>stood<rt>stʊd</rt></ruby> <ruby>up<rt>ʌp</rt></ruby>, <ruby>stared<rt>stɛrd</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby>, <ruby>then<rt>ðɛn</rt></ruby> <ruby>barked<rt>bɑrkt</rt></ruby> <ruby>twelve<rt>twɛlv</rt></ruby> <ruby>times<rt>taɪmz</rt></ruby>. <ruby>He<rt>hi</rt></ruby> <ruby>remembered<rt>rɪˈmɛmbərd</rt></ruby>!</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi vào phố Mouffetard. Cả một loạt chuyện cũ hiện lại: Garofoli, Mattia, cụ Vitalis."><ruby>I<rt>aɪ</rt></ruby> <ruby>entered<rt>ˈɛntərd</rt></ruby> <ruby>Rue<rt>ru</rt></ruby> <ruby>Mouffetard<rt>mufˈtɑr</rt></ruby>. <ruby>Memories<rt>ˈmɛməriz</rt></ruby> <ruby>flooded<rt>ˈflʌdɪd</rt></ruby> <ruby>back<rt>bæk</rt></ruby>: <ruby>Garofoli<rt>ˌgɑrəˈfoʊli</rt></ruby>, <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby>, <ruby>old<rt>oʊld</rt></ruby> <ruby>Vitalis<rt>vɪˈtɑlɪs</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tới nhà thờ Saint-Médard thì tôi thấy có một chú bé đứng tựa vào tường, trông giống Mattia."><ruby>Near<rt>nɪr</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>church<rt>ʧɜrʧ</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>Saint-Medard<rt>sæ̃ meɪˈdɑr</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>saw<rt>sɔ</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>boy<rt>bɔɪ</rt></ruby> <ruby>leaning<rt>ˈlinɪŋ</rt></ruby> <ruby>against<rt>əˈgɛnst</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>wall<rt>wɔl</rt></ruby> <ruby>who<rt>hu</rt></ruby> <ruby>looked<rt>lʊkt</rt></ruby> <ruby>like<rt>laɪk</rt></ruby> <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Tôi tiến lại gần. Không còn nghi ngờ gì nữa, chính nó."><ruby>I<rt>aɪ</rt></ruby> <ruby>came<rt>keɪm</rt></ruby> <ruby>closer<rt>ˈkloʊsər</rt></ruby>. <ruby>It<rt>ɪt</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>indeed<rt>ɪnˈdid</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Garofoli đi tù rồi,' nó nói. 'Người ta tóm cổ nó vì nó đánh đập thằng Orlando tàn nhẫn đến nỗi thằng đó ốm chết.'">  "<ruby>Garofoli<rt>ˌgɑrəˈfoʊli</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>prison<rt>ˈprɪzən</rt></ruby>," <ruby>he<rt>hi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>. "<ruby>They<rt>ðeɪ</rt></ruby> <ruby>caught<rt>kɔt</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>because<rt>bɪˈkɔz</rt></ruby> <ruby>he<rt>hi</rt></ruby> <ruby>beat<rt>bit</rt></ruby> <ruby>Orlando<rt>ɔrˈlændoʊ</rt></ruby> <ruby>so<rt>soʊ</rt></ruby> <ruby>badly<rt>ˈbædli</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>boy<rt>bɔɪ</rt></ruby> <ruby>died<rt>daɪd</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mattia kể rằng Garofoli cho gánh xiếc Gassot mướn nó, nhưng rồi bị thải,"><ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>explained<rt>ɪksˈpleɪnd</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>Garofoli<rt>ˌgɑrəˈfoʊli</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>rented<rt>ˈrɛntɪd</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>Gassot<rt>gæˈsoʊ</rt></ruby> <ruby>circus<rt>ˈsɜrkəs</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby> <ruby>they<rt>ðeɪ</rt></ruby> <ruby>dismissed<rt>dɪsˈmɪst</rt></ruby> <ruby>him<rt>hɪm</rt></ruby></span>
+        <span class="phrase" data-tooltip="vì bây giờ đầu nó quá to, không thể chui vào hộp được nữa."><ruby>because<rt>bɪˈkɔz</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>head<rt>hɛd</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>too<rt>tu</rt></ruby> <ruby>big<rt>bɪg</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>fit<rt>fɪt</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>box<rt>bɑks</rt></ruby> <ruby>anymore<rt>ˌɛniˈmɔr</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="'Từ trưa hôm qua đến nay tôi đã có gì vào bụng đâu!'">  "<ruby>I<rt>aɪ</rt></ruby> <ruby>have<rt>hæv</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>eaten<rt>ˈitən</rt></ruby> <ruby>since<rt>sɪns</rt></ruby> <ruby>yesterday<rt>ˈjɛstərˌdeɪ</rt></ruby> <ruby>noon<rt>nun</rt></ruby>!"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi chạy đến hiệu bánh mì mua cho nó một chiếc bánh. Nó ăn ngốn ngấu."><ruby>I<rt>aɪ</rt></ruby> <ruby>ran<rt>ræn</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>bakery<rt>ˈbeɪkəri</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>bought<rt>bɔt</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>loaf<rt>loʊf</rt></ruby>. <ruby>He<rt>hi</rt></ruby> <ruby>devoured<rt>dɪˈvaʊərd</rt></ruby> <ruby>it<rt>ɪt</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Xin anh hãy nhận tôi vào gánh của anh,' Mattia van xin. 'Tôi diễn được. Tôi chơi vĩ cầm, uốn dẻo, nhảy dây.'">  "<ruby>Please<rt>pliz</rt></ruby> <ruby>take<rt>teɪk</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>into<rt>ˈɪntu</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>troupe<rt>trup</rt></ruby>," <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>begged<rt>bɛgd</rt></ruby>. "<ruby>I<rt>aɪ</rt></ruby> <ruby>can<rt>kæn</rt></ruby> <ruby>perform<rt>pərˈfɔrm</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>play<rt>pleɪ</rt></ruby> <ruby>violin<rt>ˌvaɪəˈlɪn</rt></ruby>, <ruby>do<rt>du</rt></ruby> <ruby>acrobatics<rt>ˌækrəˈbætɪks</rt></ruby>, <ruby>jump<rt>ʤʌmp</rt></ruby> <ruby>rope<rt>roʊp</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="'Tôi chỉ xin có ăn thôi. Nếu tôi làm ăn tồi thì anh đánh tôi. Chỉ cần đừng đánh vào đầu.'"><ruby>I<rt>aɪ</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>need<rt>nid</rt></ruby> <ruby>food<rt>fud</rt></ruby>. <ruby>If<rt>ɪf</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>do<rt>du</rt></ruby> <ruby>badly<rt>ˈbædli</rt></ruby>, <ruby>hit<rt>hɪt</rt></ruby> <ruby>me<rt>mi</rt></ruby>. <ruby>Just<rt>ʤʌst</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>head<rt>hɛd</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Nghe thằng bé nói thế tôi suýt khóc. Tôi nói:"><ruby>Hearing<rt>ˈhɪrɪŋ</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>say<rt>seɪ</rt></ruby> <ruby>that<rt>ðæt</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>nearly<rt>ˈnɪrli</rt></ruby> <ruby>cried<rt>kraɪd</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>:</span>
+        <span class="phrase" data-tooltip="'Đồng ý. Đi với tôi, nhưng không phải như đứa ở mà như một người bạn.'">  "<ruby>Agreed<rt>əˈgrid</rt></ruby>. <ruby>Come<rt>kʌm</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>me<rt>mi</rt></ruby>, <ruby>not<rt>nɑt</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>servant<rt>ˈsɜrvənt</rt></ruby> <ruby>but<rt>bʌt</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>friend<rt>frɛnd</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mười lăm phút sau, chúng tôi ra khỏi Paris."><ruby>Fifteen<rt>fɪfˈtin</rt></ruby> <ruby>minutes<rt>ˈmɪnɪts</rt></ruby> <ruby>later<rt>ˈleɪtər</rt></ruby>, <ruby>we<rt>wi</rt></ruby> <ruby>left<rt>lɛft</rt></ruby> <ruby>Paris<rt>ˈpærɪs</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Nắng hanh tháng ba, không khí mát mẻ, mặt trời tháng tư rạng rỡ, trời xanh không gợn mây."><ruby>The<rt>ðə</rt></ruby> <ruby>March<rt>mɑrʧ</rt></ruby> <ruby>sun<rt>sʌn</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>dried<rt>draɪd</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>roads<rt>roʊdz</rt></ruby>. <ruby>The<rt>ðə</rt></ruby> <ruby>April<rt>ˈeɪprəl</rt></ruby> <ruby>sky<rt>skaɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>bright<rt>braɪt</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>cloudless<rt>ˈklaʊdlɪs</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Trên bờ đường cỏ bắt đầu mọc, lấm tấm hoa cúc dại và hoa dâu tây."><ruby>Grass<rt>græs</rt></ruby> <ruby>grew<rt>gru</rt></ruby> <ruby>by<rt>baɪ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>roadside<rt>ˈroʊdˌsaɪd</rt></ruby>, <ruby>dotted<rt>ˈdɑtɪd</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>daisies<rt>ˈdeɪziz</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>wild<rt>waɪld</rt></ruby> <ruby>strawberry<rt>ˈstrɔˌbɛri</rt></ruby> <ruby>flowers<rt>ˈflaʊərz</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Chúng tôi ngồi nghỉ trên đống sỏi. Tôi trải tấm bản đồ lên cỏ và tìm đường cho chúng tôi."><ruby>We<rt>wi</rt></ruby> <ruby>rested<rt>ˈrɛstɪd</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>pile<rt>paɪl</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>gravel<rt>ˈgrævəl</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>spread<rt>sprɛd</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>map<rt>mæp</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>grass<rt>græs</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>planned<rt>plænd</rt></ruby> <ruby>our<rt>aʊər</rt></ruby> <ruby>route<rt>rut</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Mattia chỉ tấm bản đồ hỏi: 'Cái này là gì?'"><ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>pointed<rt>ˈpɔɪntɪd</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>map<rt>mæp</rt></ruby>: "<ruby>What<rt>wʌt</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>this<rt>ðɪs</rt></ruby>?"</span>
+        <span class="phrase" data-tooltip="Nó không biết chữ. Tôi hứa sẽ dạy cho nó."><ruby>He<rt>hi</rt></ruby> <ruby>could<rt>kʊd</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>read<rt>rid</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>promised<rt>ˈprɑmɪst</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>teach<rt>tiʧ</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi chia cho nó hai cái sơ mi, hai đôi tất, ba cái khăn tay."><ruby>I<rt>aɪ</rt></ruby> <ruby>gave<rt>geɪv</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>two<rt>tu</rt></ruby> <ruby>shirts<rt>ʃɜrts</rt></ruby>, <ruby>two<rt>tu</rt></ruby> <ruby>pairs<rt>pɛrz</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>socks<rt>sɑks</rt></ruby>, <ruby>and<rt>ænd</rt></ruby> <ruby>three<rt>θri</rt></ruby> <ruby>handkerchiefs<rt>ˈhæŋkərˌʧɪfs</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Rồi Mattia kéo vĩ cầm cho tôi nghe. Nó đàn hay không kém cụ Vitalis."><ruby>Then<rt>ðɛn</rt></ruby> <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>played<rt>pleɪd</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>violin<rt>ˌvaɪəˈlɪn</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>me<rt>mi</rt></ruby>. <ruby>He<rt>hi</rt></ruby> <ruby>played<rt>pleɪd</rt></ruby> <ruby>nearly<rt>ˈnɪrli</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>well<rt>wɛl</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>old<rt>oʊld</rt></ruby> <ruby>Vitalis<rt>vɪˈtɑlɪs</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Mattia quả là của quý!"><ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>treasure<rt>ˈtrɛʒər</rt></ruby>!</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Đi qua cổng một nông trang, chúng tôi thấy một đám cưới đang diễn ra."><ruby>Passing<rt>ˈpæsɪŋ</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>farm<rt>fɑrm</rt></ruby>, <ruby>we<rt>wi</rt></ruby> <ruby>saw<rt>sɔ</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>wedding<rt>ˈwɛdɪŋ</rt></ruby> <ruby>celebration<rt>ˌsɛləˈbreɪʃən</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Một chàng thanh niên béo phị gọi chúng tôi vào chơi nhạc cho khách nhảy."><ruby>A<rt>ə</rt></ruby> <ruby>fat<rt>fæt</rt></ruby> <ruby>young<rt>jʌŋ</rt></ruby> <ruby>man<rt>mæn</rt></ruby> <ruby>called<rt>kɔld</rt></ruby> <ruby>us<rt>ʌs</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>play<rt>pleɪ</rt></ruby> <ruby>music<rt>ˈmjuzɪk</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>dancers<rt>ˈdænsərz</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Chúng tôi chơi cadơri, vanxơ không ngừng cho đến tối."><ruby>We<rt>wi</rt></ruby> <ruby>played<rt>pleɪd</rt></ruby> <ruby>quadrilles<rt>kwɑˈdrɪlz</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>waltzes<rt>ˈwɔltsɪz</rt></ruby> <ruby>without<rt>wɪˈθaʊt</rt></ruby> <ruby>stopping<rt>ˈstɑpɪŋ</rt></ruby> <ruby>until<rt>ənˈtɪl</rt></ruby> <ruby>evening<rt>ˈivnɪŋ</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cô dâu thấy Mattia tái người nên nói: 'Thôi, thôi! Chú bé này đuối sức rồi. Hãy thù lao cho các bạn nhạc sĩ!'"><ruby>The<rt>ðə</rt></ruby> <ruby>bride<rt>braɪd</rt></ruby> <ruby>noticed<rt>ˈnoʊtɪst</rt></ruby> <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>turning<rt>ˈtɜrnɪŋ</rt></ruby> <ruby>pale<rt>peɪl</rt></ruby>: "<ruby>Stop<rt>stɑp</rt></ruby>! <ruby>The<rt>ðə</rt></ruby> <ruby>boy<rt>bɔɪ</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>exhausted<rt>ɪgˈzɔstɪd</rt></ruby>. <ruby>Pay<rt>peɪ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>musicians<rt>mjuˈzɪʃənz</rt></ruby>!"</span>
+        <span class="phrase" data-tooltip="Con Capi đi nhận tiền với chiếc mũ ngậm trong mồm. Chú rể bỏ một đồng năm phờrăng."><ruby>Capi<rt>ˈkɑpi</rt></ruby> <ruby>collected<rt>kəˈlɛktɪd</rt></ruby> <ruby>money<rt>ˈmʌni</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>hat<rt>hæt</rt></ruby>. <ruby>The<rt>ðə</rt></ruby> <ruby>groom<rt>grum</rt></ruby> <ruby>gave<rt>geɪv</rt></ruby> <ruby>five<rt>faɪv</rt></ruby> <ruby>francs<rt>fræŋks</rt></ruby>!</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Sáng hôm sau, chúng tôi có hai mươi tám phờrăng trong túi."><ruby>By<rt>baɪ</rt></ruby> <ruby>morning<rt>ˈmɔrnɪŋ</rt></ruby>, <ruby>we<rt>wi</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>twenty-eight<rt>ˈtwɛntiˌeɪt</rt></ruby> <ruby>francs<rt>fræŋks</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="'Chúng ta có được số tiền này nhờ cậu đấy, Mattia ạ,' tôi nói.">  "<ruby>We<rt>wi</rt></ruby> <ruby>owe<rt>oʊ</rt></ruby> <ruby>this<rt>ðɪs</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>you<rt>ju</rt></ruby>, <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby>," <ruby>I<rt>aɪ</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Mattia đôi khi nói: 'Một ông chủ gánh mà không đánh đập kẻ tay chân thì quả tuyệt diệu.'"><ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>sometimes<rt>ˈsʌmˌtaɪmz</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>: "<ruby>A<rt>ə</rt></ruby> <ruby>master<rt>ˈmæstər</rt></ruby> <ruby>who<rt>hu</rt></ruby> <ruby>never<rt>ˈnɛvər</rt></ruby> <ruby>beats<rt>bits</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>people<rt>ˈpipəl</rt></ruby> — <ruby>how<rt>haʊ</rt></ruby> <ruby>wonderful<rt>ˈwʌndərfəl</rt></ruby>!"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi mua cho Mattia một chiếc kèn đẩy, dây băng đỏ cho bít tất, và một cái xắc lính cũ."><ruby>I<rt>aɪ</rt></ruby> <ruby>bought<rt>bɔt</rt></ruby> <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>trombone<rt>trɑmˈboʊn</rt></ruby>, <ruby>red<rt>rɛd</rt></ruby> <ruby>ribbons<rt>ˈrɪbənz</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>our<rt>aʊər</rt></ruby> <ruby>stockings<rt>ˈstɑkɪŋz</rt></ruby>, <ruby>and<rt>ænd</rt></ruby> <ruby>an<rt>ən</rt></ruby> <ruby>old<rt>oʊld</rt></ruby> <ruby>army<rt>ˈɑrmi</rt></ruby> <ruby>bag<rt>bæg</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Bỗng tôi nảy ra một ý định: mua tặng má Barberin một con bò sữa để thay cho con Roussette."><ruby>Then<rt>ðɛn</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>wonderful<rt>ˈwʌndərfəl</rt></ruby> <ruby>idea<rt>aɪˈdiə</rt></ruby> <ruby>came<rt>keɪm</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>me<rt>mi</rt></ruby>: <ruby>buy<rt>baɪ</rt></ruby> <ruby>Mother<rt>ˈmʌðər</rt></ruby> <ruby>Barberin<rt>bɑrbərɪn</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>milk<rt>mɪlk</rt></ruby> <ruby>cow<rt>kaʊ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>replace<rt>rɪˈpleɪs</rt></ruby> <ruby>Roussette<rt>ruˈsɛt</rt></ruby>!</span>
+        <span class="phrase" data-tooltip="Má Barberin sẽ vui sướng biết bao nếu ta biếu má một con bò!"><ruby>How<rt>haʊ</rt></ruby> <ruby>happy<rt>ˈhæpi</rt></ruby> <ruby>she<rt>ʃi</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>be<rt>bi</rt></ruby>!</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi hỏi một người chăn bò giá một con bò sữa. Anh ta cười phì vào mặt tôi."><ruby>I<rt>aɪ</rt></ruby> <ruby>asked<rt>æskt</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>cattle<rt>ˈkætəl</rt></ruby> <ruby>herder<rt>ˈhɜrdər</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>price<rt>praɪs</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>milk<rt>mɪlk</rt></ruby> <ruby>cow<rt>kaʊ</rt></ruby>. <ruby>He<rt>hi</rt></ruby> <ruby>laughed<rt>læft</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>face<rt>feɪs</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Cuối cùng anh ta nói nghiêm chỉnh: một trăm năm mươi phờrăng."><ruby>Finally<rt>ˈfaɪnəli</rt></ruby> <ruby>he<rt>hi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby> <ruby>seriously<rt>ˈsɪriəsli</rt></ruby>: <ruby>one<rt>wʌn</rt></ruby> <ruby>hundred<rt>ˈhʌndrɪd</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>fifty<rt>ˈfɪfti</rt></ruby> <ruby>francs<rt>fræŋks</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Cái vốn của tôi còn xa con số ấy! Nhưng nếu vận may không bỏ chúng tôi thì dành dụm từng xu, sẽ góp đủ."><ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>far<rt>fɑr</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>amount<rt>əˈmaʊnt</rt></ruby>! <ruby>But<rt>bʌt</rt></ruby> <ruby>if<rt>ɪf</rt></ruby> <ruby>our<rt>aʊər</rt></ruby> <ruby>luck<rt>lʌk</rt></ruby> <ruby>held<rt>hɛld</rt></ruby>, <ruby>saving<rt>ˈseɪvɪŋ</rt></ruby> <ruby>penny<rt>ˈpɛni</rt></ruby> <ruby>by<rt>baɪ</rt></ruby> <ruby>penny<rt>ˈpɛni</rt></ruby>, <ruby>we<rt>wi</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>get<rt>gɛt</rt></ruby> <ruby>there<rt>ðɛr</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Nếu ta đi Varses trước rồi mới ghé nhà má Barberin, sẽ có đủ thì giờ kiếm tiền."><ruby>If<rt>ɪf</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>went<rt>wɛnt</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>Varses<rt>vɑrs</rt></ruby> <ruby>first<rt>fɜrst</rt></ruby>, <ruby>then<rt>ðɛn</rt></ruby> <ruby>visited<rt>ˈvɪzɪtɪd</rt></ruby> <ruby>Mother<rt>ˈmʌðər</rt></ruby> <ruby>Barberin<rt>bɑrbərɪn</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>way<rt>weɪ</rt></ruby> <ruby>back<rt>bæk</rt></ruby>, <ruby>we<rt>wi</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>have<rt>hæv</rt></ruby> <ruby>time<rt>taɪm</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>earn<rt>ɜrn</rt></ruby> <ruby>enough<rt>ɪˈnʌf</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Sáng hôm sau tôi bày tỏ kế hoạch với Mattia. Nó tán thành ngay."><ruby>Next<rt>nɛkst</rt></ruby> <ruby>morning<rt>ˈmɔrnɪŋ</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>shared<rt>ʃɛrd</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>plan<rt>plæn</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>Mattia<rt>ˈmɑtiɑ</rt></ruby>. <ruby>He<rt>hi</rt></ruby> <ruby>agreed<rt>əˈgrid</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>once<rt>wʌns</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="'Vùng mỏ có lẽ hay đấy,' nó nói. 'Được xem một hầm mỏ thì tớ khoái lắm.'">  "<ruby>The<rt>ðə</rt></ruby> <ruby>mining<rt>ˈmaɪnɪŋ</rt></ruby> <ruby>region<rt>ˈriʤən</rt></ruby> <ruby>sounds<rt>saʊndz</rt></ruby> <ruby>exciting<rt>ɪkˈsaɪtɪŋ</rt></ruby>," <ruby>he<rt>hi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>. "<ruby>I'd<rt>aɪd</rt></ruby> <ruby>love<rt>lʌv</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>see<rt>si</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>mine<rt>maɪn</rt></ruby>!"</span>
+    </p>
+</div>
+
+<button class="ipa-toggle-btn" id="ipa-toggle-btn">IPA<br>BẬT</button>
+<button class="settings-btn" id="settings-btn">⚙️</button>
+
+<div class="settings-panel" id="settings-panel">
+    <div class="sp-header">
+        <h3>⚙️ Cài Đặt Hiển Thị</h3>
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="basic">Cơ Bản</button>
+            <button class="tab-btn" data-tab="advanced">Nâng Cao</button>
+        </div>
+    </div>
+    <div class="sp-body">
+        <div class="tab-content active" id="tab-basic">
+            <div class="section-label">Chủ đề</div>
+            <div class="theme-grid">
+                <button class="theme-btn" data-theme="light">☀️<br>Light</button>
+                <button class="theme-btn" data-theme="dark">🌙<br>Dark</button>
+                <button class="theme-btn" data-theme="dracula">🧛<br>Dracula</button>
+                <button class="theme-btn" data-theme="solarized">🌅<br>Solarized</button>
+                <button class="theme-btn" data-theme="nord">❄️<br>Nord</button>
+                <button class="theme-btn" data-theme="monokai">🎨<br>Monokai</button>
+                <button class="theme-btn" data-theme="claude">🤖<br>Claude</button>
+                <button class="theme-btn" data-theme="github">🐚<br>GitHub</button>
+                <button class="theme-btn" data-theme="sepia">📜<br>Sepia</button>
+                <button class="theme-btn" data-theme="gruvbox">🍃<br>Gruvbox</button>
+                <button class="theme-btn" data-theme="catppuccin">🌸<br>Catppuccin</button>
+                <button class="theme-btn" data-theme="paper">📰<br>Paper</button>
+            </div>
+            <div class="section-label">IPA</div>
+            <div class="setting-item">
+                <label>Hiện IPA</label>
+                <label class="switch"><input type="checkbox" id="inp-ipa-visible" checked><span class="slider"></span></label>
+            </div>
+            <div class="section-label">Văn bản</div>
+            <div class="setting-item">
+                <label>Font chữ</label>
+                <select id="inp-font-family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    <option value="Palatino, 'Palatino Linotype', serif">Palatino</option>
+                    <option value="Garamond, 'EB Garamond', serif">Garamond</option>
+                    <option value="'Book Antiqua', Palatino, serif">Book Antiqua</option>
+                    <option value="Optima, Candara, sans-serif">Optima</option>
+                    <option value="Futura, 'Century Gothic', sans-serif">Futura</option>
+                    <option value="'Gill Sans', Calibri, sans-serif">Gill Sans</option>
+                    <option value="Cambria, 'Hoefler Text', serif">Cambria</option>
+                    <option value="Constantia, Palatino, serif">Constantia</option>
+                    <option value="Candara, Calibri, sans-serif">Candara</option>
+                    <option value="'Franklin Gothic Medium', Arial, sans-serif">Franklin Gothic</option>
+                </select>
+            </div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-text-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-text-color"></div>
+            <div class="setting-item"><label>Cỡ chữ IPA (px)</label><input type="number" id="inp-ipa-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu IPA</label><input type="color" id="inp-ipa-color"></div>
+            <div class="section-label">Tooltip</div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-tooltip-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-tooltip-color"></div>
+            <div class="setting-item"><label>Màu nền</label><input type="color" id="inp-tooltip-bg"></div>
+        </div>
+        <div class="tab-content" id="tab-advanced">
+            <div class="section-label">Cỡ chữ theo thẻ (px)</div>
+            <div class="setting-item"><label>Thẻ &lt;h1&gt;</label><input type="number" id="inp-h1-size" min="10" max="80"></div>
+            <div class="setting-item"><label>Thẻ &lt;h2&gt;</label><input type="number" id="inp-h2-size" min="10" max="70"></div>
+            <div class="setting-item"><label>Thẻ &lt;h3&gt;</label><input type="number" id="inp-h3-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Thẻ &lt;p&gt;</label><input type="number" id="inp-p-size" min="10" max="60"></div>
+            <div class="section-label">Màu nền</div>
+            <div class="setting-item"><label>Nền trang</label><input type="color" id="inp-body-bg"></div>
+            <div class="setting-item"><label>Nền nội dung</label><input type="color" id="inp-content-bg"></div>
+            <div class="section-label">Body (px)</div>
+            <div class="setting-item"><label>Padding dọc</label><input type="number" id="inp-body-padding-y" min="0" max="200"></div>
+            <div class="setting-item"><label>Padding ngang</label><input type="number" id="inp-body-padding-x" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dọc</label><input type="number" id="inp-body-margin-y" min="0" max="100"></div>
+            <div class="setting-item"><label>Margin ngang</label><input type="number" id="inp-body-margin-x" min="0" max="100"></div>
+            <div class="section-label">Container (px)</div>
+            <div class="setting-item"><label>Padding trong</label><input type="number" id="inp-container-padding" min="0" max="120"></div>
+            <div class="setting-item"><label>Margin trái/phải</label><input type="number" id="inp-container-margin-lr" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin trên</label><input type="number" id="inp-container-margin-top" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dưới</label><input type="number" id="inp-container-margin-bottom" min="0" max="200"></div>
+        </div>
+    </div>
+    <div class="sp-footer">
+        <button id="mobile-btn">📱 Tối ưu Mobile</button>
+        <button id="reset-btn">↩ Khôi phục mặc định</button>
+    </div>
+</div>
+
+<script>
+let lastTouch=0;
+document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouch<=300)e.preventDefault();lastTouch=n},{passive:false});
+const tooltip=document.createElement('div');tooltip.id='custom-tooltip';document.body.appendChild(tooltip);
+let tipTimer=null;const hideTip=()=>{tooltip.style.display='none';clearTimeout(tipTimer);tipTimer=null};const delayHide=d=>{clearTimeout(tipTimer);tipTimer=setTimeout(hideTip,d)};
+const showTip=el=>{const t=el.dataset.tooltip;if(!t)return;tooltip.textContent=t;tooltip.style.display='block';const r=el.getBoundingClientRect();tooltip.style.left=(r.left+r.width/2+(window.scrollX||pageXOffset))+'px';tooltip.style.top=(r.bottom+(window.scrollY||pageYOffset))+'px'};
+document.querySelectorAll('.phrase').forEach(el=>{const s=()=>showTip(el);el.addEventListener('mouseenter',s);el.addEventListener('mousemove',s);el.addEventListener('mouseleave',hideTip);el.addEventListener('touchstart',()=>{s();delayHide(1800)},{passive:true});el.addEventListener('touchend',()=>delayHide(220),{passive:true});el.addEventListener('touchcancel',hideTip,{passive:true});});
+document.addEventListener('touchstart',e=>{if(!e.target.closest('.phrase'))hideTip()},{passive:true});window.addEventListener('scroll',hideTip,{passive:true});
+const THEMES={light:{'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333'},dark:{'--body-bg':'#1a1a2e','--content-bg':'#16213e','--font-family':'Arial, sans-serif','--text-color':'#e0e0e0','--ipa-color':'#9e9e9e','--tooltip-color':'#ffffff','--tooltip-bg':'#444444'},dracula:{'--body-bg':'#282a36','--content-bg':'#21222c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#6272a4','--tooltip-color':'#f8f8f2','--tooltip-bg':'#44475a'},solarized:{'--body-bg':'#002b36','--content-bg':'#073642','--font-family':'Georgia, serif','--text-color':'#839496','--ipa-color':'#586e75','--tooltip-color':'#fdf6e3','--tooltip-bg':'#073642'},nord:{'--body-bg':'#2e3440','--content-bg':'#3b4252','--font-family':'Arial, sans-serif','--text-color':'#d8dee9','--ipa-color':'#81a1c1','--tooltip-color':'#eceff4','--tooltip-bg':'#4c566a'},monokai:{'--body-bg':'#272822','--content-bg':'#1e1f1c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#75715e','--tooltip-color':'#f8f8f2','--tooltip-bg':'#75715e'},claude:{'--body-bg':'#f5f0eb','--content-bg':'#faf7f4','--font-family':"'Trebuchet MS', sans-serif",'--text-color':'#1a1310','--ipa-color':'#9b7e5e','--tooltip-color':'#faf7f4','--tooltip-bg':'#b5714a'},github:{'--body-bg':'#f6f8fa','--content-bg':'#ffffff','--font-family':"'Gill Sans', Calibri, sans-serif",'--text-color':'#1f2328','--ipa-color':'#57606a','--tooltip-color':'#ffffff','--tooltip-bg':'#24292f'},sepia:{'--body-bg':'#f1e7d5','--content-bg':'#fdf6e6','--font-family':'Georgia, serif','--text-color':'#5c4320','--ipa-color':'#9d7b55','--tooltip-color':'#fdf6e6','--tooltip-bg':'#7a5c35'},gruvbox:{'--body-bg':'#1d2021','--content-bg':'#282828','--font-family':"'Courier New', monospace",'--text-color':'#ebdbb2','--ipa-color':'#a89984','--tooltip-color':'#ebdbb2','--tooltip-bg':'#504945'},catppuccin:{'--body-bg':'#1e1e2e','--content-bg':'#24273a','--font-family':'Optima, Candara, sans-serif','--text-color':'#cad3f5','--ipa-color':'#8087a2','--tooltip-color':'#cad3f5','--tooltip-bg':'#363a4f'},paper:{'--body-bg':'#e8e4de','--content-bg':'#f9f7f4','--font-family':"Palatino, 'Palatino Linotype', serif",'--text-color':'#2e2e2e','--ipa-color':'#777777','--tooltip-color':'#f9f7f4','--tooltip-bg':'#444444'}};
+const DEFAULTS={'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333','--text-size':'24','--ipa-size':'14','--tooltip-size':'16','--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24','--body-padding-y':'40','--body-padding-x':'20','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'40','--container-margin-lr':'20','--container-margin-top':'0','--container-margin-bottom':'0'};
+const MOBILE={'--body-padding-y':'0','--body-padding-x':'0','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'5','--container-margin-lr':'5','--container-margin-top':'0','--container-margin-bottom':'0'};
+const SK='storySettings';const root=document.documentElement;
+const inputMap={'--font-family':document.getElementById('inp-font-family'),'--text-size':document.getElementById('inp-text-size'),'--text-color':document.getElementById('inp-text-color'),'--ipa-size':document.getElementById('inp-ipa-size'),'--ipa-color':document.getElementById('inp-ipa-color'),'--tooltip-size':document.getElementById('inp-tooltip-size'),'--tooltip-color':document.getElementById('inp-tooltip-color'),'--tooltip-bg':document.getElementById('inp-tooltip-bg'),'--h1-size':document.getElementById('inp-h1-size'),'--h2-size':document.getElementById('inp-h2-size'),'--h3-size':document.getElementById('inp-h3-size'),'--p-size':document.getElementById('inp-p-size'),'--body-bg':document.getElementById('inp-body-bg'),'--content-bg':document.getElementById('inp-content-bg'),'--body-padding-y':document.getElementById('inp-body-padding-y'),'--body-padding-x':document.getElementById('inp-body-padding-x'),'--body-margin-y':document.getElementById('inp-body-margin-y'),'--body-margin-x':document.getElementById('inp-body-margin-x'),'--container-padding':document.getElementById('inp-container-padding'),'--container-margin-lr':document.getElementById('inp-container-margin-lr'),'--container-margin-top':document.getElementById('inp-container-margin-top'),'--container-margin-bottom':document.getElementById('inp-container-margin-bottom')};
+const setCSSVar=(n,v)=>root.style.setProperty(n,/size|padding|margin/.test(n)?v+'px':v);const applyMap=obj=>Object.keys(obj).forEach(k=>{if(k[0]==='-'){setCSSVar(k,obj[k]);const e=inputMap[k];if(e)e.value=obj[k];}});const getAll=()=>{const s={};Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(e)s[k]=e.value;});return s;};const save=(extra={})=>localStorage.setItem(SK,JSON.stringify({...getAll(),_ipa:ipaCheckbox.checked,...extra}));const load=()=>{try{return JSON.parse(localStorage.getItem(SK));}catch{return null;}};const markTheme=n=>document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===n));
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');}));
+document.querySelectorAll('.theme-btn').forEach(b=>b.addEventListener('click',()=>{const t=THEMES[b.dataset.theme];if(!t)return;applyMap(t);markTheme(b.dataset.theme);save({_theme:b.dataset.theme});}));
+Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(!e)return;e.addEventListener('input',()=>{setCSSVar(k,e.value);save();});});
+const ipaCheckbox=document.getElementById('inp-ipa-visible');const ipaBtn=document.getElementById('ipa-toggle-btn');const setIPA=v=>{document.body.classList.toggle('ipa-hidden',!v);ipaCheckbox.checked=v;ipaBtn.innerHTML='IPA<br>'+(v?'BẬT':'TẮT');ipaBtn.classList.toggle('ipa-off',!v);};
+ipaCheckbox.addEventListener('change',()=>{setIPA(ipaCheckbox.checked);save();});ipaBtn.addEventListener('click',()=>{setIPA(!ipaCheckbox.checked);save();});
+document.getElementById('mobile-btn').addEventListener('click',()=>{applyMap(MOBILE);save();});document.getElementById('reset-btn').addEventListener('click',()=>{applyMap(DEFAULTS);markTheme('light');setIPA(true);save({_theme:'light',_ipa:true});});
+const panel=document.getElementById('settings-panel');document.getElementById('settings-btn').addEventListener('click',()=>panel.classList.toggle('active'));
+const saved=load();if(saved){applyMap(saved);if(saved._theme)markTheme(saved._theme);setIPA(saved._ipa!==false);}else{applyMap(DEFAULTS);markTheme('light');setIPA(true);}
+</script>
+</body>
+</html>

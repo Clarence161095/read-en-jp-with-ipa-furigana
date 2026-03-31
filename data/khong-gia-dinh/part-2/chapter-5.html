@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPA Reading Practice</title>
+<style>
+:root{--body-bg:#f9f9f9;--content-bg:#ffffff;--body-padding-y:40px;--body-padding-x:20px;--body-margin-y:0px;--body-margin-x:0px;--font-family:Arial,sans-serif;--text-size:24px;--text-color:#000000;--ipa-size:14px;--ipa-color:#555555;--tooltip-size:16px;--tooltip-color:#ffffff;--tooltip-bg:#333333;--h1-size:32px;--h2-size:28px;--h3-size:22px;--p-size:24px;--container-padding:40px;--container-margin-top:0px;--container-margin-bottom:0px;--container-margin-lr:20px}
+body{font-family:var(--font-family);padding:var(--body-padding-y) var(--body-padding-x);margin:var(--body-margin-y) var(--body-margin-x);background:var(--body-bg);transition:background .3s,color .3s;touch-action:manipulation}
+.story-content{font-size:var(--text-size);color:var(--text-color);max-width:800px;margin:var(--container-margin-top) var(--container-margin-lr) var(--container-margin-bottom);line-height:2.5;background:var(--content-bg);padding:var(--container-padding);border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.05);transition:background .3s,color .3s}
+.story-content p{margin-bottom:20px;font-size:var(--p-size)}.story-content h1{font-size:var(--h1-size)}.story-content h2{font-size:var(--h2-size)}.story-content h3{font-size:var(--h3-size)}
+ruby{margin-right:5px}rt{font-size:var(--ipa-size);color:var(--ipa-color);font-weight:normal}
+.phrase{cursor:pointer;border-bottom:2px dashed transparent;transition:border-color .2s;padding-bottom:2px;touch-action:manipulation}.phrase:hover{border-bottom:2px dashed #007bff}
+body.ipa-hidden rt{display:none}
+.ipa-toggle-btn{position:fixed;bottom:30px;left:30px;background:#28a745;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:11px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.3;transition:background .2s;touch-action:manipulation}
+.ipa-toggle-btn:hover{background:#218838}.ipa-toggle-btn.ipa-off{background:#6c757d}.ipa-toggle-btn.ipa-off:hover{background:#5a6268}
+.switch{position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0}.switch input{opacity:0;width:0;height:0}
+.switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.25s}.switch .slider:before{position:absolute;content:'';height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.25s}
+.switch input:checked+.slider{background:#007bff}.switch input:checked+.slider:before{transform:translateX(18px)}
+#custom-tooltip{position:absolute;display:none;background:var(--tooltip-bg);color:var(--tooltip-color);font-size:var(--tooltip-size);padding:8px 12px;border-radius:6px;z-index:9999;pointer-events:none;max-width:320px;word-break:break-word;box-shadow:0 2px 8px rgba(0,0,0,.25);transform:translate(-50%,14px)}
+.settings-btn{position:fixed;bottom:30px;right:30px;background:#007bff;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:28px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;transition:background .2s;touch-action:manipulation}.settings-btn:hover{background:#0056b3}
+.settings-panel{position:fixed;bottom:100px;right:30px;background:#fff;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.18);display:none;flex-direction:column;z-index:999;width:310px;font-family:sans-serif;overflow:hidden;max-height:80vh}.settings-panel.active{display:flex}
+.sp-header{padding:14px 18px 10px;border-bottom:1px solid #eee;flex-shrink:0}.sp-header h3{margin:0 0 10px;font-size:15px}
+.tab-bar{display:flex;gap:6px}.tab-btn{flex:1;padding:6px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:12px;font-weight:bold;transition:all .2s}.tab-btn.active{background:#007bff;color:#fff;border-color:#007bff}
+.sp-body{padding:12px 18px;overflow-y:auto;flex:1}
+.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#999;margin:12px 0 7px;font-weight:bold}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px}
+.theme-btn{padding:7px 4px;border:2px solid #e0e0e0;border-radius:7px;cursor:pointer;font-size:11px;text-align:center;background:#fafafa;transition:all .2s;line-height:1.4}.theme-btn:hover{border-color:#007bff}.theme-btn.active{border-color:#007bff;background:#e8f0ff;font-weight:bold}
+.setting-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:13px;color:#333}
+.setting-item input[type=number]{width:62px;padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:13px}
+.setting-item input[type=color]{border:1px solid #ddd;width:34px;height:28px;cursor:pointer;padding:1px;border-radius:4px}
+.setting-item select{padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:12px;max-width:150px}
+.tab-content{display:none}.tab-content.active{display:block}
+.sp-footer{padding:10px 18px 14px;border-top:1px solid #eee;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.sp-footer button{width:100%;padding:9px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;color:#fff}
+#mobile-btn{background:#17a2b8}#mobile-btn:hover{background:#138496}
+#reset-btn{background:#dc3545}#reset-btn:hover{background:#c82333}
+</style>
+</head>
+<body>
+
+<div class="story-content">
+    <p>
+        <span class="phrase" data-tooltip="Phần II — Chương V"><ruby>PART<rt>pɑrt</rt></ruby> <ruby>II<rt>tu</rt></ruby> — <ruby>CHAPTER<rt>ˈʧæptər</rt></ruby> <ruby>V<rt>faɪv</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Trong Ngách Ngược"><ruby>IN<rt>ɪn</rt></ruby> <ruby>THE<rt>ðə</rt></ruby> <ruby>COUNTER-GALLERY<rt>ˈkaʊntər ˈgæləri</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Im lặng đã trở lại trong mỏ. Không có tiếng động nhỏ nào vang đến chúng tôi."><ruby>Silence<rt>ˈsaɪləns</rt></ruby> <ruby>returned<rt>rɪˈtɜrnd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>mine<rt>maɪn</rt></ruby>. <ruby>Not<rt>nɑt</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>single<rt>ˈsɪŋgəl</rt></ruby> <ruby>sound<rt>saʊnd</rt></ruby> <ruby>reached<rt>riʧt</rt></ruby> <ruby>us<rt>ʌs</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Dưới chân, nước nằm phẳng lặng, không một tí gợn. Chúng tôi bị chôn sống dưới mồ."><ruby>Below<rt>bɪˈloʊ</rt></ruby>, <ruby>the<rt>ðə</rt></ruby> <ruby>water<rt>ˈwɔtər</rt></ruby> <ruby>lay<rt>leɪ</rt></ruby> <ruby>flat<rt>flæt</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>still<rt>stɪl</rt></ruby>. <ruby>We<rt>wi</rt></ruby> <ruby>were<rt>wɜr</rt></ruby> <ruby>buried<rt>ˈbɛrid</rt></ruby> <ruby>alive<rt>əˈlaɪv</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cái im lặng nặng nề ở cõi âm này còn ghê gớm hơn cái náo động khi nước tràn lên."><ruby>This<rt>ðɪs</rt></ruby> <ruby>heavy<rt>ˈhɛvi</rt></ruby> <ruby>silence<rt>ˈsaɪləns</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>worse<rt>wɜrs</rt></ruby> <ruby>than<rt>ðæn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>terrible<rt>ˈtɛrəbəl</rt></ruby> <ruby>noise<rt>nɔɪz</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>flood<rt>flʌd</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Trên tim chúng tôi có ba bốn mươi thước đất đè xuống nặng trĩu."><ruby>Forty<rt>ˈfɔrti</rt></ruby> <ruby>meters<rt>ˈmitərz</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>earth<rt>ɜrθ</rt></ruby> <ruby>pressed<rt>prɛst</rt></ruby> <ruby>down<rt>daʊn</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>our<rt>aʊər</rt></ruby> <ruby>hearts<rt>hɑrts</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cụ giáo lên tiếng: 'Bây giờ chúng ta hãy xem còn bao nhiêu lương thực.'"><ruby>The<rt>ðə</rt></ruby> <ruby>Teacher<rt>ˈtiʧər</rt></ruby> <ruby>spoke<rt>spoʊk</rt></ruby>: "<ruby>Let<rt>lɛt</rt></ruby> <ruby>us<rt>ʌs</rt></ruby> <ruby>see<rt>si</rt></ruby> <ruby>what<rt>wʌt</rt></ruby> <ruby>food<rt>fud</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>have<rt>hæv</rt></ruby>."</span>
+        <span class="phrase" data-tooltip="Tôi còn một mẩu bánh mì trong túi quần nhưng đã thành cháo nhão nhoét vì ngấm nước."><ruby>I<rt>aɪ</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>piece<rt>pis</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>bread<rt>brɛd</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>pocket<rt>ˈpɑkɪt</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby> <ruby>it<rt>ɪt</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>turned<rt>tɜrnd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>mush<rt>mʌʃ</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>water<rt>ˈwɔtər</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Cứ giữ món cháo của cháu lại! Ít nữa rồi cháu thấy ngon cho mà coi,' cụ giáo nói.">  "<ruby>Keep<rt>kip</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>mush<rt>mʌʃ</rt></ruby>! <ruby>Soon<rt>sun</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>will<rt>wɪl</rt></ruby> <ruby>find<rt>faɪnd</rt></ruby> <ruby>it<rt>ɪt</rt></ruby> <ruby>delicious<rt>dɪˈlɪʃəs</rt></ruby>," <ruby>the<rt>ðə</rt></ruby> <ruby>Teacher<rt>ˈtiʧər</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Trong cái mũ của thằng Carrory có một chiếc xúc xích, ba quả hồ đào, một củ hành, và diêm."><ruby>Inside<rt>ɪnˈsaɪd</rt></ruby> <ruby>Carrory's<rt>kæˈrɔriz</rt></ruby> <ruby>hat<rt>hæt</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>sausage<rt>ˈsɔsɪʤ</rt></ruby>, <ruby>three<rt>θri</rt></ruby> <ruby>walnuts<rt>ˈwɔlˌnʌts</rt></ruby>, <ruby>an<rt>ən</rt></ruby> <ruby>onion<rt>ˈʌnjən</rt></ruby>, <ruby>and<rt>ænd</rt></ruby> <ruby>matches<rt>ˈmæʧɪz</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Cụ giáo nói: 'Bánh mì và xúc xích sẽ chia cho Rémi và Carrory tối nay,' vì luật pháp nói người trẻ chịu đựng kém hơn.">  "<ruby>The<rt>ðə</rt></ruby> <ruby>food<rt>fud</rt></ruby> <ruby>goes<rt>goʊz</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>Rémi<rt>ˈrɛmi</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>Carrory<rt>kæˈrɔri</rt></ruby> <ruby>tonight<rt>təˈnaɪt</rt></ruby>," <ruby>the<rt>ðə</rt></ruby> <ruby>Teacher<rt>ˈtiʧər</rt></ruby> <ruby>ruled<rt>ruld</rt></ruby>, "<ruby>the<rt>ðə</rt></ruby> <ruby>youngest<rt>ˈjʌŋgɪst</rt></ruby> <ruby>endure<rt>ɪnˈdʊr</rt></ruby> <ruby>least<rt>list</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Thình lình, trong im lặng, tiếng chú Gaspard cất lên: 'Tôi cho rằng người ta chưa làm gì cả để cứu chúng ta.'"><ruby>Suddenly<rt>ˈsʌdənli</rt></ruby>, <ruby>Gaspard<rt>gæˈspɑrd</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>: "<ruby>I<rt>aɪ</rt></ruby> <ruby>think<rt>θɪŋk</rt></ruby> <ruby>no<rt>noʊ</rt></ruby> <ruby>one<rt>wʌn</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>doing<rt>ˈduɪŋ</rt></ruby> <ruby>anything<rt>ˈɛniˌθɪŋ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>save<rt>seɪv</rt></ruby> <ruby>us<rt>ʌs</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cụ giáo nói: 'Khi xảy ra tai nạn, người thợ mỏ không bỏ nhau bao giờ. Thà hy sinh trăm người chứ không đành bỏ một bạn.'"><ruby>The<rt>ðə</rt></ruby> <ruby>Teacher<rt>ˈtiʧər</rt></ruby> <ruby>replied<rt>rɪˈplaɪd</rt></ruby>: "<ruby>Miners<rt>ˈmaɪnərz</rt></ruby> <ruby>never<rt>ˈnɛvər</rt></ruby> <ruby>abandon<rt>əˈbændən</rt></ruby> <ruby>each<rt>iʧ</rt></ruby> <ruby>other<rt>ˈʌðər</rt></ruby>. <ruby>They<rt>ðeɪ</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>sacrifice<rt>ˈsækrɪˌfaɪs</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>hundred<rt>ˈhʌndrɪd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>save<rt>seɪv</rt></ruby> <ruby>one<rt>wʌn</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Chúng ta hãy đập vào vách hết sức mạnh. Âm vang truyền đi trong đất, nếu nghe thấy họ biết ta còn sống.'">  "<ruby>Let<rt>lɛt</rt></ruby> <ruby>us<rt>ʌs</rt></ruby> <ruby>bang<rt>bæŋ</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>walls<rt>wɔlz</rt></ruby>. <ruby>Sound<rt>saʊnd</rt></ruby> <ruby>travels<rt>ˈtrævəlz</rt></ruby> <ruby>through<rt>θru</rt></ruby> <ruby>earth<rt>ɜrθ</rt></ruby>. <ruby>They<rt>ðeɪ</rt></ruby> <ruby>will<rt>wɪl</rt></ruby> <ruby>know<rt>noʊ</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>live<rt>lɪv</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Carrory nói: 'Nghe kìa! Có tiếng gì trong nước... tiếng này vang từng lúc và cách quãng đều.'"><ruby>Carrory<rt>kæˈrɔri</rt></ruby> <ruby>whispered<rt>ˈwɪspərd</rt></ruby>: "<ruby>Listen<rt>ˈlɪsən</rt></ruby>! <ruby>Something<rt>ˈsʌmθɪŋ</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>water<rt>ˈwɔtər</rt></ruby>... <ruby>regular<rt>ˈrɛgjələr</rt></ruby> <ruby>sounds<rt>saʊndz</rt></ruby>, <ruby>evenly<rt>ˈivənli</rt></ruby> <ruby>spaced<rt>speɪst</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Đó là tiếng của những gàu múc ở giếng! Chúng ta thoát chết rồi, các cậu ạ!'">  "<ruby>That<rt>ðæt</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>pumping<rt>ˈpʌmpɪŋ</rt></ruby> <ruby>buckets<rt>ˈbʌkɪts</rt></ruby>! <ruby>We<rt>wi</rt></ruby> <ruby>are<rt>ɑr</rt></ruby> <ruby>saved<rt>seɪvd</rt></ruby>!" <ruby>we<rt>wi</rt></ruby> <ruby>cried<rt>kraɪd</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Giờ phải kể lại tai nạn đã xảy ra thế nào. Sáng thứ hai, trời đầy mây sẫm. Một cơn dông kèm mưa xối xả như cơn lụt."><ruby>Now<rt>naʊ</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>must<rt>mʌst</rt></ruby> <ruby>tell<rt>tɛl</rt></ruby> <ruby>what<rt>wʌt</rt></ruby> <ruby>happened<rt>ˈhæpənd</rt></ruby> <ruby>above<rt>əˈbʌv</rt></ruby>. <ruby>That<rt>ðæt</rt></ruby> <ruby>Monday<rt>ˈmʌndeɪ</rt></ruby> <ruby>morning<rt>ˈmɔrnɪŋ</rt></ruby>, <ruby>a<rt>ə</rt></ruby> <ruby>violent<rt>ˈvaɪələnt</rt></ruby> <ruby>storm<rt>stɔrm</rt></ruby> <ruby>struck<rt>strʌk</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>rain<rt>reɪn</rt></ruby> <ruby>like<rt>laɪk</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>waterfall<rt>ˈwɔtərˌfɔl</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Nước sông Divonne dâng tràn, xoáy vào một cái vực ngay trên một tầng than cạn, rồi ập vào hầm mỏ."><ruby>The<rt>ðə</rt></ruby> <ruby>Divonne<rt>dɪˈvɔn</rt></ruby> <ruby>River<rt>ˈrɪvər</rt></ruby> <ruby>overflowed<rt>ˌoʊvərˈfloʊd</rt></ruby>, <ruby>water<rt>ˈwɔtər</rt></ruby> <ruby>swirled<rt>swɜrld</rt></ruby> <ruby>into<rt>ˈɪntu</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>pit<rt>pɪt</rt></ruby> <ruby>above<rt>əˈbʌv</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>shallow<rt>ˈʃæloʊ</rt></ruby> <ruby>coal<rt>koʊl</rt></ruby> <ruby>seam<rt>sim</rt></ruby>, <ruby>and<rt>ænd</rt></ruby> <ruby>poured<rt>pɔrd</rt></ruby> <ruby>into<rt>ˈɪntu</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>mine<rt>maɪn</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Viên kỹ sư chạy đến giếng, ra lệnh cho người ta dòng ông xuống. Ông đưa đồng hồ cho một bác thợ: 'Nhờ anh đưa cho con gái tôi'."><ruby>The<rt>ðə</rt></ruby> <ruby>engineer<rt>ˌɛnʤɪˈnɪr</rt></ruby> <ruby>rushed<rt>rʌʃt</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>shaft<rt>ʃæft</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>ordered<rt>ˈɔrdərd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>be<rt>bi</rt></ruby> <ruby>lowered<rt>ˈloʊərd</rt></ruby> <ruby>down<rt>daʊn</rt></ruby>. <ruby>He<rt>hi</rt></ruby> <ruby>gave<rt>geɪv</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>watch<rt>wɑʧ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>worker<rt>ˈwɜrkər</rt></ruby>: "<ruby>Give<rt>gɪv</rt></ruby> <ruby>this<rt>ðɪs</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>daughter<rt>ˈdɔtər</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Ông kỹ sư cứu được tám người rồi bị bế thốc vào thùng kéo lên. 120 người còn mắc nghẽn."><ruby>The<rt>ðə</rt></ruby> <ruby>engineer<rt>ˌɛnʤɪˈnɪr</rt></ruby> <ruby>saved<rt>seɪvd</rt></ruby> <ruby>eight<rt>eɪt</rt></ruby> <ruby>men<rt>mɛn</rt></ruby> <ruby>before<rt>bɪˈfɔr</rt></ruby> <ruby>being<rt>ˈbiɪŋ</rt></ruby> <ruby>forced<rt>fɔrst</rt></ruby> <ruby>into<rt>ˈɪntu</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>bucket<rt>ˈbʌkɪt</rt></ruby>. <ruby>One<rt>wʌn</rt></ruby> <ruby>hundred<rt>ˈhʌndrɪd</rt></ruby> <ruby>twenty<rt>ˈtwɛnti</rt></ruby> <ruby>remained<rt>rɪˈmeɪnd</rt></ruby> <ruby>trapped<rt>træpt</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Người ta tổ chức ai đào khai hầm, múc nước ngày đêm ở cả ba giếng. Phải mất ít nhất tám ngày."><ruby>Rescue<rt>ˈrɛskju</rt></ruby> <ruby>began<rt>bɪˈgæn</rt></ruby>: <ruby>digging<rt>ˈdɪgɪŋ</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>new<rt>nu</rt></ruby> <ruby>shaft<rt>ʃæft</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>pumping<rt>ˈpʌmpɪŋ</rt></ruby> <ruby>water<rt>ˈwɔtər</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>all<rt>ɔl</rt></ruby> <ruby>three<rt>θri</rt></ruby> <ruby>shafts<rt>ʃæfts</rt></ruby> <ruby>day<rt>deɪ</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>night<rt>naɪt</rt></ruby>. <ruby>At<rt>æt</rt></ruby> <ruby>least<rt>list</rt></ruby> <ruby>eight<rt>eɪt</rt></ruby> <ruby>days<rt>deɪz</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cụ giáo trượt ngã lao xuống vực nước đen sì, chiếc đèn cũng rơi theo. Tôi lao xuống nước cứu cụ."><ruby>The<rt>ðə</rt></ruby> <ruby>Teacher<rt>ˈtiʧər</rt></ruby> <ruby>slipped<rt>slɪpt</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>fell<rt>fɛl</rt></ruby> <ruby>into<rt>ˈɪntu</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>black<rt>blæk</rt></ruby> <ruby>water<rt>ˈwɔtər</rt></ruby>, <ruby>his<rt>hɪz</rt></ruby> <ruby>lamp<rt>læmp</rt></ruby> <ruby>sinking<rt>ˈsɪŋkɪŋ</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>dove<rt>doʊv</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>after<rt>ˈæftər</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Nhờ đã học bơi lặn với cụ Vitalis, tôi tìm được cụ giáo trong bóng tối và kéo cụ lên."><ruby>Thanks<rt>θæŋks</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>swimming<rt>ˈswɪmɪŋ</rt></ruby> <ruby>lessons<rt>ˈlɛsənz</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>Vitalis<rt>vɪˈtɑlɪs</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>found<rt>faʊnd</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>dark<rt>dɑrk</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>pulled<rt>pʊld</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>up<rt>ʌp</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Lại đây cháu, để bác hôn cháu mấy cái! Cháu đã cứu mạng bác!' 'Bác đã cứu mạng chúng cháu trước!'">  "<ruby>Come<rt>kʌm</rt></ruby> <ruby>here<rt>hɪr</rt></ruby>, <ruby>let<rt>lɛt</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>kiss<rt>kɪs</rt></ruby> <ruby>you<rt>ju</rt></ruby>! <ruby>You<rt>ju</rt></ruby> <ruby>saved<rt>seɪvd</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>life<rt>laɪf</rt></ruby>!" "<ruby>You<rt>ju</rt></ruby> <ruby>saved<rt>seɪvd</rt></ruby> <ruby>ours<rt>aʊərz</rt></ruby> <ruby>first<rt>fɜrst</rt></ruby>!"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cụ giáo và tôi ướt từ đầu đến chân. Tôi được khoác cái áo khô của Compayrou nhờ rút thăm."><ruby>The<rt>ðə</rt></ruby> <ruby>Teacher<rt>ˈtiʧər</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>were<rt>wɜr</rt></ruby> <ruby>soaked<rt>soʊkt</rt></ruby>. <ruby>By<rt>baɪ</rt></ruby> <ruby>drawing<rt>ˈdrɔɪŋ</rt></ruby> <ruby>lots<rt>lɑts</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>won<rt>wʌn</rt></ruby> <ruby>Compayrou's<rt>kɔmpɛˈruz</rt></ruby> <ruby>dry<rt>draɪ</rt></ruby> <ruby>coat<rt>koʊt</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cụ giáo kẹp đầu tôi vào cánh tay cụ để giữ tôi khỏi rơi xuống nước khi ngủ. 'Ngủ đi cháu! Đã có bác giữ cho.'"><ruby>The<rt>ðə</rt></ruby> <ruby>Teacher<rt>ˈtiʧər</rt></ruby> <ruby>held<rt>hɛld</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>head<rt>hɛd</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>arm<rt>ɑrm</rt></ruby> <ruby>so<rt>soʊ</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>would<rt>wʊd</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>fall<rt>fɔl</rt></ruby> <ruby>while<rt>waɪl</rt></ruby> <ruby>sleeping<rt>ˈslipɪŋ</rt></ruby>. "<ruby>Sleep<rt>slip</rt></ruby>, <ruby>child<rt>ʧaɪld</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>am<rt>æm</rt></ruby> <ruby>holding<rt>ˈhoʊldɪŋ</rt></ruby> <ruby>you<rt>ju</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Thì giờ cứ thế trôi qua, và luôn luôn chúng tôi nghe thấy tiếng gàu đều đều vục xuống nước."><ruby>Time<rt>taɪm</rt></ruby> <ruby>passed<rt>pæst</rt></ruby>. <ruby>The<rt>ðə</rt></ruby> <ruby>steady<rt>ˈstɛdi</rt></ruby> <ruby>sound<rt>saʊnd</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>pumping<rt>ˈpʌmpɪŋ</rt></ruby> <ruby>buckets<rt>ˈbʌkɪts</rt></ruby> <ruby>continued<rt>kənˈtɪnjud</rt></ruby>.</span>
+    </p>
+</div>
+
+<button class="ipa-toggle-btn" id="ipa-toggle-btn">IPA<br>BẬT</button>
+<button class="settings-btn" id="settings-btn">⚙️</button>
+
+<div class="settings-panel" id="settings-panel">
+    <div class="sp-header">
+        <h3>⚙️ Cài Đặt Hiển Thị</h3>
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="basic">Cơ Bản</button>
+            <button class="tab-btn" data-tab="advanced">Nâng Cao</button>
+        </div>
+    </div>
+    <div class="sp-body">
+        <div class="tab-content active" id="tab-basic">
+            <div class="section-label">Chủ đề</div>
+            <div class="theme-grid">
+                <button class="theme-btn" data-theme="light">☀️<br>Light</button>
+                <button class="theme-btn" data-theme="dark">🌙<br>Dark</button>
+                <button class="theme-btn" data-theme="dracula">🧛<br>Dracula</button>
+                <button class="theme-btn" data-theme="solarized">🌅<br>Solarized</button>
+                <button class="theme-btn" data-theme="nord">❄️<br>Nord</button>
+                <button class="theme-btn" data-theme="monokai">🎨<br>Monokai</button>
+                <button class="theme-btn" data-theme="claude">🤖<br>Claude</button>
+                <button class="theme-btn" data-theme="github">🐚<br>GitHub</button>
+                <button class="theme-btn" data-theme="sepia">📜<br>Sepia</button>
+                <button class="theme-btn" data-theme="gruvbox">🍃<br>Gruvbox</button>
+                <button class="theme-btn" data-theme="catppuccin">🌸<br>Catppuccin</button>
+                <button class="theme-btn" data-theme="paper">📰<br>Paper</button>
+            </div>
+            <div class="section-label">IPA</div>
+            <div class="setting-item">
+                <label>Hiện IPA</label>
+                <label class="switch"><input type="checkbox" id="inp-ipa-visible" checked><span class="slider"></span></label>
+            </div>
+            <div class="section-label">Văn bản</div>
+            <div class="setting-item">
+                <label>Font chữ</label>
+                <select id="inp-font-family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    <option value="Palatino, 'Palatino Linotype', serif">Palatino</option>
+                    <option value="Garamond, 'EB Garamond', serif">Garamond</option>
+                    <option value="'Book Antiqua', Palatino, serif">Book Antiqua</option>
+                    <option value="Optima, Candara, sans-serif">Optima</option>
+                    <option value="Futura, 'Century Gothic', sans-serif">Futura</option>
+                    <option value="'Gill Sans', Calibri, sans-serif">Gill Sans</option>
+                    <option value="Cambria, 'Hoefler Text', serif">Cambria</option>
+                    <option value="Constantia, Palatino, serif">Constantia</option>
+                    <option value="Candara, Calibri, sans-serif">Candara</option>
+                    <option value="'Franklin Gothic Medium', Arial, sans-serif">Franklin Gothic</option>
+                </select>
+            </div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-text-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-text-color"></div>
+            <div class="setting-item"><label>Cỡ chữ IPA (px)</label><input type="number" id="inp-ipa-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu IPA</label><input type="color" id="inp-ipa-color"></div>
+            <div class="section-label">Tooltip</div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-tooltip-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-tooltip-color"></div>
+            <div class="setting-item"><label>Màu nền</label><input type="color" id="inp-tooltip-bg"></div>
+        </div>
+        <div class="tab-content" id="tab-advanced">
+            <div class="section-label">Cỡ chữ theo thẻ (px)</div>
+            <div class="setting-item"><label>Thẻ &lt;h1&gt;</label><input type="number" id="inp-h1-size" min="10" max="80"></div>
+            <div class="setting-item"><label>Thẻ &lt;h2&gt;</label><input type="number" id="inp-h2-size" min="10" max="70"></div>
+            <div class="setting-item"><label>Thẻ &lt;h3&gt;</label><input type="number" id="inp-h3-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Thẻ &lt;p&gt;</label><input type="number" id="inp-p-size" min="10" max="60"></div>
+            <div class="section-label">Màu nền</div>
+            <div class="setting-item"><label>Nền trang</label><input type="color" id="inp-body-bg"></div>
+            <div class="setting-item"><label>Nền nội dung</label><input type="color" id="inp-content-bg"></div>
+            <div class="section-label">Body (px)</div>
+            <div class="setting-item"><label>Padding dọc</label><input type="number" id="inp-body-padding-y" min="0" max="200"></div>
+            <div class="setting-item"><label>Padding ngang</label><input type="number" id="inp-body-padding-x" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dọc</label><input type="number" id="inp-body-margin-y" min="0" max="100"></div>
+            <div class="setting-item"><label>Margin ngang</label><input type="number" id="inp-body-margin-x" min="0" max="100"></div>
+            <div class="section-label">Container (px)</div>
+            <div class="setting-item"><label>Padding trong</label><input type="number" id="inp-container-padding" min="0" max="120"></div>
+            <div class="setting-item"><label>Margin trái/phải</label><input type="number" id="inp-container-margin-lr" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin trên</label><input type="number" id="inp-container-margin-top" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dưới</label><input type="number" id="inp-container-margin-bottom" min="0" max="200"></div>
+        </div>
+    </div>
+    <div class="sp-footer">
+        <button id="mobile-btn">📱 Tối ưu Mobile</button>
+        <button id="reset-btn">↩ Khôi phục mặc định</button>
+    </div>
+</div>
+
+<script>
+let lastTouch=0;
+document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouch<=300)e.preventDefault();lastTouch=n},{passive:false});
+const tooltip=document.createElement('div');tooltip.id='custom-tooltip';document.body.appendChild(tooltip);
+let tipTimer=null;const hideTip=()=>{tooltip.style.display='none';clearTimeout(tipTimer);tipTimer=null};const delayHide=d=>{clearTimeout(tipTimer);tipTimer=setTimeout(hideTip,d)};
+const showTip=el=>{const t=el.dataset.tooltip;if(!t)return;tooltip.textContent=t;tooltip.style.display='block';const r=el.getBoundingClientRect();tooltip.style.left=(r.left+r.width/2+(window.scrollX||pageXOffset))+'px';tooltip.style.top=(r.bottom+(window.scrollY||pageYOffset))+'px'};
+document.querySelectorAll('.phrase').forEach(el=>{const s=()=>showTip(el);el.addEventListener('mouseenter',s);el.addEventListener('mousemove',s);el.addEventListener('mouseleave',hideTip);el.addEventListener('touchstart',()=>{s();delayHide(1800)},{passive:true});el.addEventListener('touchend',()=>delayHide(220),{passive:true});el.addEventListener('touchcancel',hideTip,{passive:true});});
+document.addEventListener('touchstart',e=>{if(!e.target.closest('.phrase'))hideTip()},{passive:true});window.addEventListener('scroll',hideTip,{passive:true});
+const THEMES={light:{'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333'},dark:{'--body-bg':'#1a1a2e','--content-bg':'#16213e','--font-family':'Arial, sans-serif','--text-color':'#e0e0e0','--ipa-color':'#9e9e9e','--tooltip-color':'#ffffff','--tooltip-bg':'#444444'},dracula:{'--body-bg':'#282a36','--content-bg':'#21222c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#6272a4','--tooltip-color':'#f8f8f2','--tooltip-bg':'#44475a'},solarized:{'--body-bg':'#002b36','--content-bg':'#073642','--font-family':'Georgia, serif','--text-color':'#839496','--ipa-color':'#586e75','--tooltip-color':'#fdf6e3','--tooltip-bg':'#073642'},nord:{'--body-bg':'#2e3440','--content-bg':'#3b4252','--font-family':'Arial, sans-serif','--text-color':'#d8dee9','--ipa-color':'#81a1c1','--tooltip-color':'#eceff4','--tooltip-bg':'#4c566a'},monokai:{'--body-bg':'#272822','--content-bg':'#1e1f1c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#75715e','--tooltip-color':'#f8f8f2','--tooltip-bg':'#75715e'},claude:{'--body-bg':'#f5f0eb','--content-bg':'#faf7f4','--font-family':"'Trebuchet MS', sans-serif",'--text-color':'#1a1310','--ipa-color':'#9b7e5e','--tooltip-color':'#faf7f4','--tooltip-bg':'#b5714a'},github:{'--body-bg':'#f6f8fa','--content-bg':'#ffffff','--font-family':"'Gill Sans', Calibri, sans-serif",'--text-color':'#1f2328','--ipa-color':'#57606a','--tooltip-color':'#ffffff','--tooltip-bg':'#24292f'},sepia:{'--body-bg':'#f1e7d5','--content-bg':'#fdf6e6','--font-family':'Georgia, serif','--text-color':'#5c4320','--ipa-color':'#9d7b55','--tooltip-color':'#fdf6e6','--tooltip-bg':'#7a5c35'},gruvbox:{'--body-bg':'#1d2021','--content-bg':'#282828','--font-family':"'Courier New', monospace",'--text-color':'#ebdbb2','--ipa-color':'#a89984','--tooltip-color':'#ebdbb2','--tooltip-bg':'#504945'},catppuccin:{'--body-bg':'#1e1e2e','--content-bg':'#24273a','--font-family':'Optima, Candara, sans-serif','--text-color':'#cad3f5','--ipa-color':'#8087a2','--tooltip-color':'#cad3f5','--tooltip-bg':'#363a4f'},paper:{'--body-bg':'#e8e4de','--content-bg':'#f9f7f4','--font-family':"Palatino, 'Palatino Linotype', serif",'--text-color':'#2e2e2e','--ipa-color':'#777777','--tooltip-color':'#f9f7f4','--tooltip-bg':'#444444'}};
+const DEFAULTS={'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333','--text-size':'24','--ipa-size':'14','--tooltip-size':'16','--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24','--body-padding-y':'40','--body-padding-x':'20','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'40','--container-margin-lr':'20','--container-margin-top':'0','--container-margin-bottom':'0'};
+const MOBILE={'--body-padding-y':'0','--body-padding-x':'0','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'5','--container-margin-lr':'5','--container-margin-top':'0','--container-margin-bottom':'0'};
+const SK='storySettings';const root=document.documentElement;
+const inputMap={'--font-family':document.getElementById('inp-font-family'),'--text-size':document.getElementById('inp-text-size'),'--text-color':document.getElementById('inp-text-color'),'--ipa-size':document.getElementById('inp-ipa-size'),'--ipa-color':document.getElementById('inp-ipa-color'),'--tooltip-size':document.getElementById('inp-tooltip-size'),'--tooltip-color':document.getElementById('inp-tooltip-color'),'--tooltip-bg':document.getElementById('inp-tooltip-bg'),'--h1-size':document.getElementById('inp-h1-size'),'--h2-size':document.getElementById('inp-h2-size'),'--h3-size':document.getElementById('inp-h3-size'),'--p-size':document.getElementById('inp-p-size'),'--body-bg':document.getElementById('inp-body-bg'),'--content-bg':document.getElementById('inp-content-bg'),'--body-padding-y':document.getElementById('inp-body-padding-y'),'--body-padding-x':document.getElementById('inp-body-padding-x'),'--body-margin-y':document.getElementById('inp-body-margin-y'),'--body-margin-x':document.getElementById('inp-body-margin-x'),'--container-padding':document.getElementById('inp-container-padding'),'--container-margin-lr':document.getElementById('inp-container-margin-lr'),'--container-margin-top':document.getElementById('inp-container-margin-top'),'--container-margin-bottom':document.getElementById('inp-container-margin-bottom')};
+const setCSSVar=(n,v)=>root.style.setProperty(n,/size|padding|margin/.test(n)?v+'px':v);const applyMap=obj=>Object.keys(obj).forEach(k=>{if(k[0]==='-'){setCSSVar(k,obj[k]);const e=inputMap[k];if(e)e.value=obj[k];}});const getAll=()=>{const s={};Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(e)s[k]=e.value;});return s;};const save=(extra={})=>localStorage.setItem(SK,JSON.stringify({...getAll(),_ipa:ipaCheckbox.checked,...extra}));const load=()=>{try{return JSON.parse(localStorage.getItem(SK));}catch{return null;}};const markTheme=n=>document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===n));
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');}));
+document.querySelectorAll('.theme-btn').forEach(b=>b.addEventListener('click',()=>{const t=THEMES[b.dataset.theme];if(!t)return;applyMap(t);markTheme(b.dataset.theme);save({_theme:b.dataset.theme});}));
+Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(!e)return;e.addEventListener('input',()=>{setCSSVar(k,e.value);save();});});
+const ipaCheckbox=document.getElementById('inp-ipa-visible');const ipaBtn=document.getElementById('ipa-toggle-btn');const setIPA=v=>{document.body.classList.toggle('ipa-hidden',!v);ipaCheckbox.checked=v;ipaBtn.innerHTML='IPA<br>'+(v?'BẬT':'TẮT');ipaBtn.classList.toggle('ipa-off',!v);};
+ipaCheckbox.addEventListener('change',()=>{setIPA(ipaCheckbox.checked);save();});ipaBtn.addEventListener('click',()=>{setIPA(!ipaCheckbox.checked);save();});
+document.getElementById('mobile-btn').addEventListener('click',()=>{applyMap(MOBILE);save();});document.getElementById('reset-btn').addEventListener('click',()=>{applyMap(DEFAULTS);markTheme('light');setIPA(true);save({_theme:'light',_ipa:true});});
+const panel=document.getElementById('settings-panel');document.getElementById('settings-btn').addEventListener('click',()=>panel.classList.toggle('active'));
+const saved=load();if(saved){applyMap(saved);if(saved._theme)markTheme(saved._theme);setIPA(saved._ipa!==false);}else{applyMap(DEFAULTS);markTheme('light');setIPA(true);}
+</script>
+</body>
+</html>

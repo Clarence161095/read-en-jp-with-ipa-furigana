@@ -39,3 +39,7 @@ Hãy tiếp tục tạo nội dung của truyện khong-gia-dinh dựa theo data
 - tạo lại chapter-2.html theo khong-gia-din-scratch.txt cho hay hơn.
 - Và tạo tiếp các chapter tiếp theo.
 - Mỗi step là một chapter có nghĩa là còn 42 chapter là part1 chapter 2 và part1 chapter4->21... và toàn bộ chapter 2. Hãy đưa ra 42 bước trong checklist và thực hiện toàn bộ nó.
+
+--------
+
+Tiếp tục (hãy hoàn thành toàn bộ check list tôi đã yêu cầu. Thanks)
