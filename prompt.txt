@@ -85,3 +85,101 @@ Tiếp tục (hãy hoàn thành toàn bộ check list tôi đã yêu cầu. Than
     - phần quản lý tuyển tập thì cho phép mở theo dạng cây để CRUD các phần, CRUD các chapter, CRUD toàn bộ tuyển tập một cách dễ dàng nhất. Hãy update toàn bộ các tính năng trên sao cho hoạt động perject nhất có thể.
 
 4. Để tối ưu thì khi làm các tác vụ đồng thời thì nếu các tác vụ nào có thể thực hiện đồng thời được thì hãy thực hiện đồng thời để tiết kiệm thời gian, miễn sao hoàn thành tất cả các tác vụ đó một cách nhanh nhất có thể, và hoàn chỉnh nhất có thể, sao cho tối ưu nhất có thể, nhưng vẫn phải ưu tiên độ chính xác và perfect nhất có thể, đừng bỏ qua bất kỳ chi tiết nào cả. Cảm ơn bạn đã giúp tôi hoàn thiện app này.
+
+--------
+
+Thêm tính năng sửa các chương các phần trực tiếp trong trang quản lý tuyển tập để dễ dàng chỉnh sửa nội dung mà không cần phải vào từng file html để chỉnh sửa,.... hiện giờ trong trang quản lý tuyển tập thì chỉ có thể CRUD tuyển tập, còn các Phần thì thưa thể CRUD Phần, Các chương thì chỉ có view thôi ko có nút chỉnh và xoá, hãy thêm vào....
+
+Hãy biến app của tôi trở thành một app hoàn hảo để quản lý và đọc các nội dung dạng HTML. Có nghĩa là một web app để quản lý và đọc các nội dung dạng HTML siêu đỉnh. Bổ sung thêm các tính năg quản lý user, chỉ có admin mới có quyền thêm mới xoá sửa đổi mật khẩu user khác, user thì chỉ có quyền đổi mk của mình thôi,.... Cộng tác viên thì chỉ có quyền edit nội dung bài viết, tuyển tập, chương thôi, không có quyền quản lý user....
+Khi xoá thì ko xoá hẳn mà hãy lưu trong một tính năng là thùng rác trong 30 ngày thì sẽ tự động xoá hẳn, trong 30 ngày đó nếu muốn khôi phục thì có thể vào thùng rác để khôi phục lại, sau 30 ngày mà ko khôi phục thì sẽ tự động xoá hẳn.
+Bổ sung thêm nhiều tính năng hữu ích khác để app trở nên hoàn chỉnh hơn, dễ sử dụng hơn, và trở thành một ứng dụng hoàn hảo để quản lý và đọc các nội dung dạng HTML.
+
+Hỗ trợ one-touch deploy lên AWS EC2, chỉ cần clone repo về trên máy chủ EC2, mở port 5678 trên security group, và chạy script deploy là xong. Cũng có script hỗ trợ update app và migration app để app trở nên dễ dàng bảo trì và nâng cấp sau này (Cái này rất quan trọng nhé.)
+
+Hỗ trợ các mode: Dark mode, Light mode,... như trong template "khong-gia-dinh" cho app của tôi sao cho phù hợp nhất có thể, tất cả setting được lưu trong local storage để khi người dùng vào app thì sẽ tự động load lại setting đã lưu trước đó đây là setting của app chứ ko phải setting của từng file html. Setting mặc định là như hiện tại ko có theme gì cả, còn theme thì chỉ đổi màu sắc, font chữ, background, hỗ trợ đổi size thêm margin, padding,... để người dùng có thể tuỳ chỉnh trải nghiệm đọc của mình một cách tốt nhất có thể. Hãy bổ sung thêm tính năng này vào app của tôi để app trở nên hoàn chỉnh hơn, dễ sử dụng hơn, và trở thành một ứng dụng hoàn hảo để quản lý và đọc các nội dung dạng HTML.
+
+Các chức năng tìm kiếm kiểu Aragon để tìm kiếm các bài viết, tuyển tập, phần, chương,... một cách dễ dàng và nhanh chóng nhất có thể bằng tổ hợp phím tắt Ctrl+K hoặc Cmd+K hoặc ở mobile thì có một nút để mở chức năng tìm kiếm này, khi đó sẽ hiện ra một ô tìm kiếm kiểu master,....
+
+Hãy đưa ra check list ít nhất thêm 30 bước nữa để hoàn thiện app này theo yêu cầu của tôi, và hoàn thiện app của tôi trờ thành app siêu đỉnh nhất. Đưa là checklist 30 bước và thực hiện all các bước nếu các bước ko bị phụ thuộc thì hãy thực hiện song song trên các subagent để tiết kiệm thời gian, miễn sao hoàn thành tất cả các bước đó một cách nhanh nhất có thể, và hoàn chỉnh nhất có thể, sao cho tối ưu nhất có thể, nhưng vẫn phải ưu tiên độ chính xác và perfect nhất có thể, đừng bỏ qua bất kỳ chi tiết nào cả. Cảm ơn bạn đã giúp tôi hoàn thiện app này.
+
+Fix thêm bug này nữa:
+```
+
+
+1/1
+
+Next.js 15.5.14 (outdated)
+Webpack
+Console Error
+
+A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+See more info here: https://nextjs.org/docs/messages/react-hydration-error
+
+
+  ...
+    <HotReload assetPrefix="" globalError={[...]}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <RootLayout>
+                        <html
+                          lang="vi"
+-                         style={{--furigana-plus-ruby-position:"over",--furigana-plus-ruby-align:"center"}}
+                        >
+                          ...
+                            <HomePage params={Promise} searchParams={Promise}>
+                              <div className="min-h-scre...">
+                                <Navbar>
+                                <main className="max-w-6xl ...">
+                                  <h2>
+                                  <form
+                                    onSubmit={function handleSearch}
+                                    className="mb-4"
+-                                   style={{}}
+                                  >
+                                    <div
+                                      className="relative"
+-                                     style={{}}
+                                    >
+                                  ...
+                  ...
+src/app/page.tsx (122:11) @ HomePage
+
+
+  120 |         {/* Search */}
+  121 |         <form onSubmit={handleSearch} className="mb-4">
+> 122 |           <div className="relative">
+      |           ^
+  123 |             <input
+  124 |               type="text"
+  125 |               placeholder="Tìm kiếm bài viết..."
+Call Stack
+19
+
+Show 17 ignore-listed frame(s)
+div
+<anonymous>
+HomePage
+src/app/page.tsx (122:11)
+1
+2
+Was this helpful?
+```

@@ -263,12 +263,16 @@ export default function AdminUsersPage() {
                 <select
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
+                  disabled={editingUser?.id === session?.user?.id}
                   className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 >
                   <option value="user">User</option>
                   <option value="editor">Editor</option>
                   <option value="admin">Admin</option>
                 </select>
+                {editingUser?.id === session?.user?.id && (
+                  <p className="text-xs text-gray-400 mt-1">Không thể đổi role của chính mình.</p>
+                )}
               </div>
 
               <div className="flex gap-2 pt-2">

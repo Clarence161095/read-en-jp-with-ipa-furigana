@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { readFile } from 'fs/promises';
-import path from 'path';
+import { getArticleAbsolutePath } from '@/lib/article-storage';
 
 // Script to inject into HTML for better mobile touch behavior
 const MOBILE_TOUCH_SCRIPT = `
@@ -99,7 +99,7 @@ export async function GET(
   });
 
   try {
-    const filePath = path.join(process.cwd(), article.htmlFilePath);
+    const filePath = getArticleAbsolutePath(article.htmlFilePath);
     let content = await readFile(filePath, 'utf-8');
 
     // Inject mobile touch script before </body>

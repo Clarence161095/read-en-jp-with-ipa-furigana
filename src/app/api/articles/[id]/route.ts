@@ -3,7 +3,8 @@ import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { generateSlug } from '@/lib/utils';
 import { writeFile, unlink } from 'fs/promises';
-import path from 'path';
+import { canManageContent } from '@/lib/permissions';
+import { getArticleAbsolutePath } from '@/lib/article-storage';
 
 // GET /api/articles/[id] - Get article by ID
 export async function GET(
@@ -16,6 +17,14 @@ export async function GET(
     include: {
       category: { select: { id: true, name: true, slug: true } },
       author: { select: { id: true, username: true } },
+      part: {
+        select: {
+          id: true,
+          title: true,
+          order: true,
+          series: { select: { id: true, title: true, slug: true } },
+        },
+      },
     },
   });
 
@@ -34,7 +43,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const session = await auth();
-    if (!session?.user) {
+    if (!session?.user || !canManageContent((session.user as any).role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -51,6 +60,8 @@ export async function PUT(
     const isPublished = formData.get('isPublished');
     const htmlFile = formData.get('htmlFile') as File | null;
     const htmlContent = formData.get('htmlContent') as string | null;
+    const partId = formData.get('partId');
+    const orderInPart = formData.get('orderInPart');
 
     const updateData: any = {};
 
@@ -67,11 +78,15 @@ export async function PUT(
     if (categoryId !== undefined) updateData.categoryId = categoryId || null;
     if (tags !== null) updateData.tags = tags || null;
     if (isPublished !== null) updateData.isPublished = isPublished !== 'false';
+    if (partId !== null) updateData.partId = (partId as string) || null;
+    if (orderInPart !== null) {
+      updateData.orderInPart = parseInt(orderInPart as string, 10) || 0;
+    }
 
     // Update HTML file if provided
     if (htmlFile || htmlContent) {
       const content = htmlFile ? await htmlFile.text() : htmlContent!;
-      const filePath = path.join(process.cwd(), article.htmlFilePath);
+      const filePath = getArticleAbsolutePath(article.htmlFilePath);
       await writeFile(filePath, content, 'utf-8');
     }
 
@@ -95,7 +110,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const session = await auth();
-    if (!session?.user) {
+    if (!session?.user || !canManageContent((session.user as any).role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -106,7 +121,7 @@ export async function DELETE(
 
     // Delete HTML file
     try {
-      const filePath = path.join(process.cwd(), article.htmlFilePath);
+      const filePath = getArticleAbsolutePath(article.htmlFilePath);
       await unlink(filePath);
     } catch {
       // File may not exist, continue

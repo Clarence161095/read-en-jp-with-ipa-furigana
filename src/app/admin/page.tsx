@@ -24,7 +24,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // Fetch articles for stats
-    fetch('/api/articles?limit=5&sort=newest')
+    fetch('/api/articles?limit=5&sort=newest&scope=admin')
       .then((r) => r.json())
       .then((data) => {
         setRecentArticles(data.articles);
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
       });
 
     // Fetch all articles count + views
-    fetch('/api/articles?limit=1000')
+    fetch('/api/articles?limit=1000&scope=admin')
       .then((r) => r.json())
       .then((data) => {
         const totalViews = data.articles.reduce((sum: number, a: any) => sum + a.viewCount, 0);

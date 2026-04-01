@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { hashSync } from 'bcryptjs';
+import { auth } from '@/lib/auth';
+import { canManageUsers } from '@/lib/permissions';
 
 // GET /api/users - List all users
 export async function GET() {
+  const session = await auth();
+  if (!session?.user || !canManageUsers((session.user as any).role)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -22,6 +29,11 @@ export async function GET() {
 // POST /api/users - Create a new user
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session?.user || !canManageUsers((session.user as any).role)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { username, email, password, role } = body;
 

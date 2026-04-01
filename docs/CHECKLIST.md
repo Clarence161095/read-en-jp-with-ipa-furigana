@@ -159,3 +159,48 @@ Phase 1 (Setup) → Phase 2 (DB & Auth) → Phase 3 (APIs)
 ```
 
 Mỗi phase nên hoàn thành và test trước khi chuyển sang phase tiếp theo.
+
+---
+
+## Phase 9: Perfect App Roadmap
+
+- [x] Chuẩn hóa đường dẫn file HTML để mọi bài viết mới và bài imported dùng cùng một quy ước lưu file.
+- [x] Thêm `scope=admin` cho Articles API để trang quản trị nhìn thấy cả draft và chapter trong series.
+- [x] Thêm `scope=admin` cho Series API để cây quản trị không bị lọc mất nội dung chưa publish.
+- [x] Chặn API users bằng session + role thay vì chỉ dựa vào middleware.
+- [x] Tách luồng đổi mật khẩu tự phục vụ cho chính user tại trang `/account`.
+- [x] Thêm route đọc HTML nguồn của chương để sửa trực tiếp mà không tăng viewCount.
+- [x] Bổ sung CRUD Part qua API riêng (`/api/parts`, `/api/parts/[id]`).
+- [x] Bổ sung tạo chương trực tiếp trong cây tuyển tập.
+- [x] Bổ sung sửa metadata và HTML của chương trực tiếp trong cây tuyển tập.
+- [x] Bổ sung xóa chương trực tiếp trong cây tuyển tập.
+- [x] Bổ sung tạo và sửa Part trực tiếp trong cây tuyển tập.
+- [x] Bổ sung command palette tìm kiếm nhanh với `Ctrl+K` / `Cmd+K`.
+- [x] Bổ sung nút mobile để mở command palette nhanh.
+- [x] Bổ sung app settings lưu localStorage cho theme, cỡ chữ app và layout rộng/hẹp.
+- [x] Giảm nhiễu hydration mismatch bằng `suppressHydrationWarning` ở layout và điểm phát sinh chính.
+- [x] Loại bỏ việc tăng view ảo khi admin mở màn hình sửa HTML.
+- [x] Đồng bộ admin dashboard và admin articles để dùng đúng API quản trị.
+- [ ] Thêm soft delete 30 ngày cho Article.
+- [ ] Thêm soft delete 30 ngày cho Series và Part.
+- [ ] Tạo trang Thùng rác để restore hoặc xóa hẳn thủ công.
+- [ ] Viết cleanup job tự động xóa dữ liệu quá 30 ngày.
+- [ ] Gắn audit log cho create/update/delete user, series, part, chapter.
+- [ ] Thêm drag-and-drop reorder cho Part trong series.
+- [ ] Thêm drag-and-drop reorder cho Chapter trong part.
+- [ ] Thêm bulk actions cho chapter: publish, unpublish, move part, delete.
+- [ ] Thêm editor gọn cho Part để chỉnh mô tả hoặc metadata riêng nếu mở rộng schema.
+- [ ] Thêm search endpoint có highlight và ranking tốt hơn cho command palette.
+- [ ] Thêm search tab riêng cho admin để nhảy thẳng tới edit chapter/part/series.
+- [ ] Hoàn thiện theme toàn app bằng token màu thay cho utility cứng ở tất cả page chính.
+- [ ] Bổ sung thêm preset giao diện đọc như dark, sepia, high-contrast, compact.
+- [ ] Thêm toast notifications thống nhất thay cho `alert`/`confirm` rải rác.
+- [ ] Tạo trang cài đặt hệ thống cho admin.
+- [ ] Tạo trang hồ sơ người dùng đầy đủ hơn ngoài đổi mật khẩu.
+- [ ] Tách quyền `editor` và `contributor` rõ hơn ở database + middleware.
+- [ ] Cho phép editor quản lý content nhưng không đụng tới categories nếu cần siết quyền hơn.
+- [ ] Viết migration để chuẩn bị cho trash bin và audit log.
+- [ ] Bổ sung health check và smoke test script cho deploy/update trên EC2.
+- [ ] Tăng độ an toàn script deploy/update với rollback cơ bản khi migrate fail.
+- [ ] Viết tài liệu vận hành EC2 one-touch deploy chi tiết cho Amazon Linux 2023.
+- [ ] Viết test scenario cho mobile reader, admin CRUD, permissions, restore flow.

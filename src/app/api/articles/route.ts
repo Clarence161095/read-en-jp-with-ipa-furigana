@@ -5,10 +5,14 @@ import { generateSlug } from '@/lib/utils';
 import { writeFile, mkdir } from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
+import { canManageContent } from '@/lib/permissions';
+import { ARTICLE_STORAGE_PREFIX } from '@/lib/article-storage';
 
 // GET /api/articles - List articles with pagination, search, filter
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+  const session = await auth();
+  const adminScope = searchParams.get('scope') === 'admin' && canManageContent((session?.user as any)?.role);
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '12');
   const search = searchParams.get('search') || '';
@@ -18,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   const skip = (page - 1) * limit;
 
-  const where: any = { isPublished: true };
+  const where: any = adminScope ? {} : { isPublished: true };
 
   // Optionally exclude articles that belong to a series (standalone only)
   const standalone = searchParams.get('standalone');
@@ -64,6 +68,7 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             title: true,
+            order: true,
             series: { select: { id: true, title: true, slug: true } },
           },
         },
@@ -99,6 +104,8 @@ export async function POST(request: NextRequest) {
     const isPublished = formData.get('isPublished') !== 'false';
     const htmlFile = formData.get('htmlFile') as File | null;
     const htmlContent = formData.get('htmlContent') as string | null;
+    const partId = (formData.get('partId') as string | null) || null;
+    const requestedOrder = formData.get('orderInPart');
 
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
@@ -129,16 +136,32 @@ export async function POST(request: NextRequest) {
 
     await writeFile(path.join(storagePath, fileName), content, 'utf-8');
 
+    let orderInPart = 0;
+    if (partId) {
+      if (requestedOrder !== null && requestedOrder !== '') {
+        orderInPart = parseInt(requestedOrder as string, 10) || 1;
+      } else {
+        const lastArticle = await prisma.article.findFirst({
+          where: { partId },
+          orderBy: { orderInPart: 'desc' },
+          select: { orderInPart: true },
+        });
+        orderInPart = (lastArticle?.orderInPart || 0) + 1;
+      }
+    }
+
     const article = await prisma.article.create({
       data: {
         title,
         slug,
         description: description || null,
-        htmlFilePath: fileName,
+        htmlFilePath: `${ARTICLE_STORAGE_PREFIX}${fileName}`,
         tags: tags || null,
         isPublished,
         categoryId: categoryId || null,
         authorId: session.user.id,
+        partId,
+        orderInPart,
       },
     });
 

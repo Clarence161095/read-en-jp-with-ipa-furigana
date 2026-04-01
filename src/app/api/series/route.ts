@@ -2,14 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { generateSlug } from '@/lib/utils';
+import { canManageContent } from '@/lib/permissions';
 
 // GET /api/series - List all series
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const session = await auth();
   const includeChapters = searchParams.get('includeChapters') === 'true';
+  const adminScope = searchParams.get('scope') === 'admin' && canManageContent((session?.user as any)?.role);
 
   const series = await prisma.series.findMany({
-    where: { isPublished: true },
+    where: adminScope ? {} : { isPublished: true },
     include: {
       author: { select: { id: true, username: true } },
       parts: {
@@ -17,9 +20,17 @@ export async function GET(request: NextRequest) {
         include: includeChapters
           ? {
               articles: {
-                where: { isPublished: true },
+                where: adminScope ? undefined : { isPublished: true },
                 orderBy: { orderInPart: 'asc' },
-                select: { id: true, title: true, slug: true, orderInPart: true, viewCount: true },
+                select: {
+                  id: true,
+                  title: true,
+                  slug: true,
+                  orderInPart: true,
+                  viewCount: true,
+                  description: true,
+                  isPublished: true,
+                },
               },
             }
           : { _count: { select: { articles: true } } },

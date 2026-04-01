@@ -44,7 +44,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     Promise.all([
       fetch('/api/categories').then((r) => r.json()),
       fetch(`/api/articles/${articleId}`).then((r) => r.json()),
-      fetch(`/api/articles/${articleId}/raw`).then((r) => r.text()),
+      fetch(`/api/articles/${articleId}/source`).then((r) => r.json()),
     ]).then(([catData, articleData, rawHtml]) => {
       setCategories(catData.categories);
       setArticle(articleData);
@@ -53,7 +53,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       setCategoryId(articleData.categoryId || '');
       setTags(articleData.tags || '');
       setIsPublished(articleData.isPublished);
-      setHtmlContent(rawHtml);
+      setHtmlContent(rawHtml.content || '');
       setLoading(false);
     });
   }, [articleId]);

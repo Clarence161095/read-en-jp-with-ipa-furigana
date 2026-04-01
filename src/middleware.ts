@@ -20,6 +20,12 @@ export default auth((req) => {
     }
   }
 
+  if (pathname.startsWith('/account')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+  }
+
   // API protection for write operations
   if (pathname.startsWith('/api/articles') && req.method !== 'GET') {
     if (!user || (user.role !== 'admin' && user.role !== 'editor')) {
@@ -45,9 +51,21 @@ export default auth((req) => {
     }
   }
 
+  if (pathname.startsWith('/api/parts')) {
+    if (!user || (user.role !== 'admin' && user.role !== 'editor')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  }
+
+  if (pathname.startsWith('/api/account')) {
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  }
+
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/articles/:path*', '/api/users/:path*', '/api/categories/:path*', '/api/series/:path*'],
+  matcher: ['/admin/:path*', '/account/:path*', '/api/articles/:path*', '/api/users/:path*', '/api/categories/:path*', '/api/series/:path*', '/api/parts/:path*', '/api/account/:path*'],
 };

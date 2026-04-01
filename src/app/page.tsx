@@ -80,7 +80,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" suppressHydrationWarning>
       <Navbar />
 
       <main className="max-w-6xl mx-auto px-4 py-6">
@@ -118,8 +118,8 @@ export default function HomePage() {
         <h2 className="text-lg font-bold text-gray-800 mb-3">📝 Bài viết</h2>
 
         {/* Search */}
-        <form onSubmit={handleSearch} className="mb-4">
-          <div className="relative">
+        <form onSubmit={handleSearch} className="mb-4" suppressHydrationWarning>
+          <div className="relative" suppressHydrationWarning>
             <input
               type="text"
               placeholder="Tìm kiếm bài viết..."

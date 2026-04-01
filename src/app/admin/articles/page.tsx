@@ -36,7 +36,7 @@ export default function AdminArticlesPage() {
 
   const fetchArticles = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams({ page: page.toString(), limit: '20' });
+    const params = new URLSearchParams({ page: page.toString(), limit: '20', scope: 'admin' });
     if (search) params.set('search', search);
     if (seriesFilter) params.set('series', seriesFilter);
     const res = await fetch(`/api/articles?${params}`);
