@@ -1,0 +1,615 @@
+Với input như vậy:
+
+```
+Tôi đang cần đọc mẩu truyện sau mà có hỗ trợ IPA theo giọng anh Mỹ. Giờ hãy giúp tôi tạo một file html có sẵn ipa cho mẩu truyện này nhé. ipa được bỏ trong thẻ ruby để dễ dàng đọc. 
+- Với các cấu (Câu được định nghĩa là cách nhau bởi dấu phẩy chứ ko phải là mỗi đoạn) thì cần thêm thuộc tính title vào và nội dung của thuộc tính tile chính là phần dịch tiếng Việt chuẩn chỉnh của câu đó sao cho chuẩn nhất có thể. Kiểu dạng tooltip khi người đọc hover vào câu đó sẽ hiện ra phần dịch tiếng Việt theo từng câu chứ ko phải theo từng đoạn. Hãy dùng tooltip đơn giản mặc định trong html5 chứ đừng tự custom nó ra nhé, hoặc dùng một thự viện tooltip nào đó bằng cdn là ok.
+- Có nút bong bóng để setting độ lớn nhỏ của ipa của chữ, màu của chữ, cỡ chữ màu chữ tooltip, ... cho trang để tiện đọc hơn (Có sẵn nút reset để đẩy về mặt định setting ban đầu).
+
+Ouput chỉ cần đưa tôi 1 file html được đặt trong 1 block code:
+
+```
+CHAPTER II
+MY FOSTER FATHER
+I walked toward him, wanting to hug him, but he pushed me back with his stick
+"Who is this boy?"
+"That's Remi!"
+"But you told me that…"
+"Well… yes, but… no, because that…"
+"No, no!"
+He raised his stick and walked toward me. I stepped back.
+"What had I done wrong? What was my crime?"
+"Why treat me this way when I tried to hug him?"
+"You are getting ready for Shrove Tuesday, that's good timing because I'm starving. What's for dinner?"
+```
+
+thì output sẽ là một file HTML như sau:
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPA Reading Practice</title>
+<style>
+:root{--body-bg:#f9f9f9;--content-bg:#ffffff;--body-padding-y:40px;--body-padding-x:20px;--body-margin-y:0px;--body-margin-x:0px;--font-family:Arial,sans-serif;--text-size:24px;--text-color:#000000;--ipa-size:14px;--ipa-color:#555555;--tooltip-size:16px;--tooltip-color:#ffffff;--tooltip-bg:#333333;--h1-size:32px;--h2-size:28px;--h3-size:22px;--p-size:24px;--container-padding:40px;--container-margin-top:0px;--container-margin-bottom:0px;--container-margin-lr:20px}
+body{font-family:var(--font-family);padding:var(--body-padding-y) var(--body-padding-x);margin:var(--body-margin-y) var(--body-margin-x);background:var(--body-bg);transition:background .3s,color .3s;touch-action:manipulation}
+.story-content{font-size:var(--text-size);color:var(--text-color);max-width:800px;margin:var(--container-margin-top) var(--container-margin-lr) var(--container-margin-bottom);line-height:2.5;background:var(--content-bg);padding:var(--container-padding);border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.05);transition:background .3s,color .3s}
+.story-content p{margin-bottom:20px;font-size:var(--p-size)}.story-content h1{font-size:var(--h1-size)}.story-content h2{font-size:var(--h2-size)}.story-content h3{font-size:var(--h3-size)}
+ruby{margin-right:5px}rt{font-size:var(--ipa-size);color:var(--ipa-color);font-weight:normal}
+.phrase{cursor:pointer;border-bottom:2px dashed transparent;transition:border-color .2s;padding-bottom:2px;touch-action:manipulation}.phrase:hover{border-bottom:2px dashed #007bff}
+body.ipa-hidden rt{display:none}
+.ipa-toggle-btn{position:fixed;bottom:30px;left:30px;background:#28a745;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:11px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.3;transition:background .2s;touch-action:manipulation}
+.ipa-toggle-btn:hover{background:#218838}.ipa-toggle-btn.ipa-off{background:#6c757d}.ipa-toggle-btn.ipa-off:hover{background:#5a6268}
+.switch{position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0}.switch input{opacity:0;width:0;height:0}
+.switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.25s}.switch .slider:before{position:absolute;content:'';height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.25s}
+.switch input:checked+.slider{background:#007bff}.switch input:checked+.slider:before{transform:translateX(18px)}
+#custom-tooltip{position:absolute;display:none;background:var(--tooltip-bg);color:var(--tooltip-color);font-size:var(--tooltip-size);padding:8px 12px;border-radius:6px;z-index:9999;pointer-events:none;max-width:320px;word-break:break-word;box-shadow:0 2px 8px rgba(0,0,0,.25);transform:translate(-50%,14px)}
+.settings-btn{position:fixed;bottom:30px;right:30px;background:#007bff;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:28px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;transition:background .2s;touch-action:manipulation}.settings-btn:hover{background:#0056b3}
+.settings-panel{position:fixed;bottom:100px;right:30px;background:#fff;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.18);display:none;flex-direction:column;z-index:999;width:310px;font-family:sans-serif;overflow:hidden;max-height:80vh}.settings-panel.active{display:flex}
+.sp-header{padding:14px 18px 10px;border-bottom:1px solid #eee;flex-shrink:0}.sp-header h3{margin:0 0 10px;font-size:15px}
+.tab-bar{display:flex;gap:6px}.tab-btn{flex:1;padding:6px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:12px;font-weight:bold;transition:all .2s}.tab-btn.active{background:#007bff;color:#fff;border-color:#007bff}
+.sp-body{padding:12px 18px;overflow-y:auto;flex:1}
+.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#999;margin:12px 0 7px;font-weight:bold}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px}
+.theme-btn{padding:7px 4px;border:2px solid #e0e0e0;border-radius:7px;cursor:pointer;font-size:11px;text-align:center;background:#fafafa;transition:all .2s;line-height:1.4}.theme-btn:hover{border-color:#007bff}.theme-btn.active{border-color:#007bff;background:#e8f0ff;font-weight:bold}
+.setting-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:13px;color:#333}
+.setting-item input[type=number]{width:62px;padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:13px}
+.setting-item input[type=color]{border:1px solid #ddd;width:34px;height:28px;cursor:pointer;padding:1px;border-radius:4px}
+.setting-item select{padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:12px;max-width:150px}
+.tab-content{display:none}.tab-content.active{display:block}
+.sp-footer{padding:10px 18px 14px;border-top:1px solid #eee;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.sp-footer button{width:100%;padding:9px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;color:#fff}
+#mobile-btn{background:#17a2b8}#mobile-btn:hover{background:#138496}
+#reset-btn{background:#dc3545}#reset-btn:hover{background:#c82333}
+</style>
+</head>
+<body>
+
+<div class="story-content">
+    <p>
+        <span class="phrase" data-tooltip="Chương II"><ruby>CHAPTER<rt>ˈʧæptər</rt></ruby> <ruby>II<rt>tu</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Người Bố Nuôi"><ruby>THE<rt>ðə</rt></ruby> <ruby>FOSTER<rt>ˈfɔstər</rt></ruby> <ruby>FATHER<rt>ˈfɑðər</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi tiến lại gần ông ta, định ôm ông ta, nhưng ông ta lấy đầu gậy cản tôi lại:"><ruby>I<rt>aɪ</rt></ruby> <ruby>walked<rt>wɔkt</rt></ruby> <ruby>toward<rt>tɔrd</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>, <ruby>wanting<rt>ˈwɑntɪŋ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>hug<rt>hʌg</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby> <ruby>he<rt>hi</rt></ruby> <ruby>pushed<rt>pʊʃt</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>back<rt>bæk</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>stick<rt>stɪk</rt></ruby>:</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Cái thằng này là thằng nào?">"<ruby>Who<rt>hu</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>this<rt>ðɪs</rt></ruby> <ruby>boy<rt>bɔɪ</rt></ruby>?"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Thằng Rémi đấy!">"<ruby>That's<rt>ðæts</rt></ruby> <ruby>Remi<rt>ˈrɛmi</rt></ruby>!"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Má nó có nói với tôi là…">"<ruby>But<rt>bʌt</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>told<rt>toʊld</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>that<rt>ðæt</rt></ruby>…"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Ờ… vâng, nhưng mà… không phải, bởi vì rằng…">"<ruby>Well<rt>wɛl</rt></ruby>… <ruby>yes<rt>jɛs</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby>… <ruby>no<rt>noʊ</rt></ruby>, <ruby>because<rt>bɪˈkɔz</rt></ruby>…"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="À, không phải, không phải!…">"<ruby>No<rt>noʊ</rt></ruby>, <ruby>no<rt>noʊ</rt></ruby>!"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Ông ta giơ cao chiếc gậy, đi lại chỗ tôi. Tự nhiên tôi lùi lại."><ruby>He<rt>hi</rt></ruby> <ruby>raised<rt>reɪzd</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>stick<rt>stɪk</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>walked<rt>wɔkt</rt></ruby> <ruby>toward<rt>tɔrd</rt></ruby> <ruby>me<rt>mi</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>stepped<rt>stɛpt</rt></ruby> <ruby>back<rt>bæk</rt></ruby>.</span>
+        <span class="phrase" data-tooltip="Nào tôi đã làm gì sai trái? Tôi có tội tình gì?"><ruby>What<rt>wʌt</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>done<rt>dʌn</rt></ruby> <ruby>wrong<rt>rɔŋ</rt></ruby>? <ruby>What<rt>wʌt</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>crime<rt>kraɪm</rt></ruby>?</span>
+        <span class="phrase" data-tooltip="Tại sao lại đối xử với tôi như thế khi tôi chạy đến định ôm hôn ông?"><ruby>Why<rt>waɪ</rt></ruby> <ruby>treat<rt>trit</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>this<rt>ðɪs</rt></ruby> <ruby>way<rt>weɪ</rt></ruby> <ruby>when<rt>wɛn</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>tried<rt>traɪd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>hug<rt>hʌg</rt></ruby> <ruby>him<rt>hɪm</rt></ruby>?</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Các người đang chuẩn bị ăn mặn ngày thứ ba đây. Thật là đúng lúc vì tớ đang đói ngấu. Ăn tối có gì?">"<ruby>You<rt>ju</rt></ruby> <ruby>are<rt>ɑr</rt></ruby> <ruby>getting<rt>ˈgɛtɪŋ</rt></ruby> <ruby>ready<rt>ˈrɛdi</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>Shrove<rt>ʃroʊv</rt></ruby> <ruby>Tuesday<rt>ˈtuzˌdeɪ</rt></ruby>, <ruby>that's<rt>ðæts</rt></ruby> <ruby>good<rt>gʊd</rt></ruby> <ruby>timing<rt>ˈtaɪmɪŋ</rt></ruby> <ruby>because<rt>bɪˈkɔz</rt></ruby> <ruby>I'm<rt>aɪm</rt></ruby> <ruby>starving<rt>ˈstɑrvɪŋ</rt></ruby>. <ruby>What's<rt>wʌts</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>dinner<rt>ˈdɪnər</rt></ruby>?"</span>
+    </p>
+</div>
+
+<button class="ipa-toggle-btn" id="ipa-toggle-btn">IPA<br>BẬT</button>
+<button class="settings-btn" id="settings-btn">⚙️</button>
+
+<div class="settings-panel" id="settings-panel">
+    <div class="sp-header">
+        <h3>⚙️ Cài Đặt Hiển Thị</h3>
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="basic">Cơ Bản</button>
+            <button class="tab-btn" data-tab="advanced">Nâng Cao</button>
+        </div>
+    </div>
+    <div class="sp-body">
+        <div class="tab-content active" id="tab-basic">
+            <div class="section-label">Chủ đề</div>
+            <div class="theme-grid">
+                <button class="theme-btn" data-theme="light">☀️<br>Light</button>
+                <button class="theme-btn" data-theme="dark">🌙<br>Dark</button>
+                <button class="theme-btn" data-theme="dracula">🧛<br>Dracula</button>
+                <button class="theme-btn" data-theme="solarized">🌅<br>Solarized</button>
+                <button class="theme-btn" data-theme="nord">❄️<br>Nord</button>
+                <button class="theme-btn" data-theme="monokai">🎨<br>Monokai</button>
+                <button class="theme-btn" data-theme="claude">🤖<br>Claude</button>
+                <button class="theme-btn" data-theme="github">🐚<br>GitHub</button>
+                <button class="theme-btn" data-theme="sepia">📜<br>Sepia</button>
+                <button class="theme-btn" data-theme="gruvbox">🍃<br>Gruvbox</button>
+                <button class="theme-btn" data-theme="catppuccin">🌸<br>Catppuccin</button>
+                <button class="theme-btn" data-theme="paper">📰<br>Paper</button>
+            </div>
+            <div class="section-label">IPA</div>
+            <div class="setting-item">
+                <label>Hiện IPA</label>
+                <label class="switch"><input type="checkbox" id="inp-ipa-visible" checked><span class="slider"></span></label>
+            </div>
+            <div class="section-label">Văn bản</div>
+            <div class="setting-item">
+                <label>Font chữ</label>
+                <select id="inp-font-family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    <option value="Palatino, 'Palatino Linotype', serif">Palatino</option>
+                    <option value="Garamond, 'EB Garamond', serif">Garamond</option>
+                    <option value="'Book Antiqua', Palatino, serif">Book Antiqua</option>
+                    <option value="Optima, Candara, sans-serif">Optima</option>
+                    <option value="Futura, 'Century Gothic', sans-serif">Futura</option>
+                    <option value="'Gill Sans', Calibri, sans-serif">Gill Sans</option>
+                    <option value="Cambria, 'Hoefler Text', serif">Cambria</option>
+                    <option value="Constantia, Palatino, serif">Constantia</option>
+                    <option value="Candara, Calibri, sans-serif">Candara</option>
+                    <option value="'Franklin Gothic Medium', Arial, sans-serif">Franklin Gothic</option>
+                </select>
+            </div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-text-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-text-color"></div>
+            <div class="setting-item"><label>Cỡ chữ IPA (px)</label><input type="number" id="inp-ipa-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu IPA</label><input type="color" id="inp-ipa-color"></div>
+            <div class="section-label">Tooltip</div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-tooltip-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-tooltip-color"></div>
+            <div class="setting-item"><label>Màu nền</label><input type="color" id="inp-tooltip-bg"></div>
+        </div>
+        <div class="tab-content" id="tab-advanced">
+            <div class="section-label">Cỡ chữ theo thẻ (px)</div>
+            <div class="setting-item"><label>Thẻ &lt;h1&gt;</label><input type="number" id="inp-h1-size" min="10" max="80"></div>
+            <div class="setting-item"><label>Thẻ &lt;h2&gt;</label><input type="number" id="inp-h2-size" min="10" max="70"></div>
+            <div class="setting-item"><label>Thẻ &lt;h3&gt;</label><input type="number" id="inp-h3-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Thẻ &lt;p&gt;</label><input type="number" id="inp-p-size" min="10" max="60"></div>
+            <div class="section-label">Màu nền</div>
+            <div class="setting-item"><label>Nền trang</label><input type="color" id="inp-body-bg"></div>
+            <div class="setting-item"><label>Nền nội dung</label><input type="color" id="inp-content-bg"></div>
+            <div class="section-label">Body (px)</div>
+            <div class="setting-item"><label>Padding dọc</label><input type="number" id="inp-body-padding-y" min="0" max="200"></div>
+            <div class="setting-item"><label>Padding ngang</label><input type="number" id="inp-body-padding-x" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dọc</label><input type="number" id="inp-body-margin-y" min="0" max="100"></div>
+            <div class="setting-item"><label>Margin ngang</label><input type="number" id="inp-body-margin-x" min="0" max="100"></div>
+            <div class="section-label">Container (px)</div>
+            <div class="setting-item"><label>Padding trong</label><input type="number" id="inp-container-padding" min="0" max="120"></div>
+            <div class="setting-item"><label>Margin trái/phải</label><input type="number" id="inp-container-margin-lr" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin trên</label><input type="number" id="inp-container-margin-top" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dưới</label><input type="number" id="inp-container-margin-bottom" min="0" max="200"></div>
+        </div>
+    </div>
+    <div class="sp-footer">
+        <button id="mobile-btn">📱 Tối ưu Mobile</button>
+        <button id="reset-btn">↩ Khôi phục mặc định</button>
+    </div>
+</div>
+
+<script>
+let lastTouch=0;
+document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouch<=300)e.preventDefault();lastTouch=n},{passive:false});
+const tooltip=document.createElement('div');tooltip.id='custom-tooltip';document.body.appendChild(tooltip);
+let tipTimer=null;const hideTip=()=>{tooltip.style.display='none';clearTimeout(tipTimer);tipTimer=null};const delayHide=d=>{clearTimeout(tipTimer);tipTimer=setTimeout(hideTip,d)};
+const showTip=el=>{const t=el.dataset.tooltip;if(!t)return;tooltip.textContent=t;tooltip.style.display='block';const r=el.getBoundingClientRect();tooltip.style.left=(r.left+r.width/2+(window.scrollX||pageXOffset))+'px';tooltip.style.top=(r.bottom+(window.scrollY||pageYOffset))+'px'};
+document.querySelectorAll('.phrase').forEach(el=>{const s=()=>showTip(el);el.addEventListener('mouseenter',s);el.addEventListener('mousemove',s);el.addEventListener('mouseleave',hideTip);el.addEventListener('touchstart',()=>{s();delayHide(1800)},{passive:true});el.addEventListener('touchend',()=>delayHide(220),{passive:true});el.addEventListener('touchcancel',hideTip,{passive:true});});
+document.addEventListener('touchstart',e=>{if(!e.target.closest('.phrase'))hideTip()},{passive:true});window.addEventListener('scroll',hideTip,{passive:true});
+const THEMES={light:{'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333'},dark:{'--body-bg':'#1a1a2e','--content-bg':'#16213e','--font-family':'Arial, sans-serif','--text-color':'#e0e0e0','--ipa-color':'#9e9e9e','--tooltip-color':'#ffffff','--tooltip-bg':'#444444'},dracula:{'--body-bg':'#282a36','--content-bg':'#21222c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#6272a4','--tooltip-color':'#f8f8f2','--tooltip-bg':'#44475a'},solarized:{'--body-bg':'#002b36','--content-bg':'#073642','--font-family':'Georgia, serif','--text-color':'#839496','--ipa-color':'#586e75','--tooltip-color':'#fdf6e3','--tooltip-bg':'#073642'},nord:{'--body-bg':'#2e3440','--content-bg':'#3b4252','--font-family':'Arial, sans-serif','--text-color':'#d8dee9','--ipa-color':'#81a1c1','--tooltip-color':'#eceff4','--tooltip-bg':'#4c566a'},monokai:{'--body-bg':'#272822','--content-bg':'#1e1f1c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#75715e','--tooltip-color':'#f8f8f2','--tooltip-bg':'#75715e'},claude:{'--body-bg':'#f5f0eb','--content-bg':'#faf7f4','--font-family':"'Trebuchet MS', sans-serif",'--text-color':'#1a1310','--ipa-color':'#9b7e5e','--tooltip-color':'#faf7f4','--tooltip-bg':'#b5714a'},github:{'--body-bg':'#f6f8fa','--content-bg':'#ffffff','--font-family':"'Gill Sans', Calibri, sans-serif",'--text-color':'#1f2328','--ipa-color':'#57606a','--tooltip-color':'#ffffff','--tooltip-bg':'#24292f'},sepia:{'--body-bg':'#f1e7d5','--content-bg':'#fdf6e6','--font-family':'Georgia, serif','--text-color':'#5c4320','--ipa-color':'#9d7b55','--tooltip-color':'#fdf6e6','--tooltip-bg':'#7a5c35'},gruvbox:{'--body-bg':'#1d2021','--content-bg':'#282828','--font-family':"'Courier New', monospace",'--text-color':'#ebdbb2','--ipa-color':'#a89984','--tooltip-color':'#ebdbb2','--tooltip-bg':'#504945'},catppuccin:{'--body-bg':'#1e1e2e','--content-bg':'#24273a','--font-family':'Optima, Candara, sans-serif','--text-color':'#cad3f5','--ipa-color':'#8087a2','--tooltip-color':'#cad3f5','--tooltip-bg':'#363a4f'},paper:{'--body-bg':'#e8e4de','--content-bg':'#f9f7f4','--font-family':"Palatino, 'Palatino Linotype', serif",'--text-color':'#2e2e2e','--ipa-color':'#777777','--tooltip-color':'#f9f7f4','--tooltip-bg':'#444444'}};
+const DEFAULTS={'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333','--text-size':'24','--ipa-size':'14','--tooltip-size':'16','--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24','--body-padding-y':'40','--body-padding-x':'20','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'40','--container-margin-lr':'20','--container-margin-top':'0','--container-margin-bottom':'0'};
+const MOBILE={'--body-padding-y':'0','--body-padding-x':'0','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'5','--container-margin-lr':'5','--container-margin-top':'0','--container-margin-bottom':'0'};
+const SK='storySettings';const root=document.documentElement;
+const inputMap={'--font-family':document.getElementById('inp-font-family'),'--text-size':document.getElementById('inp-text-size'),'--text-color':document.getElementById('inp-text-color'),'--ipa-size':document.getElementById('inp-ipa-size'),'--ipa-color':document.getElementById('inp-ipa-color'),'--tooltip-size':document.getElementById('inp-tooltip-size'),'--tooltip-color':document.getElementById('inp-tooltip-color'),'--tooltip-bg':document.getElementById('inp-tooltip-bg'),'--h1-size':document.getElementById('inp-h1-size'),'--h2-size':document.getElementById('inp-h2-size'),'--h3-size':document.getElementById('inp-h3-size'),'--p-size':document.getElementById('inp-p-size'),'--body-bg':document.getElementById('inp-body-bg'),'--content-bg':document.getElementById('inp-content-bg'),'--body-padding-y':document.getElementById('inp-body-padding-y'),'--body-padding-x':document.getElementById('inp-body-padding-x'),'--body-margin-y':document.getElementById('inp-body-margin-y'),'--body-margin-x':document.getElementById('inp-body-margin-x'),'--container-padding':document.getElementById('inp-container-padding'),'--container-margin-lr':document.getElementById('inp-container-margin-lr'),'--container-margin-top':document.getElementById('inp-container-margin-top'),'--container-margin-bottom':document.getElementById('inp-container-margin-bottom')};
+const setCSSVar=(n,v)=>root.style.setProperty(n,/size|padding|margin/.test(n)?v+'px':v);const applyMap=obj=>Object.keys(obj).forEach(k=>{if(k[0]==='-'){setCSSVar(k,obj[k]);const e=inputMap[k];if(e)e.value=obj[k];}});const getAll=()=>{const s={};Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(e)s[k]=e.value;});return s;};const save=(extra={})=>localStorage.setItem(SK,JSON.stringify({...getAll(),_ipa:ipaCheckbox.checked,...extra}));const load=()=>{try{return JSON.parse(localStorage.getItem(SK));}catch{return null;}};const markTheme=n=>document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===n));
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');}));
+document.querySelectorAll('.theme-btn').forEach(b=>b.addEventListener('click',()=>{const t=THEMES[b.dataset.theme];if(!t)return;applyMap(t);markTheme(b.dataset.theme);save({_theme:b.dataset.theme});}));
+Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(!e)return;e.addEventListener('input',()=>{setCSSVar(k,e.value);save();});});
+const ipaCheckbox=document.getElementById('inp-ipa-visible');const ipaBtn=document.getElementById('ipa-toggle-btn');const setIPA=v=>{document.body.classList.toggle('ipa-hidden',!v);ipaCheckbox.checked=v;ipaBtn.innerHTML='IPA<br>'+(v?'BẬT':'TẮT');ipaBtn.classList.toggle('ipa-off',!v);};
+ipaCheckbox.addEventListener('change',()=>{setIPA(ipaCheckbox.checked);save();});ipaBtn.addEventListener('click',()=>{setIPA(!ipaCheckbox.checked);save();});
+document.getElementById('mobile-btn').addEventListener('click',()=>{applyMap(MOBILE);save();});document.getElementById('reset-btn').addEventListener('click',()=>{applyMap(DEFAULTS);markTheme('light');setIPA(true);save({_theme:'light',_ipa:true});});
+const panel=document.getElementById('settings-panel');document.getElementById('settings-btn').addEventListener('click',()=>panel.classList.toggle('active'));
+const saved=load();if(saved){applyMap(saved);if(saved._theme)markTheme(saved._theme);setIPA(saved._ipa!==false);}else{applyMap(DEFAULTS);markTheme('light');setIPA(true);}
+</script>
+</body>
+</html>
+```
+
+Giờ hãy tạo giúp tôi một file HTML mới với nội dung với phần tiếng Anh bên dưới đảm bảo các yêu cầu sau:
+1. Ouput chỉ là một file HTML hoàn chỉnh được để trong 1 block code và có cấu trúc y hết ở trên chỉ khác phần nội dung trong thẻ `<div class="story-content">...</div>` được thay bằng phần nội dung bên dưới của tôi cung cấp.
+2. Phần IPA phải là chuẩn Anh Mỹ.
+3. Phần dịch tiếng Việt phải hay và chính xác với nội dung tổng thể của toàn bộ đoạn Tiếng Anh mà tôi đưa cho bạn chứ ko dịch cứng nhắc chia rẽ từng câu mà sẽ dịch từng câu mà đọc vào thấy sự mạch lạc. Tuy nhiên phần hiển thị Tooltip phải của câu nào là của câu nấy chứ đừng dịch gộp hãy làm đúng như ví dụ ở trên, tôi chỉ nhắc để bạn dịch sang tiếng Việt hay hơn thôi vì ở trên phần dịch tiếng Việt hơi giở.
+4. Nhớ toàn bộ format và cấu trúc file phải giống 100% ở trên chỉ khác mỗi phần nội dung trong thẻ `<div class="story-content">...</div>` được thay bằng phần nội dung bên dưới của tôi cung cấp.
+
+Ok giờ hãy tạo html cho phần nội dung Tiếng Anh này:
+
+```
+CHAPTER II
+
+MY ADOPTED FATHER
+
+Mother Barberin kissed her husband; I was about to do the same when he put out his stick and stopped me.
+
+
+
+"What's this?... you told me...."
+
+
+
+"Well, yes, but it isn't true ... because...."
+
+
+
+"Ah, it isn't true, eh?"
+
+
+
+He stepped towards me with his stick raised; instinctively I shrunk back. What had I done? Nothing wrong, surely! I was only going to kiss him. I looked at him timidly, but he had turned from me and was speaking to Mother Barberin.
+
+
+
+"So you're keeping Shrove Tuesday," he said. "I'm glad, for I'm famished. What have you got for supper?"
+
+
+
+"I was making some pancakes and apple fritters."
+
+
+
+"So I see, but you're not going to give pancakes to a man who has covered the miles that I have."
+
+
+
+"I haven't anything else. You see we didn't expect you."
+
+
+
+"What? nothing else! Nothing for supper!" He glanced round the kitchen.
+
+
+
+"There's some butter."
+
+
+
+He looked up at the ceiling, at the spot where[Pg 11] the bacon used to hang, but for a long time there had been nothing on the hook; only a few ropes of onions and garlic hung from the beam now.
+
+
+
+"Here's some onions," he said, knocking a rope down with his big stick; "with four or five onions and a piece of butter we'll have a good soup. Take out the pancakes and fry the onions in the pan!"
+
+
+
+"Take the pancakes out of the frying pan!"
+
+
+
+Without a word, Mother Barberin hurried to do what her husband asked. He sat down on a chair by the corner of the fireplace. I had not dared to leave the place where his stick had sent me. Leaning against the table, I looked at him.
+
+
+
+He was a man about fifty with a hard face and rough ways. His head leaned a little bit towards his right shoulder, on account of the wound he had received, and this deformity gave him a still more forbidding aspect.
+
+
+
+Mother Barberin had put the frying pan again on the fire.
+
+
+
+"Is it with a little bit of butter like that you're going to try and make a soup?" he asked. Thereupon he seized the plate with the butter and threw it all into the pan. No more butter ... then ... no more pancakes.
+
+
+
+At any other moment I should have been greatly upset at this catastrophe, but I was not thinking of the pancakes and fritters now. The thought that was uppermost in my mind was, that this man who seemed so cruel was my father! My father! Absently I said the word over and over again to[Pg 12] myself. I had never thought much what a father would be. Vaguely, I had imagined him to be a sort of mother with a big voice, but in looking at this one who had fallen from heaven, I felt greatly worried and frightened. I had wanted to kiss him and he had pushed me away with his stick. Why? My mother had never pushed me away when I went to kiss her; on the contrary, she always took me in her arms and held me tight.
+
+
+
+"Instead of standing there as though you're made of wood," he said, "put the plates on the table."
+
+
+
+I nearly fell down in my haste to obey. The soup was made. Mother Barberin served it on the plates. Then, leaving the big chimney corner, he came and sat down and commenced to eat, stopping only from time to time to glance at me. I felt so uncomfortable that I could not eat. I looked at him also, but out of the corner of my eye, then I turned my head quickly when I caught his eye.
+
+
+
+"Doesn't he eat more than that usually?" he asked suddenly.
+
+
+
+"Oh, yes, he's got a good appetite."
+
+
+
+"That's a pity. He doesn't seem to want his supper now, though."
+
+
+
+Mother Barberin did not seem to want to talk. She went to and fro, waiting on her husband.
+
+
+
+"Ain't you hungry?"
+
+
+
+"No."
+
+
+
+"Well then, go to bed and go to sleep at once. If you don't I'll be angry."
+
+
+
+[Pg 13]
+
+
+
+My mother gave me a look which told me to obey without answering. But there was no occasion for this warning. I had not thought of saying a word.
+
+
+
+As in a great many poor homes, our kitchen was also the bedroom. Near the fireplace were all the things for the meals—the table, the pots and pans, and the sideboard; at the other end was the bedroom. In a corner stood Mother Barberin's big bed, in the opposite corner, in a little alcove, was my bed under a red figured curtain.
+
+
+
+I hurriedly undressed and got into bed. But to go to sleep was another thing. I was terribly worried and very unhappy. How could this man be my father? And if he was, why did he treat me so badly?
+
+
+
+With my nose flattened against the wall I tried to drive these thoughts away and go to sleep as he had ordered me, but it was impossible. Sleep would not come. I had never felt so wide awake.
+
+
+
+After a time, I could not say how long, I heard some one coming over to my bed. The slow step was heavy and dragged, so I knew at once that it was not Mother Barberin. I felt a warm breath on my cheek.
+
+
+
+"Are you asleep?" This was said in a harsh whisper.
+
+
+
+I took care not to answer, for the terrible words, "I'll be angry" still rang in my ears.
+
+
+
+"He's asleep," said Mother Barberin; "the moment he gets into bed he drops off. You can talk without being afraid that he'll hear."
+
+
+
+[Pg 14]
+
+
+
+I ought, of course, to have told him that I was not asleep, but I did not dare. I had been ordered to go to sleep, I was not yet asleep, so I was in the wrong.
+
+
+
+"Well, what about your lawsuit?" asked Mother Barberin.
+
+
+
+"Lost it. The judge said that I was to blame for being under the scaffold." Thereupon he banged his fist on the table and began to swear, without saying anything that meant anything.
+
+
+
+"Case lost," he went on after a moment; "money lost, all gone, poverty staring us in the face. And as though that isn't enough, when I get back here, I find a child. Why didn't you do what I told you to do?"
+
+
+
+"Because I couldn't."
+
+
+
+"You could not take him to a Foundlings' Home?"
+
+
+
+"A woman can't give up a little mite like that if she's fed it with her own milk and grown to love it."
+
+
+
+"It's not your child."
+
+
+
+"Well, I wanted to do what you told me, but just at that very moment he fell ill."
+
+
+
+"Ill?"
+
+
+
+"Yes. Then I couldn't take him to that place. He might have died."
+
+
+
+"But when he got better?"
+
+
+
+"Well, he didn't get better all at once. After that sickness another came. He coughed so it would have made your heart bleed to hear him,[Pg 15] poor little mite. Our little Nicolas died like that. It seemed to me that if I sent him to the Foundlings' Home he'd died also."
+
+
+
+"But after?... after?"
+
+
+
+"Well, time went on and I thought that as I'd put off going I'd put it off a bit longer."
+
+
+
+"How old is he now?"
+
+
+
+"Eight."
+
+
+
+"Well then, he'll go now to the place where he should have gone sooner, and he won't like it so well now."
+
+
+
+"Oh, Jerome, you can't ... you won't do that!"
+
+
+
+"Won't I? and who's going to stop me? Do you think we can keep him always?"
+
+
+
+There was a moment's silence. I was hardly able to breathe. The lump in my throat nearly choked me. After a time Mother Barberin went on:
+
+
+
+"How Paris has changed you! You wouldn't have spoken like that to me before you went away."
+
+
+
+"Perhaps not. But if Paris has changed me, it's also pretty near killed me. I can't work now. We've got no money. The cow's sold. When we haven't enough to feed ourselves, have we got to feed a child that don't belong to us?"
+
+
+
+"He's mine."
+
+
+
+"He's no more yours than mine. Besides, he ain't a country boy. He's no poor man's child. He's a delicate morsel, no arms, no legs."
+
+
+
+"He's the prettiest boy in the village!"
+
+
+
+[Pg 16]
+
+
+
+"I don't say he ain't pretty. But sturdy, no! Do you think you can make a working man out of a chit with shoulders like his? He's a city child and there's no place for city children here."
+
+
+
+"I tell you he's a fine boy and as intelligent and cute as a little cat, and he's got a good heart, and he'll work for us...."
+
+
+
+"In the meantime we've got to work for him, and I'm no good for much now."
+
+
+
+"If his parents claim him, what will you say?"
+
+
+
+"His parents! Has he got any parents? They would have found him by now if he had. It was a crazy thing for me to think that his parents would come and claim him some day and pay us for his keep. I was a fool. 'Cause he was wrapped up in fine clothes trimmed with lace, that wasn't to say that his parents were going to hunt for him. Besides, they're dead."
+
+
+
+"Perhaps they're not. And one day they may come...."
+
+
+
+"If you women ain't obstinate!"
+
+
+
+"But if they do come?"
+
+
+
+"Well, we've sent him to the Home. But we've said enough. I'll take him to-morrow. I'm going 'round to see François now. I'll be back in an hour."
+
+
+
+The door was opened and closed again. He had gone. Then I quickly sat up in bed and began to call to Mother Barberin.
+
+
+
+"Say! Mamma!"
+
+
+
+She ran over to my bed.
+
+
+
+[Pg 17]
+
+
+
+"Are you going to let me go to the Foundlings' Home?"
+
+
+
+"No, my little Remi, no."
+
+
+
+She kissed me and held me tight in her arms. I felt better after that and my tears dried on my cheeks.
+
+
+
+"You didn't go to sleep, then?" she asked softly.
+
+
+
+"It wasn't my fault."
+
+
+
+"I'm not scolding you. You heard what he said, then?"
+
+
+
+"Yes, you're not my mamma, but ... he isn't my father."
+
+
+
+The last words I had said in a different tone because, although I was unhappy at learning that she was not my mother, I was glad, I was almost proud, to know that he was not my father. This contradiction of my feelings betrayed itself in my voice. Mother Barberin did not appear to notice.
+
+
+
+"Perhaps I ought to have told you the truth, but you seemed so much my own boy that I couldn't tell you I was not your real mother. You heard what Jerome said, my boy. He found you one day in a street in Paris, the Avenue de Breuteuil. It was in February, early in the morning, he was going to work when he heard a baby cry, and he found you on a step. He looked about to call some one, and as he did so a man came out from behind a tree and ran away. You cried so loud that Jerome didn't like to put you back on the step again. While he was wondering what to do, some more men came along, and they all decided that they'd[Pg 18] take you to the police station. You wouldn't stop crying. Poor mite, you must have been cold. But then, when they got you warm at the station house, you still cried, so they thought you were hungry, and they got you some milk. My! you were hungry! When you'd had enough they undressed you and held you before the fire. You were a beautiful pink boy, and all dressed in lovely clothes. The lieutenant wrote down a description of the clothes and where you were found, and said that he should have to send you to the Home unless one of the men liked to take charge of you. Such a beautiful, fine child it wouldn't be difficult to bring up, he said, and the parents would surely make a search for it and pay any one well for looking after it, so Jerome said he'd take it. Just at that time I had a baby the same age. So I was well able to feed both you two mites. There, dearie, that was how I came to be your mother."
+
+
+
+"Oh, Mamma, Mamma!"
+
+
+
+"Yes, dearie, there! and at the end of three months I lost my own little baby and then I got even more fond of you. It was such a pity Jerome couldn't forget, and seeing at the end of three years that your parents hadn't come after you, he tried to make me send you to the Home. You heard why I didn't do as he told me?"
+
+
+
+"Oh, don't send me to the Home," I cried, clinging to her, "Mother Barberin, please, please, don't send me to the Home."
+
+
+
+"No, dearie, no, you shan't go. I'll settle it.[Pg 19] Jerome is not really unkind, you'll see. He's had a lot of trouble and he is kind of worried about the future. We'll all work, you shall work, too."
+
+
+
+"Yes, yes, I'll do anything you want me to do, but don't send me to the Home."
+
+
+
+"You shan't go, that is if you promise to go to sleep at once. When he returns he mustn't find you awake."
+
+
+
+She kissed me and turned me over with my face to the wall. I wanted to go to sleep, but I had received too hard a blow to slip off quietly into slumberland. Dear good Mother Barberin was not my own mother! Then what was a real mother? Something better, something sweeter still? It wasn't possible! Then I thought that a real father might not have held up his stick to me.... He wanted to send me to the Home, would mother be able to prevent him?
+
+
+
+In the village there were two children from the Home. They were called "workhouse children." They had a metal plaque hung round their necks with a number on it. They were badly dressed, and so dirty! All the other children made fun of them and threw stones at them. They chased them like boys chase a lost dog, for fun, and because a stray dog has no one to protect it. Oh, I did not want to be like those children. I did not want to have a number hung round my neck. I did not want them to call after me, "Hi, Workhouse Kid; Hi Foundling!" The very thought of it made me[Pg 20] feel cold and my teeth chatter. I could not go to sleep. And Barberin was coming back soon!
+
+
+
+But fortunately he did not return until very late, and sleep came before he arrived.
+```

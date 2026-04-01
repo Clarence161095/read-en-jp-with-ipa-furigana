@@ -42,4 +42,46 @@ Hãy tiếp tục tạo nội dung của truyện khong-gia-dinh dựa theo data
 
 --------
 
+Hãy tiếp tục tạo nội dung của truyện khong-gia-dinh dựa theo data/khong-gia-dinh/khong-gia-din-scratch.txt:
+- data/khong-gia-dinh/part-1 tới data/khong-gia-dinh/part-2/chapter-3.html của bạn tạo quá tuyệt với rồi giờ hãy tạo toàn bộ chapter còn lại theo cách mà bạn đã tạo 2 chapter này. Ko cần suy nghĩ nhiều chỉ cần tạo mà thôi, chuẩn chỉnh đúng và hay như 2 chapter này là quá tuyệt với.
+- Và tạo tiếp các chapter tiếp theo. Tức là tạo từ data/khong-gia-dinh/part-2/chapter-6.html tới data/khong-gia-dinh/part-2/chapter-21.html.
+- Mỗi step là một chapter có nghĩa là còn 15 chapter là part2 chapter 6 tới part2 chapter 21. Hãy đưa ra 15 bước trong checklist và thực hiện toàn bộ nó.
+
+--------
+
+Hãy fix các lỗi hiện tại của app để app run được cái đã, và user không phải là admin cũng có thể vào đọc được các bài viết đã lưu trong app, và có thể xem nội dung theo các folder nhiều cấp độ để dễ dàng xem, fix lại tất cả những yêu cầu cho tới bây giờ của tôi để app trở nên hoàn thiện hơn. Import bộ truyện "Không gia đình" vào app để làm một câu chuyện demo cho app cho tới phần hiên tại đã có còn các chapter còn thiếu tôi sẽ tiếp tục tạo sau. Hãy fix lại app để có thể đọc được bộ truyện này một cách hoàn chỉnh nhất có thể, và có thể quản lý nó một cách dễ dàng nhất có thể. Cảm ơn bạn đã giúp tôi hoàn thiện app này. Cập nhật để sao app thân thiện với người đọc và có thể dễ dàng đọc các bài viết, các câu chuyện....
+
+Fix thêm cái nữa là trên chế độ mobile thay vì hover và thì hiện nội dung tiếng việt thì hãy để khi click vào phần nội dung tiếng anh thì sẽ hiện phần nội dung tiếng việt lên, khi click sang chỗ khác hoặc click vào phần tiếng anh đó lần nữa thì sẽ ẩn phần tiếng việt đi. Còn ở chế độ desktop thì vẫn giữ nguyên là hover để hiện phần tiếng việt. Hãy fix lại app để có thể đáp ứng được yêu cầu này, và sao cho trải nghiệm người dùng là ok nhất. Và ở Desktop hay mobile gì thì size cũng là full màn hình chứ hiện tại ở desktop thì hiện chưa full được.... hãy fix lại sao cho mọi thứ nhìn ok nhất có thể... Hãy biến đây trở thành một app perfect về việc trải nghiệm đọc các file HTML đã được lưu trữ trong app của tôi, và có thể quản lý chúng một cách dễ dàng nhất có thể. Cảm ơn bạn đã giúp tôi hoàn thiện app này.
+
+--------
+
+Hãy tiếp tục tạo nội dung của truyện khong-gia-dinh dựa theo data/khong-gia-dinh/khong-gia-din-scratch.txt:
+- data/khong-gia-dinh/part-1 tới data/khong-gia-dinh/part-2/chapter-8.html của bạn tạo quá tuyệt với rồi giờ hãy tạo toàn bộ chapter còn lại theo cách mà bạn đã tạo 2 chapter này. Ko cần suy nghĩ nhiều chỉ cần tạo mà thôi, chuẩn chỉnh đúng và hay như 2 chapter này là quá tuyệt với.
+- Và tạo tiếp các chapter tiếp theo. Tức là tạo từ data/khong-gia-dinh/part-2/chapter-14.html tới data/khong-gia-dinh/part-2/chapter-21.html.
+- Mỗi step là một chapter có nghĩa là còn 8 chapter là part2 chapter 14 tới part2 chapter 21. Hãy đưa ra 8 bước trong checklist và thực hiện toàn bộ nó.
+- Tức là thực hiện tiếp nhưng chapter còn thiếu của bộ truyện "Không gia đình" này để hoàn thiện bộ truyện này trên app của tôi.
+- Để cho nhanh hãy thực hiện tạo song song toàn bộ các chapter còn lại một lúc luôn, ko sợ tốn token hãy dùng thoải mái miễn sao hoàn thành bộ truyện này một cách nhanh nhất có thể, chuẩn chỉnh nhất có thể, và hay nhất có thể chạy song song toàn bộ.
+
+--------
+
 Tiếp tục (hãy hoàn thành toàn bộ check list tôi đã yêu cầu. Thanks)
+
+--------
+
+1. Hãy hoàn thành part 2 - chapter 21 cuối cùng của bộ truyện "Không gia đình" này để hoàn thiện bộ truyện này trên app của tôi.
+
+2. Sau đó thực hiện các việc sau:
+- import toàn bộ bộ truyện "Không gia đình" này vào app của tôi để làm một câu chuyện demo cho app.
+- fix lại app để có thể đọc được bộ truyện này một cách hoàn chỉnh nhất có thể, và có thể quản lý nó một cách dễ dàng nhất có thể.
+- Bổ sung tính tăng tìm kiếm theo tuyển tập.... nói chung là bổ sung các tính năng hữu ích để app trở nên hoàn chỉnh hơn, dễ sử dụng hơn, và có thể quản lý các bài viết một cách dễ dàng hơn.
+- Bổ sung thêm tính năng tạo prompt để sử dụng prompt đó tạo html một cách tự động bằng chatbox gemini:
+- Nói thì thấy phức tạp vậy chứ nó rất dơn giản nó chỉ đơn giản là một phần mềm cho phép lưu các template prompt, sau đó cho phép người dùng nhập vào một một nội dung để thay thế vào vị trí XXXXXX được đánh dấu tron prompt đã lưu trước đó, và copy nó vào clipboard để người dùng có thể paste vào chatbox gemini để tạo ra một file html một cách tự động dựa trên template prompt đó. Ví dụ như tôi có một template prompt là "Hãy tạo cho tôi một bài viết về chủ đề YYYYYY với nội dung ZZZZZZ" trong đó YYYYYY và ZZZZZZ là 2 phần mà tôi sẽ nhập vào sau đó khi tôi nhập vào nội dung cho 2 phần đó thì nó sẽ tự động thay thế vào vị trí XXXXXX trong prompt đã lưu trước đó và copy toàn bộ nội dung đã được thay thế đó vào clipboard để tôi có thể paste vào chatbox gemini để tạo ra một file html một cách tự động dựa trên template prompt đó. Sẽ không biết có bao nhiêu cái XXXXX trong prompt đó nhưng mặc định là sẽ có 2 cái XXXXX và hoàn toàn có thể add thêm nhiều cái XXXXX nếu người dùng muốn, tất nhiên XXXXXX là chuỗi mặc định thôi tôi có thể thay chuôi xày bằng bất kỳ chuỗi nào khác mà tôi muốn để làm dấu hiệu cho việc thay thế nội dung sau này (ví dụ: NOI_DUNG_THAY_DOI_1, NOI_DUNG_THAY_DOI_2,...), và khi người dùng nhập vào nội dung để thay thế vào vị trí XXXXX đó thì sẽ có một nút copy để copy toàn bộ nội dung đã được thay thế đó vào clipboard để người dùng có thể paste vào chatbox gemini để tạo ra một file html một cách tự động dựa trên template prompt đó. Nói chung là cho phép tôi CRUD các template prompt, và khi sử dụng template prompt đó thì cho phép tôi nhập vào nội dung để thay thế vào vị trí XXXXX đó và copy toàn bộ nội dung đã được thay thế đó vào clipboard để tôi có thể paste vào chatbox gemini. Hãy làm sao cho tôi dễ sử dụng nó nhất là ok.
+
+
+3. Một số bug cần bạn fix:
+    - App run đang gặp lỗi khi vào đọc một bài đọc, xuất hiện lỗi có icon Next ở góc dưới hãy fix để hết tất cả các lỗi có thể có.
+    - Ở hãy bổ sung thêm 5 thẻ </br> như tôi đã thêm vào cuối phần nội dung của chapter-1.html để tạo khoảng cách giữa phần nội dung cuối cùng để có thể dễ dàng thấy trược phần title tiếng việt khi hover vào vì câu cuối cùng của các chapter đều rất khó đọc. Hãy thêm như tôi thêm trong chapter-1.html là được triển khai cho toàn bộ các chapter còn lại của bộ truyện "Không gia đình" này.
+    - trang quản lý bài viết thực hiện CRUD bài viết đang khó khăn khi các bài viết cùng tên, hãy có thêm các cột cụ thể như tên, tên tuyển tập thuộc về, tên phần thuộc về....
+    - phần quản lý tuyển tập thì cho phép mở theo dạng cây để CRUD các phần, CRUD các chapter, CRUD toàn bộ tuyển tập một cách dễ dàng nhất. Hãy update toàn bộ các tính năng trên sao cho hoạt động perject nhất có thể.
+
+4. Để tối ưu thì khi làm các tác vụ đồng thời thì nếu các tác vụ nào có thể thực hiện đồng thời được thì hãy thực hiện đồng thời để tiết kiệm thời gian, miễn sao hoàn thành tất cả các tác vụ đó một cách nhanh nhất có thể, và hoàn chỉnh nhất có thể, sao cho tối ưu nhất có thể, nhưng vẫn phải ưu tiên độ chính xác và perfect nhất có thể, đừng bỏ qua bất kỳ chi tiết nào cả. Cảm ơn bạn đã giúp tôi hoàn thiện app này.

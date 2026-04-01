@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPA Reading Practice</title>
+<style>
+:root{--body-bg:#f9f9f9;--content-bg:#ffffff;--body-padding-y:40px;--body-padding-x:20px;--body-margin-y:0px;--body-margin-x:0px;--font-family:Arial,sans-serif;--text-size:24px;--text-color:#000000;--ipa-size:14px;--ipa-color:#555555;--tooltip-size:16px;--tooltip-color:#ffffff;--tooltip-bg:#333333;--h1-size:32px;--h2-size:28px;--h3-size:22px;--p-size:24px;--container-padding:40px;--container-margin-top:0px;--container-margin-bottom:0px;--container-margin-lr:20px}
+body{font-family:var(--font-family);padding:var(--body-padding-y) var(--body-padding-x);margin:var(--body-margin-y) var(--body-margin-x);background:var(--body-bg);transition:background .3s,color .3s;touch-action:manipulation}
+.story-content{font-size:var(--text-size);color:var(--text-color);max-width:800px;margin:var(--container-margin-top) var(--container-margin-lr) var(--container-margin-bottom);line-height:2.5;background:var(--content-bg);padding:var(--container-padding);border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.05);transition:background .3s,color .3s}
+.story-content p{margin-bottom:20px;font-size:var(--p-size)}.story-content h1{font-size:var(--h1-size)}.story-content h2{font-size:var(--h2-size)}.story-content h3{font-size:var(--h3-size)}
+ruby{margin-right:5px}rt{font-size:var(--ipa-size);color:var(--ipa-color);font-weight:normal}
+.phrase{cursor:pointer;border-bottom:2px dashed transparent;transition:border-color .2s;padding-bottom:2px;touch-action:manipulation}.phrase:hover{border-bottom:2px dashed #007bff}
+body.ipa-hidden rt{display:none}
+.ipa-toggle-btn{position:fixed;bottom:30px;left:30px;background:#28a745;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:11px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.3;transition:background .2s;touch-action:manipulation}
+.ipa-toggle-btn:hover{background:#218838}.ipa-toggle-btn.ipa-off{background:#6c757d}.ipa-toggle-btn.ipa-off:hover{background:#5a6268}
+.switch{position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0}.switch input{opacity:0;width:0;height:0}
+.switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;transition:.25s}.switch .slider:before{position:absolute;content:'';height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.25s}
+.switch input:checked+.slider{background:#007bff}.switch input:checked+.slider:before{transform:translateX(18px)}
+#custom-tooltip{position:absolute;display:none;background:var(--tooltip-bg);color:var(--tooltip-color);font-size:var(--tooltip-size);padding:8px 12px;border-radius:6px;z-index:9999;pointer-events:none;max-width:320px;word-break:break-word;box-shadow:0 2px 8px rgba(0,0,0,.25);transform:translate(-50%,14px)}
+.settings-btn{position:fixed;bottom:30px;right:30px;background:#007bff;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:28px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:1000;display:flex;align-items:center;justify-content:center;transition:background .2s;touch-action:manipulation}.settings-btn:hover{background:#0056b3}
+.settings-panel{position:fixed;bottom:100px;right:30px;background:#fff;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.18);display:none;flex-direction:column;z-index:999;width:310px;font-family:sans-serif;overflow:hidden;max-height:80vh}.settings-panel.active{display:flex}
+.sp-header{padding:14px 18px 10px;border-bottom:1px solid #eee;flex-shrink:0}.sp-header h3{margin:0 0 10px;font-size:15px}
+.tab-bar{display:flex;gap:6px}.tab-btn{flex:1;padding:6px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:12px;font-weight:bold;transition:all .2s}.tab-btn.active{background:#007bff;color:#fff;border-color:#007bff}
+.sp-body{padding:12px 18px;overflow-y:auto;flex:1}
+.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#999;margin:12px 0 7px;font-weight:bold}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px}
+.theme-btn{padding:7px 4px;border:2px solid #e0e0e0;border-radius:7px;cursor:pointer;font-size:11px;text-align:center;background:#fafafa;transition:all .2s;line-height:1.4}.theme-btn:hover{border-color:#007bff}.theme-btn.active{border-color:#007bff;background:#e8f0ff;font-weight:bold}
+.setting-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:13px;color:#333}
+.setting-item input[type=number]{width:62px;padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:13px}
+.setting-item input[type=color]{border:1px solid #ddd;width:34px;height:28px;cursor:pointer;padding:1px;border-radius:4px}
+.setting-item select{padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:12px;max-width:150px}
+.tab-content{display:none}.tab-content.active{display:block}
+.sp-footer{padding:10px 18px 14px;border-top:1px solid #eee;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.sp-footer button{width:100%;padding:9px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;color:#fff}
+#mobile-btn{background:#17a2b8}#mobile-btn:hover{background:#138496}
+#reset-btn{background:#dc3545}#reset-btn:hover{background:#c82333}
+</style>
+</head>
+<body>
+
+<div class="story-content">
+    <p>
+        <span class="phrase" data-tooltip="Phần II — Chương X"><ruby>PART<rt>pɑrt</rt></ruby> <ruby>II<rt>tu</rt></ruby> — <ruby>CHAPTER<rt>ˈʧæptər</rt></ruby> <ruby>X<rt>tɛn</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Gia đình cũ và gia đình mới"><ruby>OLD<rt>oʊld</rt></ruby> <ruby>FAMILY<rt>ˈfæməli</rt></ruby> <ruby>AND<rt>ænd</rt></ruby> <ruby>NEW<rt>nu</rt></ruby> <ruby>FAMILY<rt>ˈfæməli</rt></ruby></span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Đêm đó tôi không sao ngủ nổi. Điều vui sướng quá lớn lao khiến tôi trằn trọc trên giường, không thể nào chợp mắt."><ruby>That<rt>ðæt</rt></ruby> <ruby>night<rt>naɪt</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>could<rt>kʊd</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>sleep<rt>slip</rt></ruby>. <ruby>The<rt>ðə</rt></ruby> <ruby>overwhelming<rt>ˌoʊvərˈwɛlmɪŋ</rt></ruby> <ruby>joy<rt>ʤɔɪ</rt></ruby> <ruby>kept<rt>kɛpt</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>tossing<rt>ˈtɔsɪŋ</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>turning<rt>ˈtɜrnɪŋ</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>bed<rt>bɛd</rt></ruby>, <ruby>unable<rt>ʌnˈeɪbəl</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>close<rt>kloʊz</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>eyes<rt>aɪz</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi cứ nghĩ mãi về gia đình mình. Cha mẹ tôi đang tìm tôi! Tôi có một gia đình thực sự!"><ruby>I<rt>aɪ</rt></ruby> <ruby>kept<rt>kɛpt</rt></ruby> <ruby>thinking<rt>ˈθɪŋkɪŋ</rt></ruby> <ruby>about<rt>əˈbaʊt</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>. <ruby>My<rt>maɪ</rt></ruby> <ruby>parents<rt>ˈpɛrənts</rt></ruby> <ruby>were<rt>wɜr</rt></ruby> <ruby>looking<rt>ˈlʊkɪŋ</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>me<rt>mi</rt></ruby>! <ruby>I<rt>aɪ</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>real<rt>riəl</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>!</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Nhưng rồi những ý nghĩ khác ùa đến. Nếu tôi có một gia đình mới, vậy những người thân yêu cũ thì sao?"><ruby>But<rt>bʌt</rt></ruby> <ruby>then<rt>ðɛn</rt></ruby> <ruby>other<rt>ˈʌðər</rt></ruby> <ruby>thoughts<rt>θɔts</rt></ruby> <ruby>rushed<rt>rʌʃt</rt></ruby> <ruby>in<rt>ɪn</rt></ruby>. <ruby>If<rt>ɪf</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>new<rt>nu</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>, <ruby>what<rt>wʌt</rt></ruby> <ruby>about<rt>əˈbaʊt</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>dear<rt>dɪr</rt></ruby> <ruby>ones<rt>wʌnz</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>before<rt>bɪˈfɔr</rt></ruby>?</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mattia cũng thức. Tôi nghe thấy nó trăn trở trên giường trên. Tôi hỏi khẽ: 'Cậu cũng không ngủ được à?'"><ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>also<rt>ˈɔlsoʊ</rt></ruby> <ruby>awake<rt>əˈweɪk</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>heard<rt>hɜrd</rt></ruby> <ruby>him<rt>hɪm</rt></ruby> <ruby>tossing<rt>ˈtɔsɪŋ</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>bed<rt>bɛd</rt></ruby> <ruby>above<rt>əˈbʌv</rt></ruby>. <ruby>I<rt>aɪ</rt></ruby> <ruby>whispered<rt>ˈwɪspərd</rt></ruby>: "<ruby>Can't<rt>kænt</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>sleep<rt>slip</rt></ruby> <ruby>either<rt>ˈiðər</rt></ruby>?"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Không,' nó đáp. 'Tớ đang nghĩ.' 'Nghĩ gì?' 'Nghĩ về việc cậu sắp có gia đình mới.'"><ruby>"No<rt>noʊ</rt></ruby>," <ruby>he<rt>hi</rt></ruby> <ruby>replied<rt>rɪˈplaɪd</rt></ruby>. "<ruby>I'm<rt>aɪm</rt></ruby> <ruby>thinking<rt>ˈθɪŋkɪŋ</rt></ruby>." "<ruby>About<rt>əˈbaʊt</rt></ruby> <ruby>what<rt>wʌt</rt></ruby>?" "<ruby>About<rt>əˈbaʊt</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>new<rt>nu</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mattia nói thẳng với tôi: 'Cậu có gia đình mới, tốt quá, nhưng cậu không được quên gia đình cũ.'"><ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>spoke<rt>spoʊk</rt></ruby> <ruby>plainly<rt>ˈpleɪnli</rt></ruby>: "<ruby>You<rt>ju</rt></ruby> <ruby>have<rt>hæv</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>new<rt>nu</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>, <ruby>that's<rt>ðæts</rt></ruby> <ruby>wonderful<rt>ˈwʌndərfəl</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>must<rt>mʌst</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>forget<rt>fərˈgɛt</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>old<rt>oʊld</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Gia đình cũ là ai?' tôi hỏi. 'Là em Lise, bác Acquin, là Étiennette, Benjamin, Alexis, là má Barberin, và cả tớ nữa.'"><ruby>"Who<rt>hu</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>old<rt>oʊld</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>?" <ruby>I<rt>aɪ</rt></ruby> <ruby>asked<rt>æskt</rt></ruby>. "<ruby>Lise<rt>liz</rt></ruby>, <ruby>Father<rt>ˈfɑðər</rt></ruby> <ruby>Acquin<rt>ɑˈkæ̃</rt></ruby>, <ruby>Étiennette<rt>eɪtiɛˈnɛt</rt></ruby>, <ruby>Benjamin<rt>ˈbɛnʤəmɪn</rt></ruby>, <ruby>Alexis<rt>əˈlɛksɪs</rt></ruby>, <ruby>Mother<rt>ˈmʌðər</rt></ruby> <ruby>Barberin<rt>bɑrbəˈræ̃</rt></ruby>, <ruby>and<rt>ænd</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>too<rt>tu</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Nó nói tiếp, giọng buồn buồn: 'Khi cậu giàu sang, cậu đã hứa sẽ giúp đỡ tất cả mọi người.'"><ruby>He<rt>hi</rt></ruby> <ruby>continued<rt>kənˈtɪnjud</rt></ruby>, <ruby>his<rt>hɪz</rt></ruby> <ruby>voice<rt>vɔɪs</rt></ruby> <ruby>sad<rt>sæd</rt></ruby>: "<ruby>When<rt>wɛn</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>become<rt>bɪˈkʌm</rt></ruby> <ruby>rich<rt>rɪʧ</rt></ruby>, <ruby>you<rt>ju</rt></ruby> <ruby>promised<rt>ˈprɑmɪst</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>help<rt>hɛlp</rt></ruby> <ruby>all<rt>ɔl</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>them<rt>ðɛm</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Tớ không quên đâu!' tôi đáp. 'Nhưng trước hết tớ phải đi tìm bố mẹ đã. Rồi tớ sẽ nghĩ đến tất cả mọi người.'"><ruby>"I<rt>aɪ</rt></ruby> <ruby>won't<rt>woʊnt</rt></ruby> <ruby>forget<rt>fərˈgɛt</rt></ruby>!" <ruby>I<rt>aɪ</rt></ruby> <ruby>replied<rt>rɪˈplaɪd</rt></ruby>. "<ruby>But<rt>bʌt</rt></ruby> <ruby>first<rt>fɜrst</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>must<rt>mʌst</rt></ruby> <ruby>find<rt>faɪnd</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>parents<rt>ˈpɛrənts</rt></ruby>. <ruby>Then<rt>ðɛn</rt></ruby> <ruby>I'll<rt>aɪl</rt></ruby> <ruby>think<rt>θɪŋk</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>everyone<rt>ˈɛvriˌwʌn</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mattia đề nghị: 'Trước khi đi Paris, sao chúng ta không ghé thăm Lise ở Dreuzy?'"><ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>suggested<rt>səgˈʤɛstɪd</rt></ruby>: "<ruby>Before<rt>bɪˈfɔr</rt></ruby> <ruby>going<rt>ˈgoʊɪŋ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>Paris<rt>ˈpærɪs</rt></ruby>, <ruby>why<rt>waɪ</rt></ruby> <ruby>don't<rt>doʊnt</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>visit<rt>ˈvɪzɪt</rt></ruby> <ruby>Lise<rt>liz</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>Dreuzy<rt>drøˈzi</rt></ruby>?"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi nóng lòng muốn đi Paris ngay, nhưng Mattia nhắc tôi rằng những người thân đã yêu thương tôi cũng xứng đáng được thăm."><ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>eager<rt>ˈigər</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>go<rt>goʊ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>Paris<rt>ˈpærɪs</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>once<rt>wʌns</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby> <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>reminded<rt>rɪˈmaɪndɪd</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>those<rt>ðoʊz</rt></ruby> <ruby>who<rt>hu</rt></ruby> <ruby>had<rt>hæd</rt></ruby> <ruby>loved<rt>lʌvd</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>also<rt>ˈɔlsoʊ</rt></ruby> <ruby>deserved<rt>dɪˈzɜrvd</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>visit<rt>ˈvɪzɪt</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Nó nói: 'Nếu gia đình mới của cậu là những người giàu sang, họ sẽ đón cậu, còn cần gì phải vội?'"><ruby>He<rt>hi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>: "<ruby>If<rt>ɪf</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>new<rt>nu</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby> <ruby>are<rt>ɑr</rt></ruby> <ruby>wealthy<rt>ˈwɛlθi</rt></ruby> <ruby>people<rt>ˈpipəl</rt></ruby>, <ruby>they<rt>ðeɪ</rt></ruby> <ruby>will<rt>wɪl</rt></ruby> <ruby>welcome<rt>ˈwɛlkəm</rt></ruby> <ruby>you<rt>ju</rt></ruby>. <ruby>Why<rt>waɪ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>rush<rt>rʌʃ</rt></ruby>?"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Nhưng nếu cậu giàu có,' Mattia tiếp, 'thì cậu liệu có sẽ quên những người nghèo khổ đã nuôi cậu? Gia đình cũ, mình gọi thế, sẽ ra sao?'"><ruby>"But<rt>bʌt</rt></ruby> <ruby>if<rt>ɪf</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>become<rt>bɪˈkʌm</rt></ruby> <ruby>rich<rt>rɪʧ</rt></ruby>," <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>continued<rt>kənˈtɪnjud</rt></ruby>, "<ruby>will<rt>wɪl</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>forget<rt>fərˈgɛt</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>poor<rt>pʊr</rt></ruby> <ruby>people<rt>ˈpipəl</rt></ruby> <ruby>who<rt>hu</rt></ruby> <ruby>raised<rt>reɪzd</rt></ruby> <ruby>you<rt>ju</rt></ruby>? <ruby>What<rt>wʌt</rt></ruby> <ruby>will<rt>wɪl</rt></ruby> <ruby>become<rt>bɪˈkʌm</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>old<rt>oʊld</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>?"</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi bực mình vì cái giọng trách móc ngầm của Mattia. Nhưng nghĩ lại, tôi thấy nó có lý."><ruby>I<rt>aɪ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>annoyed<rt>əˈnɔɪd</rt></ruby> <ruby>by<rt>baɪ</rt></ruby> <ruby>Mattia's<rt>mɑˈtiɑz</rt></ruby> <ruby>implied<rt>ɪmˈplaɪd</rt></ruby> <ruby>reproach<rt>rɪˈproʊʧ</rt></ruby>. <ruby>But<rt>bʌt</rt></ruby> <ruby>on<rt>ɑn</rt></ruby> <ruby>reflection<rt>rɪˈflɛkʃən</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>realized<rt>ˈriəˌlaɪzd</rt></ruby> <ruby>he<rt>hi</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>right<rt>raɪt</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Rồi Mattia nói một câu làm tôi suy nghĩ mãi: 'Còn nếu gia đình mới không nhận cậu thì sao? Cậu đánh mất cả gia đình cũ lẫn gia đình mới.'"><ruby>Then<rt>ðɛn</rt></ruby> <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>said<rt>sɛd</rt></ruby> <ruby>something<rt>ˈsʌmθɪŋ</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>stayed<rt>steɪd</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>me<rt>mi</rt></ruby>: "<ruby>What<rt>wʌt</rt></ruby> <ruby>if<rt>ɪf</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>new<rt>nu</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby> <ruby>doesn't<rt>ˈdʌzənt</rt></ruby> <ruby>accept<rt>ækˈsɛpt</rt></ruby> <ruby>you<rt>ju</rt></ruby>? <ruby>You'd<rt>jud</rt></ruby> <ruby>lose<rt>luz</rt></ruby> <ruby>both<rt>boʊθ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>old<rt>oʊld</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>new<rt>nu</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Má Barberin cũng đồng ý: chúng tôi nên ghé thăm Lise trước khi đi Paris. Bà nói Dreuzy không quá xa."><ruby>Mother<rt>ˈmʌðər</rt></ruby> <ruby>Barberin<rt>bɑrbəˈræ̃</rt></ruby> <ruby>agreed<rt>əˈgrid</rt></ruby>: <ruby>we<rt>wi</rt></ruby> <ruby>should<rt>ʃʊd</rt></ruby> <ruby>visit<rt>ˈvɪzɪt</rt></ruby> <ruby>Lise<rt>liz</rt></ruby> <ruby>before<rt>bɪˈfɔr</rt></ruby> <ruby>going<rt>ˈgoʊɪŋ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>Paris<rt>ˈpærɪs</rt></ruby>. <ruby>She<rt>ʃi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby> <ruby>Dreuzy<rt>drøˈzi</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>too<rt>tu</rt></ruby> <ruby>far<rt>fɑr</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Thế là chúng tôi lên đường, rời Chavanon. Buổi sáng chia tay với má Barberin thật cảm động."><ruby>And<rt>ænd</rt></ruby> <ruby>so<rt>soʊ</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>set<rt>sɛt</rt></ruby> <ruby>off<rt>ɔf</rt></ruby>, <ruby>leaving<rt>ˈlivɪŋ</rt></ruby> <ruby>Chavanon<rt>ʃɑvɑˈnɔ̃</rt></ruby>. <ruby>The<rt>ðə</rt></ruby> <ruby>morning<rt>ˈmɔrnɪŋ</rt></ruby> <ruby>farewell<rt>fɛrˈwɛl</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>Mother<rt>ˈmʌðər</rt></ruby> <ruby>Barberin<rt>bɑrbəˈræ̃</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>deeply<rt>ˈdipli</rt></ruby> <ruby>touching<rt>ˈtʌʧɪŋ</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Má ôm tôi thật chặt và nói: 'Con đi đi, nhưng hãy nhớ rằng dù cha mẹ con là ai, dù giàu hay nghèo, thì má vẫn luôn thương con.'"><ruby>She<rt>ʃi</rt></ruby> <ruby>held<rt>hɛld</rt></ruby> <ruby>me<rt>mi</rt></ruby> <ruby>tight<rt>taɪt</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>: "<ruby>Go<rt>goʊ</rt></ruby> <ruby>now<rt>naʊ</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby> <ruby>remember<rt>rɪˈmɛmbər</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>no<rt>noʊ</rt></ruby> <ruby>matter<rt>ˈmætər</rt></ruby> <ruby>who<rt>hu</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>parents<rt>ˈpɛrənts</rt></ruby> <ruby>are<rt>ɑr</rt></ruby>, <ruby>rich<rt>rɪʧ</rt></ruby> <ruby>or<rt>ɔr</rt></ruby> <ruby>poor<rt>pʊr</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>will<rt>wɪl</rt></ruby> <ruby>always<rt>ˈɔlweɪz</rt></ruby> <ruby>love<rt>lʌv</rt></ruby> <ruby>you<rt>ju</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Con bò sữa đứng trong chuồng kêu rống lên khi chúng tôi đi. Dường như nó cũng muốn nói lời từ biệt."><ruby>The<rt>ðə</rt></ruby> <ruby>cow<rt>kaʊ</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>barn<rt>bɑrn</rt></ruby> <ruby>lowed<rt>loʊd</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>left<rt>lɛft</rt></ruby>. <ruby>It<rt>ɪt</rt></ruby> <ruby>seemed<rt>simd</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>if<rt>ɪf</rt></ruby> <ruby>she<rt>ʃi</rt></ruby> <ruby>too<rt>tu</rt></ruby> <ruby>wanted<rt>ˈwɑntɪd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>say<rt>seɪ</rt></ruby> <ruby>goodbye<rt>gʊdˈbaɪ</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Trên đường đi, Mattia lo lắng hơn tôi. Nó nói: 'Nếu gia đình người ta giàu, họ sẽ không cần tớ. Họ sẽ chỉ nhận cậu thôi.'"><ruby>Along<rt>əˈlɔŋ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>way<rt>weɪ</rt></ruby>, <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>more<rt>mɔr</rt></ruby> <ruby>worried<rt>ˈwɜrid</rt></ruby> <ruby>than<rt>ðæn</rt></ruby> <ruby>I<rt>aɪ</rt></ruby>. <ruby>He<rt>hi</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>: "<ruby>If<rt>ɪf</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby> <ruby>is<rt>ɪz</rt></ruby> <ruby>rich<rt>rɪʧ</rt></ruby>, <ruby>they<rt>ðeɪ</rt></ruby> <ruby>won't<rt>woʊnt</rt></ruby> <ruby>need<rt>nid</rt></ruby> <ruby>me<rt>mi</rt></ruby>. <ruby>They'll<rt>ðeɪl</rt></ruby> <ruby>only<rt>ˈoʊnli</rt></ruby> <ruby>take<rt>teɪk</rt></ruby> <ruby>you<rt>ju</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="'Không!' tôi nói. 'Cậu là bạn tôi. Đi đâu tôi cũng mang cậu theo. Nếu họ không nhận cậu thì tôi cũng không ở.'"><ruby>"No<rt>noʊ</rt></ruby>!" <ruby>I<rt>aɪ</rt></ruby> <ruby>said<rt>sɛd</rt></ruby>. "<ruby>You<rt>ju</rt></ruby> <ruby>are<rt>ɑr</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>friend<rt>frɛnd</rt></ruby>. <ruby>Wherever<rt>wɛrˈɛvər</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>go<rt>goʊ</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>take<rt>teɪk</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>with<rt>wɪð</rt></ruby> <ruby>me<rt>mi</rt></ruby>. <ruby>If<rt>ɪf</rt></ruby> <ruby>they<rt>ðeɪ</rt></ruby> <ruby>don't<rt>doʊnt</rt></ruby> <ruby>accept<rt>ækˈsɛpt</rt></ruby> <ruby>you<rt>ju</rt></ruby>, <ruby>I<rt>aɪ</rt></ruby> <ruby>won't<rt>woʊnt</rt></ruby> <ruby>stay<rt>steɪ</rt></ruby> <ruby>either<rt>ˈiðər</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mattia mỉm cười, nhưng nụ cười buồn. 'Cậu nói thế bây giờ. Nhưng khi có cha mẹ ruột, cậu sẽ quên hết.'"><ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>smiled<rt>smaɪld</rt></ruby>, <ruby>but<rt>bʌt</rt></ruby> <ruby>it<rt>ɪt</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>sad<rt>sæd</rt></ruby> <ruby>smile<rt>smaɪl</rt></ruby>. "<ruby>You<rt>ju</rt></ruby> <ruby>say<rt>seɪ</rt></ruby> <ruby>that<rt>ðæt</rt></ruby> <ruby>now<rt>naʊ</rt></ruby>. <ruby>But<rt>bʌt</rt></ruby> <ruby>when<rt>wɛn</rt></ruby> <ruby>you<rt>ju</rt></ruby> <ruby>have<rt>hæv</rt></ruby> <ruby>your<rt>jʊr</rt></ruby> <ruby>real<rt>riəl</rt></ruby> <ruby>parents<rt>ˈpɛrənts</rt></ruby>, <ruby>you'll<rt>jul</rt></ruby> <ruby>forget<rt>fərˈgɛt</rt></ruby> <ruby>everything<rt>ˈɛvriˌθɪŋ</rt></ruby>."</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Chúng tôi thỏa thuận: đi thăm Lise trước ở Dreuzy, rồi mới đi Paris. Như thế, cả Mattia và tôi đều thỏa mãn."><ruby>We<rt>wi</rt></ruby> <ruby>agreed<rt>əˈgrid</rt></ruby>: <ruby>visit<rt>ˈvɪzɪt</rt></ruby> <ruby>Lise<rt>liz</rt></ruby> <ruby>first<rt>fɜrst</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>Dreuzy<rt>drøˈzi</rt></ruby>, <ruby>then<rt>ðɛn</rt></ruby> <ruby>go<rt>goʊ</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>Paris<rt>ˈpærɪs</rt></ruby>. <ruby>That<rt>ðæt</rt></ruby> <ruby>way<rt>weɪ</rt></ruby>, <ruby>both<rt>boʊθ</rt></ruby> <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>were<rt>wɜr</rt></ruby> <ruby>satisfied<rt>ˈsætɪsˌfaɪd</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Chúng tôi lên đường đi Dreuzy. Con đường quen thuộc dẫn chúng tôi qua những cánh đồng xanh mát và những khu rừng tươi tốt."><ruby>We<rt>wi</rt></ruby> <ruby>set<rt>sɛt</rt></ruby> <ruby>out<rt>aʊt</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>Dreuzy<rt>drøˈzi</rt></ruby>. <ruby>The<rt>ðə</rt></ruby> <ruby>familiar<rt>fəˈmɪljər</rt></ruby> <ruby>road<rt>roʊd</rt></ruby> <ruby>led<rt>lɛd</rt></ruby> <ruby>us<rt>ʌs</rt></ruby> <ruby>through<rt>θru</rt></ruby> <ruby>green<rt>grin</rt></ruby> <ruby>fields<rt>fildz</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>lush<rt>lʌʃ</rt></ruby> <ruby>forests<rt>ˈfɔrɪsts</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Dọc đường, Mattia chơi vĩ cầm và tôi đánh thụ cầm. Tiếng nhạc khiến con Capi vui vẻ chạy nhảy xung quanh chúng tôi."><ruby>Along<rt>əˈlɔŋ</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>way<rt>weɪ</rt></ruby>, <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>played<rt>pleɪd</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>violin<rt>ˌvaɪəˈlɪn</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>played<rt>pleɪd</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>harp<rt>hɑrp</rt></ruby>. <ruby>The<rt>ðə</rt></ruby> <ruby>music<rt>ˈmjuzɪk</rt></ruby> <ruby>made<rt>meɪd</rt></ruby> <ruby>Capi<rt>ˈkɑpi</rt></ruby> <ruby>dance<rt>dæns</rt></ruby> <ruby>happily<rt>ˈhæpɪli</rt></ruby> <ruby>around<rt>əˈraʊnd</rt></ruby> <ruby>us<rt>ʌs</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mattia muốn mua quà cho Lise. 'Mua gì bây giờ?' tôi hỏi. 'Con bé thích búp bê,' nó đáp."><ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>wanted<rt>ˈwɑntɪd</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>buy<rt>baɪ</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>gift<rt>gɪft</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>Lise<rt>liz</rt></ruby>. "<ruby>What<rt>wʌt</rt></ruby> <ruby>should<rt>ʃʊd</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>buy<rt>baɪ</rt></ruby>?" <ruby>I<rt>aɪ</rt></ruby> <ruby>asked<rt>æskt</rt></ruby>. "<ruby>She<rt>ʃi</rt></ruby> <ruby>likes<rt>laɪks</rt></ruby> <ruby>dolls<rt>dɑlz</rt></ruby>," <ruby>he<rt>hi</rt></ruby> <ruby>replied<rt>rɪˈplaɪd</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Chúng tôi dừng ở một thị trấn nhỏ và mua được một con búp bê xinh xắn. Mattia còn mua thêm một bộ đồ chơi nhà bếp tí hon."><ruby>We<rt>wi</rt></ruby> <ruby>stopped<rt>stɑpt</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>small<rt>smɔl</rt></ruby> <ruby>town<rt>taʊn</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>bought<rt>bɔt</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>pretty<rt>ˈprɪti</rt></ruby> <ruby>doll<rt>dɑl</rt></ruby>. <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>also<rt>ˈɔlsoʊ</rt></ruby> <ruby>bought<rt>bɔt</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>tiny<rt>ˈtaɪni</rt></ruby> <ruby>toy<rt>tɔɪ</rt></ruby> <ruby>kitchen<rt>ˈkɪʧən</rt></ruby> <ruby>set<rt>sɛt</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Khi chúng tôi nhìn thấy ngôi nhà nhỏ của cô Catherine ở Dreuzy từ xa, tim tôi đập rộn ràng."><ruby>When<rt>wɛn</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>caught<rt>kɔt</rt></ruby> <ruby>sight<rt>saɪt</rt></ruby> <ruby>of<rt>ʌv</rt></ruby> <ruby>Aunt<rt>ænt</rt></ruby> <ruby>Catherine's<rt>ˈkæθrɪnz</rt></ruby> <ruby>little<rt>ˈlɪtəl</rt></ruby> <ruby>house<rt>haʊs</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>Dreuzy<rt>drøˈzi</rt></ruby> <ruby>from<rt>frʌm</rt></ruby> <ruby>afar<rt>əˈfɑr</rt></ruby>, <ruby>my<rt>maɪ</rt></ruby> <ruby>heart<rt>hɑrt</rt></ruby> <ruby>beat<rt>bit</rt></ruby> <ruby>fast<rt>fæst</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Lise nhìn thấy chúng tôi trước. Em chạy ra, mặt rạng rỡ, vẫy tay. Nhưng em không thể gọi tên chúng tôi vì em vẫn câm."><ruby>Lise<rt>liz</rt></ruby> <ruby>saw<rt>sɔ</rt></ruby> <ruby>us<rt>ʌs</rt></ruby> <ruby>first<rt>fɜrst</rt></ruby>. <ruby>She<rt>ʃi</rt></ruby> <ruby>ran<rt>ræn</rt></ruby> <ruby>out<rt>aʊt</rt></ruby>, <ruby>her<rt>hɜr</rt></ruby> <ruby>face<rt>feɪs</rt></ruby> <ruby>radiant<rt>ˈreɪdiənt</rt></ruby>, <ruby>waving<rt>ˈweɪvɪŋ</rt></ruby>. <ruby>But<rt>bʌt</rt></ruby> <ruby>she<rt>ʃi</rt></ruby> <ruby>could<rt>kʊd</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>call<rt>kɔl</rt></ruby> <ruby>our<rt>aʊər</rt></ruby> <ruby>names<rt>neɪmz</rt></ruby>, <ruby>for<rt>fɔr</rt></ruby> <ruby>she<rt>ʃi</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>still<rt>stɪl</rt></ruby> <ruby>mute<rt>mjut</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Tôi tặng em con búp bê. Mắt em sáng rỡ. Em ôm nó vào lòng, vuốt ve tóc búp bê như thể đó là một em bé thật."><ruby>I<rt>aɪ</rt></ruby> <ruby>gave<rt>geɪv</rt></ruby> <ruby>her<rt>hɜr</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>doll<rt>dɑl</rt></ruby>. <ruby>Her<rt>hɜr</rt></ruby> <ruby>eyes<rt>aɪz</rt></ruby> <ruby>lit<rt>lɪt</rt></ruby> <ruby>up<rt>ʌp</rt></ruby>. <ruby>She<rt>ʃi</rt></ruby> <ruby>cradled<rt>ˈkreɪdəld</rt></ruby> <ruby>it<rt>ɪt</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>her<rt>hɜr</rt></ruby> <ruby>arms<rt>ɑrmz</rt></ruby>, <ruby>stroking<rt>ˈstroʊkɪŋ</rt></ruby> <ruby>its<rt>ɪts</rt></ruby> <ruby>hair<rt>hɛr</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>if<rt>ɪf</rt></ruby> <ruby>it<rt>ɪt</rt></ruby> <ruby>were<rt>wɜr</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>real<rt>riəl</rt></ruby> <ruby>baby<rt>ˈbeɪbi</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Mattia đưa bộ đồ chơi nhà bếp. Lise mỉm cười rạng rỡ và ôm Mattia thay lời cảm ơn."><ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>presented<rt>prɪˈzɛntɪd</rt></ruby> <ruby>the<rt>ðə</rt></ruby> <ruby>toy<rt>tɔɪ</rt></ruby> <ruby>kitchen<rt>ˈkɪʧən</rt></ruby>. <ruby>Lise<rt>liz</rt></ruby> <ruby>beamed<rt>bimd</rt></ruby> <ruby>and<rt>ænd</rt></ruby> <ruby>hugged<rt>hʌgd</rt></ruby> <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>as<rt>æz</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>thank<rt>θæŋk</rt></ruby> <ruby>you<rt>ju</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Chúng tôi ở lại Dreuzy vài ngày hạnh phúc. Nhưng Paris đang gọi, và tôi không thể chờ thêm để đi tìm gia đình."><ruby>We<rt>wi</rt></ruby> <ruby>stayed<rt>steɪd</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>Dreuzy<rt>drøˈzi</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>few<rt>fju</rt></ruby> <ruby>happy<rt>ˈhæpi</rt></ruby> <ruby>days<rt>deɪz</rt></ruby>. <ruby>But<rt>bʌt</rt></ruby> <ruby>Paris<rt>ˈpærɪs</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>calling<rt>ˈkɔlɪŋ</rt></ruby>, <ruby>and<rt>ænd</rt></ruby> <ruby>I<rt>aɪ</rt></ruby> <ruby>could<rt>kʊd</rt></ruby> <ruby>not<rt>nɑt</rt></ruby> <ruby>wait<rt>weɪt</rt></ruby> <ruby>any<rt>ˈɛni</rt></ruby> <ruby>longer<rt>ˈlɔŋgər</rt></ruby> <ruby>to<rt>tu</rt></ruby> <ruby>find<rt>faɪnd</rt></ruby> <ruby>my<rt>maɪ</rt></ruby> <ruby>family<rt>ˈfæməli</rt></ruby>.</span>
+    </p>
+    <p>
+        <span class="phrase" data-tooltip="Khi chia tay, Mattia nhìn Lise rất lâu. Tôi thấy nụ cười của nó ấm áp lạ thường. Có một tình cảm gì trong ánh mắt ấy."><ruby>When<rt>wɛn</rt></ruby> <ruby>we<rt>wi</rt></ruby> <ruby>parted<rt>ˈpɑrtɪd</rt></ruby>, <ruby>Mattia<rt>mɑˈtiɑ</rt></ruby> <ruby>looked<rt>lʊkt</rt></ruby> <ruby>at<rt>æt</rt></ruby> <ruby>Lise<rt>liz</rt></ruby> <ruby>for<rt>fɔr</rt></ruby> <ruby>a<rt>ə</rt></ruby> <ruby>long<rt>lɔŋ</rt></ruby> <ruby>time<rt>taɪm</rt></ruby>. <ruby>His<rt>hɪz</rt></ruby> <ruby>smile<rt>smaɪl</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>unusually<rt>ʌnˈjuʒuəli</rt></ruby> <ruby>warm<rt>wɔrm</rt></ruby>. <ruby>There<rt>ðɛr</rt></ruby> <ruby>was<rt>wʌz</rt></ruby> <ruby>something<rt>ˈsʌmθɪŋ</rt></ruby> <ruby>special<rt>ˈspɛʃəl</rt></ruby> <ruby>in<rt>ɪn</rt></ruby> <ruby>his<rt>hɪz</rt></ruby> <ruby>eyes<rt>aɪz</rt></ruby>.</span>
+    </p>
+    <br><br><br><br><br>
+</div>
+
+<button class="ipa-toggle-btn" id="ipa-toggle-btn">IPA<br>BẬT</button>
+<button class="settings-btn" id="settings-btn">⚙️</button>
+
+<div class="settings-panel" id="settings-panel">
+    <div class="sp-header">
+        <h3>⚙️ Cài Đặt Hiển Thị</h3>
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="basic">Cơ Bản</button>
+            <button class="tab-btn" data-tab="advanced">Nâng Cao</button></div></div>
+    <div class="sp-body">
+        <div class="tab-content active" id="tab-basic">
+            <div class="section-label">Chủ đề</div>
+            <div class="theme-grid">
+                <button class="theme-btn" data-theme="light">☀️<br>Light</button>
+                <button class="theme-btn" data-theme="dark">🌙<br>Dark</button>
+                <button class="theme-btn" data-theme="dracula">🧛<br>Dracula</button>
+                <button class="theme-btn" data-theme="solarized">🌅<br>Solarized</button>
+                <button class="theme-btn" data-theme="nord">❄️<br>Nord</button>
+                <button class="theme-btn" data-theme="monokai">🎨<br>Monokai</button>
+                <button class="theme-btn" data-theme="claude">🤖<br>Claude</button>
+                <button class="theme-btn" data-theme="github">🐚<br>GitHub</button>
+                <button class="theme-btn" data-theme="sepia">📜<br>Sepia</button>
+                <button class="theme-btn" data-theme="gruvbox">🍃<br>Gruvbox</button>
+                <button class="theme-btn" data-theme="catppuccin">🌸<br>Catppuccin</button>
+                <button class="theme-btn" data-theme="paper">📰<br>Paper</button></div>
+            <div class="section-label">IPA</div>
+            <div class="setting-item">
+                <label>Hiện IPA</label>
+                <label class="switch"><input type="checkbox" id="inp-ipa-visible" checked><span class="slider"></span></label></div>
+            <div class="section-label">Văn bản</div>
+            <div class="setting-item">
+                <label>Font chữ</label>
+                <select id="inp-font-family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    <option value="Palatino, 'Palatino Linotype', serif">Palatino</option>
+                    <option value="Garamond, 'EB Garamond', serif">Garamond</option>
+                    <option value="'Book Antiqua', Palatino, serif">Book Antiqua</option>
+                    <option value="Optima, Candara, sans-serif">Optima</option>
+                    <option value="Futura, 'Century Gothic', sans-serif">Futura</option>
+                    <option value="'Gill Sans', Calibri, sans-serif">Gill Sans</option>
+                    <option value="Cambria, 'Hoefler Text', serif">Cambria</option>
+                    <option value="Constantia, Palatino, serif">Constantia</option>
+                    <option value="Candara, Calibri, sans-serif">Candara</option>
+                    <option value="'Franklin Gothic Medium', Arial, sans-serif">Franklin Gothic</option>
+                </select></div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-text-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-text-color"></div>
+            <div class="setting-item"><label>Cỡ chữ IPA (px)</label><input type="number" id="inp-ipa-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu IPA</label><input type="color" id="inp-ipa-color"></div>
+            <div class="section-label">Tooltip</div>
+            <div class="setting-item"><label>Cỡ chữ (px)</label><input type="number" id="inp-tooltip-size" min="8" max="40"></div>
+            <div class="setting-item"><label>Màu chữ</label><input type="color" id="inp-tooltip-color"></div>
+            <div class="setting-item"><label>Màu nền</label><input type="color" id="inp-tooltip-bg"></div></div>
+        <div class="tab-content" id="tab-advanced">
+            <div class="section-label">Cỡ chữ theo thẻ (px)</div>
+            <div class="setting-item"><label>Thẻ &lt;h1&gt;</label><input type="number" id="inp-h1-size" min="10" max="80"></div>
+            <div class="setting-item"><label>Thẻ &lt;h2&gt;</label><input type="number" id="inp-h2-size" min="10" max="70"></div>
+            <div class="setting-item"><label>Thẻ &lt;h3&gt;</label><input type="number" id="inp-h3-size" min="10" max="60"></div>
+            <div class="setting-item"><label>Thẻ &lt;p&gt;</label><input type="number" id="inp-p-size" min="10" max="60"></div>
+            <div class="section-label">Màu nền</div>
+            <div class="setting-item"><label>Nền trang</label><input type="color" id="inp-body-bg"></div>
+            <div class="setting-item"><label>Nền nội dung</label><input type="color" id="inp-content-bg"></div>
+            <div class="section-label">Body (px)</div>
+            <div class="setting-item"><label>Padding dọc</label><input type="number" id="inp-body-padding-y" min="0" max="200"></div>
+            <div class="setting-item"><label>Padding ngang</label><input type="number" id="inp-body-padding-x" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dọc</label><input type="number" id="inp-body-margin-y" min="0" max="100"></div>
+            <div class="setting-item"><label>Margin ngang</label><input type="number" id="inp-body-margin-x" min="0" max="100"></div>
+            <div class="section-label">Container (px)</div>
+            <div class="setting-item"><label>Padding trong</label><input type="number" id="inp-container-padding" min="0" max="120"></div>
+            <div class="setting-item"><label>Margin trái/phải</label><input type="number" id="inp-container-margin-lr" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin trên</label><input type="number" id="inp-container-margin-top" min="0" max="200"></div>
+            <div class="setting-item"><label>Margin dưới</label><input type="number" id="inp-container-margin-bottom" min="0" max="200"></div></div></div>
+    <div class="sp-footer">
+        <button id="mobile-btn">📱 Tối ưu Mobile</button>
+        <button id="reset-btn">↩ Khôi phục mặc định</button></div>
+</div>
+
+<script>
+let lastTouch=0;
+document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouch<=300)e.preventDefault();lastTouch=n},{passive:false});
+const tooltip=document.createElement('div');tooltip.id='custom-tooltip';document.body.appendChild(tooltip);
+let tipTimer=null;const hideTip=()=>{tooltip.style.display='none';clearTimeout(tipTimer);tipTimer=null};const delayHide=d=>{clearTimeout(tipTimer);tipTimer=setTimeout(hideTip,d)};
+const showTip=el=>{const t=el.dataset.tooltip;if(!t)return;tooltip.textContent=t;tooltip.style.display='block';const r=el.getBoundingClientRect();tooltip.style.left=(r.left+r.width/2+(window.scrollX||pageXOffset))+'px';tooltip.style.top=(r.bottom+(window.scrollY||pageYOffset))+'px'};
+document.querySelectorAll('.phrase').forEach(el=>{const s=()=>showTip(el);el.addEventListener('mouseenter',s);el.addEventListener('mousemove',s);el.addEventListener('mouseleave',hideTip);el.addEventListener('touchstart',()=>{s();delayHide(1800)},{passive:true});el.addEventListener('touchend',()=>delayHide(220),{passive:true});el.addEventListener('touchcancel',hideTip,{passive:true});});
+document.addEventListener('touchstart',e=>{if(!e.target.closest('.phrase'))hideTip()},{passive:true});window.addEventListener('scroll',hideTip,{passive:true});
+const THEMES={light:{'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333'},dark:{'--body-bg':'#1a1a2e','--content-bg':'#16213e','--font-family':'Arial, sans-serif','--text-color':'#e0e0e0','--ipa-color':'#9e9e9e','--tooltip-color':'#ffffff','--tooltip-bg':'#444444'},dracula:{'--body-bg':'#282a36','--content-bg':'#21222c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#6272a4','--tooltip-color':'#f8f8f2','--tooltip-bg':'#44475a'},solarized:{'--body-bg':'#002b36','--content-bg':'#073642','--font-family':'Georgia, serif','--text-color':'#839496','--ipa-color':'#586e75','--tooltip-color':'#fdf6e3','--tooltip-bg':'#073642'},nord:{'--body-bg':'#2e3440','--content-bg':'#3b4252','--font-family':'Arial, sans-serif','--text-color':'#d8dee9','--ipa-color':'#81a1c1','--tooltip-color':'#eceff4','--tooltip-bg':'#4c566a'},monokai:{'--body-bg':'#272822','--content-bg':'#1e1f1c','--font-family':"'Courier New', monospace",'--text-color':'#f8f8f2','--ipa-color':'#75715e','--tooltip-color':'#f8f8f2','--tooltip-bg':'#75715e'},claude:{'--body-bg':'#f5f0eb','--content-bg':'#faf7f4','--font-family':"'Trebuchet MS', sans-serif",'--text-color':'#1a1310','--ipa-color':'#9b7e5e','--tooltip-color':'#faf7f4','--tooltip-bg':'#b5714a'},github:{'--body-bg':'#f6f8fa','--content-bg':'#ffffff','--font-family':"'Gill Sans', Calibri, sans-serif",'--text-color':'#1f2328','--ipa-color':'#57606a','--tooltip-color':'#ffffff','--tooltip-bg':'#24292f'},sepia:{'--body-bg':'#f1e7d5','--content-bg':'#fdf6e6','--font-family':'Georgia, serif','--text-color':'#5c4320','--ipa-color':'#9d7b55','--tooltip-color':'#fdf6e6','--tooltip-bg':'#7a5c35'},gruvbox:{'--body-bg':'#1d2021','--content-bg':'#282828','--font-family':"'Courier New', monospace",'--text-color':'#ebdbb2','--ipa-color':'#a89984','--tooltip-color':'#ebdbb2','--tooltip-bg':'#504945'},catppuccin:{'--body-bg':'#1e1e2e','--content-bg':'#24273a','--font-family':'Optima, Candara, sans-serif','--text-color':'#cad3f5','--ipa-color':'#8087a2','--tooltip-color':'#cad3f5','--tooltip-bg':'#363a4f'},paper:{'--body-bg':'#e8e4de','--content-bg':'#f9f7f4','--font-family':"Palatino, 'Palatino Linotype', serif",'--text-color':'#2e2e2e','--ipa-color':'#777777','--tooltip-color':'#f9f7f4','--tooltip-bg':'#444444'}};
+const DEFAULTS={'--body-bg':'#f9f9f9','--content-bg':'#ffffff','--font-family':'Arial, sans-serif','--text-color':'#000000','--ipa-color':'#555555','--tooltip-color':'#ffffff','--tooltip-bg':'#333333','--text-size':'24','--ipa-size':'14','--tooltip-size':'16','--h1-size':'32','--h2-size':'28','--h3-size':'22','--p-size':'24','--body-padding-y':'40','--body-padding-x':'20','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'40','--container-margin-lr':'20','--container-margin-top':'0','--container-margin-bottom':'0'};
+const MOBILE={'--body-padding-y':'0','--body-padding-x':'0','--body-margin-y':'0','--body-margin-x':'0','--container-padding':'5','--container-margin-lr':'5','--container-margin-top':'0','--container-margin-bottom':'0'};
+const SK='storySettings';const root=document.documentElement;
+const inputMap={'--font-family':document.getElementById('inp-font-family'),'--text-size':document.getElementById('inp-text-size'),'--text-color':document.getElementById('inp-text-color'),'--ipa-size':document.getElementById('inp-ipa-size'),'--ipa-color':document.getElementById('inp-ipa-color'),'--tooltip-size':document.getElementById('inp-tooltip-size'),'--tooltip-color':document.getElementById('inp-tooltip-color'),'--tooltip-bg':document.getElementById('inp-tooltip-bg'),'--h1-size':document.getElementById('inp-h1-size'),'--h2-size':document.getElementById('inp-h2-size'),'--h3-size':document.getElementById('inp-h3-size'),'--p-size':document.getElementById('inp-p-size'),'--body-bg':document.getElementById('inp-body-bg'),'--content-bg':document.getElementById('inp-content-bg'),'--body-padding-y':document.getElementById('inp-body-padding-y'),'--body-padding-x':document.getElementById('inp-body-padding-x'),'--body-margin-y':document.getElementById('inp-body-margin-y'),'--body-margin-x':document.getElementById('inp-body-margin-x'),'--container-padding':document.getElementById('inp-container-padding'),'--container-margin-lr':document.getElementById('inp-container-margin-lr'),'--container-margin-top':document.getElementById('inp-container-margin-top'),'--container-margin-bottom':document.getElementById('inp-container-margin-bottom')};
+const setCSSVar=(n,v)=>root.style.setProperty(n,/size|padding|margin/.test(n)?v+'px':v);const applyMap=obj=>Object.keys(obj).forEach(k=>{if(k[0]==='-'){setCSSVar(k,obj[k]);const e=inputMap[k];if(e)e.value=obj[k];}});const getAll=()=>{const s={};Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(e)s[k]=e.value;});return s;};const save=(extra={})=>localStorage.setItem(SK,JSON.stringify({...getAll(),_ipa:ipaCheckbox.checked,...extra}));const load=()=>{try{return JSON.parse(localStorage.getItem(SK));}catch{return null;}};const markTheme=n=>document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===n));
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');}));
+document.querySelectorAll('.theme-btn').forEach(b=>b.addEventListener('click',()=>{const t=THEMES[b.dataset.theme];if(!t)return;applyMap(t);markTheme(b.dataset.theme);save({_theme:b.dataset.theme});}));
+Object.keys(inputMap).forEach(k=>{const e=inputMap[k];if(!e)return;e.addEventListener('input',()=>{setCSSVar(k,e.value);save();});});
+const ipaCheckbox=document.getElementById('inp-ipa-visible');const ipaBtn=document.getElementById('ipa-toggle-btn');const setIPA=v=>{document.body.classList.toggle('ipa-hidden',!v);ipaCheckbox.checked=v;ipaBtn.innerHTML='IPA<br>'+(v?'BẬT':'TẮT');ipaBtn.classList.toggle('ipa-off',!v);};
+ipaCheckbox.addEventListener('change',()=>{setIPA(ipaCheckbox.checked);save();});ipaBtn.addEventListener('click',()=>{setIPA(!ipaCheckbox.checked);save();});
+document.getElementById('mobile-btn').addEventListener('click',()=>{applyMap(MOBILE);save();});document.getElementById('reset-btn').addEventListener('click',()=>{applyMap(DEFAULTS);markTheme('light');setIPA(true);save({_theme:'light',_ipa:true});});
+const panel=document.getElementById('settings-panel');document.getElementById('settings-btn').addEventListener('click',()=>panel.classList.toggle('active'));
+const saved=load();if(saved){applyMap(saved);if(saved._theme)markTheme(saved._theme);setIPA(saved._ipa!==false);}else{applyMap(DEFAULTS);markTheme('light');setIPA(true);}
+</script>
+</body>
+</html>

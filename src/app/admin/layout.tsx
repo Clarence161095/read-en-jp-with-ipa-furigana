@@ -9,6 +9,7 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊', roles: ['admin', 'editor'] },
   { href: '/admin/articles', label: 'Bài viết', icon: '📄', roles: ['admin', 'editor'] },
   { href: '/admin/series', label: 'Tuyển tập', icon: '📚', roles: ['admin', 'editor'] },
+  { href: '/admin/prompts', label: 'Prompt', icon: '💬', roles: ['admin', 'editor'] },
   { href: '/admin/users', label: 'Người dùng', icon: '👥', roles: ['admin'] },
 ];
 

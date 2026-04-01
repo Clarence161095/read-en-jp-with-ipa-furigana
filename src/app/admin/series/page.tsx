@@ -3,12 +3,20 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+interface Chapter {
+  id: string;
+  title: string;
+  slug: string;
+  orderInPart: number;
+  viewCount: number;
+}
+
 interface Part {
   id: string;
   title: string;
   order: number;
   _count?: { articles: number };
-  articles?: { id: string; title: string; orderInPart: number }[];
+  articles?: Chapter[];
 }
 
 interface Series {
@@ -30,6 +38,8 @@ export default function AdminSeriesPage() {
   const [description, setDescription] = useState('');
   const [parts, setParts] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [expandedSeries, setExpandedSeries] = useState<Set<string>>(new Set());
+  const [expandedParts, setExpandedParts] = useState<Set<string>>(new Set());
 
   const fetchSeries = () => {
     fetch('/api/series?includeChapters=true')
@@ -43,6 +53,34 @@ export default function AdminSeriesPage() {
   useEffect(() => {
     fetchSeries();
   }, []);
+
+  const toggleSeries = (id: string) => {
+    setExpandedSeries((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const togglePart = (id: string) => {
+    setExpandedParts((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const expandAll = () => {
+    setExpandedSeries(new Set(seriesList.map((s) => s.id)));
+    setExpandedParts(new Set(seriesList.flatMap((s) => s.parts.map((p) => p.id))));
+  };
+
+  const collapseAll = () => {
+    setExpandedSeries(new Set());
+    setExpandedParts(new Set());
+  };
 
   const openCreate = () => {
     setEditingId(null);
@@ -94,15 +132,33 @@ export default function AdminSeriesPage() {
   };
 
   return (
-    <div>
+    <div className="pb-20 lg:pb-0">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-bold text-gray-800">📚 Quản lý tuyển tập</h1>
-        <button
-          onClick={openCreate}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
-        >
-          + Tạo tuyển tập
-        </button>
+        <div className="flex items-center gap-2">
+          {seriesList.length > 0 && (
+            <>
+              <button
+                onClick={expandAll}
+                className="px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 rounded-lg border"
+              >
+                Mở tất cả
+              </button>
+              <button
+                onClick={collapseAll}
+                className="px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 rounded-lg border"
+              >
+                Đóng tất cả
+              </button>
+            </>
+          )}
+          <button
+            onClick={openCreate}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+          >
+            + Tạo tuyển tập
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -120,63 +176,129 @@ export default function AdminSeriesPage() {
           <p>Chưa có tuyển tập nào</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {seriesList.map((s) => {
             const totalChapters = s.parts.reduce(
-              (sum, p) => sum + (p._count?.articles || p.articles?.length || 0),
+              (sum, p) => sum + (p.articles?.length || p._count?.articles || 0),
               0
             );
+            const isExpanded = expandedSeries.has(s.id);
+
             return (
-              <div key={s.id} className="bg-white rounded-xl border p-5">
-                <div className="flex items-start justify-between gap-4">
+              <div key={s.id} className="bg-white rounded-xl border overflow-hidden">
+                {/* Series header */}
+                <div
+                  className="flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                  onClick={() => toggleSeries(s.id)}
+                >
+                  <span className={`text-gray-400 transition-transform text-sm ${isExpanded ? 'rotate-90' : ''}`}>
+                    ▶
+                  </span>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">📚</span>
                       <h3 className="font-semibold text-gray-800">{s.title}</h3>
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full ${
-                          s.isPublished
-                            ? 'bg-green-50 text-green-600'
-                            : 'bg-gray-100 text-gray-500'
+                          s.isPublished ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'
                         }`}
                       >
                         {s.isPublished ? 'Published' : 'Draft'}
                       </span>
                     </div>
                     {s.description && (
-                      <p className="text-sm text-gray-500 mb-2 line-clamp-1">{s.description}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1 ml-7">{s.description}</p>
                     )}
-                    <div className="flex items-center gap-3 text-xs text-gray-400">
-                      <span>📖 {s.parts.length} phần</span>
-                      <span>📄 {totalChapters} chương</span>
-                    </div>
-                    {/* Parts summary */}
-                    <div className="mt-3 space-y-1">
-                      {s.parts.map((p) => (
-                        <div key={p.id} className="text-xs text-gray-500 flex items-center gap-2">
-                          <span className="text-gray-300">├─</span>
-                          {p.title}
-                          <span className="text-gray-300">
-                            ({p._count?.articles || p.articles?.length || 0} chương)
-                          </span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-3 text-xs text-gray-400 flex-shrink-0">
+                    <span>📖 {s.parts.length} phần</span>
+                    <span>📄 {totalChapters} chương</span>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => openEdit(s)}
-                      className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg"
+                      className="p-1.5 text-xs hover:bg-blue-50 rounded-lg"
+                      title="Sửa"
                     >
-                      ✏️ Sửa
+                      ✏️
                     </button>
                     <button
                       onClick={() => handleDelete(s.id)}
-                      className="px-3 py-1.5 text-xs bg-red-50 text-red-600 hover:bg-red-100 rounded-lg"
+                      className="p-1.5 text-xs hover:bg-red-50 rounded-lg"
+                      title="Xóa"
                     >
-                      🗑️ Xóa
+                      🗑️
                     </button>
                   </div>
                 </div>
+
+                {/* Parts tree */}
+                {isExpanded && (
+                  <div className="border-t bg-gray-50/50">
+                    {s.parts.length === 0 ? (
+                      <div className="p-4 pl-12 text-xs text-gray-400">Chưa có phần nào</div>
+                    ) : (
+                      s.parts.map((part, partIdx) => {
+                        const isPartExpanded = expandedParts.has(part.id);
+                        const chapterCount = part.articles?.length || part._count?.articles || 0;
+                        const isLastPart = partIdx === s.parts.length - 1;
+
+                        return (
+                          <div key={part.id}>
+                            {/* Part row */}
+                            <div
+                              className="flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-blue-50/50 transition-colors"
+                              onClick={() => togglePart(part.id)}
+                            >
+                              <div className="w-8 text-center text-gray-300 text-xs select-none font-mono">
+                                {isLastPart ? '└─' : '├─'}
+                              </div>
+                              <span className={`text-gray-400 transition-transform text-xs ${isPartExpanded ? 'rotate-90' : ''}`}>
+                                {chapterCount > 0 ? '▶' : ''}
+                              </span>
+                              <span className="text-sm">📖</span>
+                              <span className="text-sm font-medium text-gray-700 flex-1">{part.title}</span>
+                              <span className="text-xs text-gray-400">{chapterCount} chương</span>
+                            </div>
+
+                            {/* Chapters tree */}
+                            {isPartExpanded && part.articles && part.articles.length > 0 && (
+                              <div className="bg-white/60">
+                                {part.articles.map((ch, chIdx) => {
+                                  const isLastChapter = chIdx === part.articles!.length - 1;
+                                  return (
+                                    <div
+                                      key={ch.id}
+                                      className="flex items-center gap-2 px-4 py-1.5 hover:bg-blue-50/30 transition-colors group"
+                                    >
+                                      <div className="w-8 text-center text-gray-300 text-xs select-none font-mono">
+                                        {isLastPart ? '   ' : '│  '}
+                                      </div>
+                                      <div className="w-8 text-center text-gray-300 text-xs select-none font-mono">
+                                        {isLastChapter ? '└─' : '├─'}
+                                      </div>
+                                      <span className="text-xs">📄</span>
+                                      <Link
+                                        href={`/read/${ch.slug}`}
+                                        className="text-sm text-gray-600 hover:text-blue-600 flex-1 truncate"
+                                        target="_blank"
+                                      >
+                                        {ch.title}
+                                      </Link>
+                                      <span className="text-xs text-gray-300 group-hover:text-gray-400">
+                                        👁 {ch.viewCount}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}

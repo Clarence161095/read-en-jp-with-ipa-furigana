@@ -52,6 +52,7 @@ export default function HomePage() {
       page: page.toString(),
       limit: '12',
       sort,
+      standalone: 'true',
     });
     if (search) params.set('search', search);
     if (activeCategory) params.set('category', activeCategory);
@@ -64,8 +65,8 @@ export default function HomePage() {
   }, [page, search, activeCategory, sort]);
 
   useEffect(() => {
-    fetch('/api/categories').then(r => r.json()).then(d => setCategories(d.categories));
-    fetch('/api/series').then(r => r.json()).then(d => setSeriesList(d));
+    fetch('/api/categories').then(r => r.json()).then(d => setCategories(d.categories || []));
+    fetch('/api/series').then(r => r.json()).then(d => setSeriesList(Array.isArray(d) ? d : []));
   }, []);
 
   useEffect(() => {

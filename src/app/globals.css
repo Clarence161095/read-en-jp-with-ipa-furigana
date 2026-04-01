@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure full viewport for reading pages */
+html, body {
+  margin: 0;
+  padding: 0;
+}

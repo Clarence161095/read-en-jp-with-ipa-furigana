@@ -20,6 +20,18 @@ export async function GET(request: NextRequest) {
 
   const where: any = { isPublished: true };
 
+  // Optionally exclude articles that belong to a series (standalone only)
+  const standalone = searchParams.get('standalone');
+  if (standalone === 'true') {
+    where.partId = null;
+  }
+
+  // Filter by series slug
+  const series = searchParams.get('series');
+  if (series) {
+    where.part = { series: { slug: series } };
+  }
+
   if (search) {
     where.OR = [
       { title: { contains: search } },
@@ -48,6 +60,13 @@ export async function GET(request: NextRequest) {
       include: {
         category: { select: { id: true, name: true, slug: true } },
         author: { select: { id: true, username: true } },
+        part: {
+          select: {
+            id: true,
+            title: true,
+            series: { select: { id: true, title: true, slug: true } },
+          },
+        },
       },
     }),
     prisma.article.count({ where }),

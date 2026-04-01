@@ -12,12 +12,24 @@ interface Article {
   createdAt: string;
   category: { name: string } | null;
   author: { username: string };
+  part: {
+    title: string;
+    series: { title: string; slug: string };
+  } | null;
+}
+
+interface SeriesOption {
+  id: string;
+  title: string;
+  slug: string;
 }
 
 export default function AdminArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [seriesFilter, setSeriesFilter] = useState('');
+  const [seriesOptions, setSeriesOptions] = useState<SeriesOption[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -26,12 +38,17 @@ export default function AdminArticlesPage() {
     setLoading(true);
     const params = new URLSearchParams({ page: page.toString(), limit: '20' });
     if (search) params.set('search', search);
+    if (seriesFilter) params.set('series', seriesFilter);
     const res = await fetch(`/api/articles?${params}`);
     const data = await res.json();
     setArticles(data.articles);
     setTotalPages(data.pagination.totalPages);
     setLoading(false);
-  }, [page, search]);
+  }, [page, search, seriesFilter]);
+
+  useEffect(() => {
+    fetch('/api/series').then(r => r.json()).then(d => setSeriesOptions(Array.isArray(d) ? d : []));
+  }, []);
 
   useEffect(() => { fetchArticles(); }, [fetchArticles]);
 
@@ -55,15 +72,25 @@ export default function AdminArticlesPage() {
         </Link>
       </div>
 
-      {/* Search */}
-      <div className="mb-4">
+      {/* Search + Series filter */}
+      <div className="mb-4 flex gap-2">
         <input
           type="text"
           placeholder="Tìm kiếm..."
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className="flex-1 px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
         />
+        <select
+          value={seriesFilter}
+          onChange={(e) => { setSeriesFilter(e.target.value); setPage(1); }}
+          className="px-3 py-2.5 border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Tất cả tuyển tập</option>
+          {seriesOptions.map((s) => (
+            <option key={s.id} value={s.slug}>{s.title}</option>
+          ))}
+        </select>
       </div>
 
       {/* Table / Card List */}
@@ -88,6 +115,7 @@ export default function AdminArticlesPage() {
               <thead className="bg-gray-50 text-xs text-gray-500 uppercase">
                 <tr>
                   <th className="text-left px-4 py-3">Tiêu đề</th>
+                  <th className="text-left px-4 py-3">Tuyển tập</th>
                   <th className="text-left px-4 py-3">Danh mục</th>
                   <th className="text-center px-4 py-3">Lượt xem</th>
                   <th className="text-center px-4 py-3">Ngày tạo</th>
@@ -100,6 +128,16 @@ export default function AdminArticlesPage() {
                     <td className="px-4 py-3">
                       <div className="font-medium text-sm">{article.title}</div>
                       <div className="text-xs text-gray-400">{article.author.username}</div>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500">
+                      {article.part ? (
+                        <div>
+                          <div className="text-xs font-medium text-blue-600">{article.part.series.title}</div>
+                          <div className="text-xs text-gray-400">{article.part.title}</div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-300">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500">{article.category?.name || '-'}</td>
                     <td className="px-4 py-3 text-sm text-center text-gray-500">{article.viewCount}</td>
@@ -144,6 +182,9 @@ export default function AdminArticlesPage() {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-sm truncate">{article.title}</h3>
                     <p className="text-xs text-gray-400 mt-1">
+                      {article.part ? (
+                        <span className="text-blue-500">{article.part.series.title} • {article.part.title} • </span>
+                      ) : null}
                       {article.category?.name || 'Không danh mục'} • 👁 {article.viewCount} • {new Date(article.createdAt).toLocaleDateString('vi-VN')}
                     </p>
                   </div>
