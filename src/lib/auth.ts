@@ -4,6 +4,9 @@ import { compareSync } from 'bcryptjs';
 import prisma from '@/lib/prisma';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  // EC2/Docker deployments typically run behind IP/host headers; trust host to avoid UntrustedHost errors.
+  trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
       name: 'credentials',
