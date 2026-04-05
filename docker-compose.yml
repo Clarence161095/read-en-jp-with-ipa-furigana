@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: html-reader
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: file:/app/db/app.db
+      PORT: "5678"
+    volumes:
+      - db_data:/app/db
+      - ./storage:/app/storage
+      - ./data:/app/data:ro
+
+volumes:
+  db_data:

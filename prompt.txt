@@ -88,98 +88,36 @@ Tiếp tục (hãy hoàn thành toàn bộ check list tôi đã yêu cầu. Than
 
 --------
 
-Thêm tính năng sửa các chương các phần trực tiếp trong trang quản lý tuyển tập để dễ dàng chỉnh sửa nội dung mà không cần phải vào từng file html để chỉnh sửa,.... hiện giờ trong trang quản lý tuyển tập thì chỉ có thể CRUD tuyển tập, còn các Phần thì thưa thể CRUD Phần, Các chương thì chỉ có view thôi ko có nút chỉnh và xoá, hãy thêm vào....
+Giờ tôi muốn deploy app này lên một máy chủ ec2 t2.micro của Amazon Linux 2023 AMI 2023.10.20260330.0 x86_64 HVM kernel-6.1 x86_64, máy này rất yếu. Nên chú ý giới hạn RAM và CPU khi deploy app này lên máy chủ ec2 đó, đừng để app này chiếm quá nhiều tài nguyên của máy chủ ec2 đó vì nó rất yếu, hãy tối ưu app này để có thể chạy mượt mà trên máy chủ ec2 đó.
 
-Hãy biến app của tôi trở thành một app hoàn hảo để quản lý và đọc các nội dung dạng HTML. Có nghĩa là một web app để quản lý và đọc các nội dung dạng HTML siêu đỉnh. Bổ sung thêm các tính năg quản lý user, chỉ có admin mới có quyền thêm mới xoá sửa đổi mật khẩu user khác, user thì chỉ có quyền đổi mk của mình thôi,.... Cộng tác viên thì chỉ có quyền edit nội dung bài viết, tuyển tập, chương thôi, không có quyền quản lý user....
-Khi xoá thì ko xoá hẳn mà hãy lưu trong một tính năng là thùng rác trong 30 ngày thì sẽ tự động xoá hẳn, trong 30 ngày đó nếu muốn khôi phục thì có thể vào thùng rác để khôi phục lại, sau 30 ngày mà ko khôi phục thì sẽ tự động xoá hẳn.
-Bổ sung thêm nhiều tính năng hữu ích khác để app trở nên hoàn chỉnh hơn, dễ sử dụng hơn, và trở thành một ứng dụng hoàn hảo để quản lý và đọc các nội dung dạng HTML.
+máy ec2 này ban đầu chưa được cài đặt docker và docker-compose, vậy nên hãy tạo một script để tôi có thể cài đặt docker và docker-compose một cách dễ dàng nhất có thể trên máy chủ ec2 đó. Các bước tôi chỉ sẽ làm là:
+1. Clone repo về máy chủ ec2 đó.
+2. Chạy script cài đặt docker và docker-compose mà bạn tạo ra đó. (nếu là lần đầu tiên thì sẽ cài đặt docker và docker-compose, còn nếu đã cài đặt rồi thì sẽ bỏ qua bước cài đặt đó và chuyển sang bước tiếp theo luôn).
+3. Chạy lệnh docker-compose up -d để deploy app lên máy chủ ec2 đó.
+4. Mở port 5678 cho security group của máy chủ ec2 đó để có thể truy cập app từ bên ngoài thông qua địa chỉ IP của máy chủ ec2 đó.
+5. Có khi app đó sau khi được mở port 5678 cho security group của máy chủ ec2 mà vẫn chưa truy cập được thì hãy tạo thêm một script để mở port 5678 cho security group của máy chủ ec2 đó một cách dễ dàng nhất có thể, mở tưởng lửa các kiểu cho port 5678 đó để có thể truy cập app từ bên ngoài thông qua địa chỉ IP của máy chủ ec2 đó.
 
-Hỗ trợ one-touch deploy lên AWS EC2, chỉ cần clone repo về trên máy chủ EC2, mở port 5678 trên security group, và chạy script deploy là xong. Cũng có script hỗ trợ update app và migration app để app trở nên dễ dàng bảo trì và nâng cấp sau này (Cái này rất quan trọng nhé.)
+Nhưng mà tôi lại muốn deploy bằng docker để dễ dàng quản lý và deploy sau này, vậy nên hãy giúp tôi tạo một file Dockerfile và một file docker-compose.yml để tôi có thể deploy app này lên máy chủ ec2 đó một cách dễ dàng nhất có thể.
 
-Hỗ trợ các mode: Dark mode, Light mode,... như trong template "khong-gia-dinh" cho app của tôi sao cho phù hợp nhất có thể, tất cả setting được lưu trong local storage để khi người dùng vào app thì sẽ tự động load lại setting đã lưu trước đó đây là setting của app chứ ko phải setting của từng file html. Setting mặc định là như hiện tại ko có theme gì cả, còn theme thì chỉ đổi màu sắc, font chữ, background, hỗ trợ đổi size thêm margin, padding,... để người dùng có thể tuỳ chỉnh trải nghiệm đọc của mình một cách tốt nhất có thể. Hãy bổ sung thêm tính năng này vào app của tôi để app trở nên hoàn chỉnh hơn, dễ sử dụng hơn, và trở thành một ứng dụng hoàn hảo để quản lý và đọc các nội dung dạng HTML.
+Hãy chuyển app tôi thành một app được rung trên docker-compose khi tôi docker-compose up là app sẽ tự động chạy, trên port 5678, và có thể truy cập được từ bên ngoài thông qua địa chỉ IP của máy chủ ec2 đó. Việc tôi cần làm duy nhất là clone repo về, mở port 5678 cho security group của máy chủ ec2 đó, và chạy lệnh docker-compose up -d là xong.
 
-Các chức năng tìm kiếm kiểu Aragon để tìm kiếm các bài viết, tuyển tập, phần, chương,... một cách dễ dàng và nhanh chóng nhất có thể bằng tổ hợp phím tắt Ctrl+K hoặc Cmd+K hoặc ở mobile thì có một nút để mở chức năng tìm kiếm này, khi đó sẽ hiện ra một ô tìm kiếm kiểu master,....
+Tương lai tôi sẽ còn tạo nhiều data sample khác nữa để phục vụ cho việc đọc báo, đọc truyện,... nên hãy sửa lại app sao cho tôi được phép import theo folder như cấu trúc mà tôi đã tạo sẵn trong data/khong-gia-dinh/part-1/chapter-1.html, tức là cho phép tôi import theo folder như vậy để dễ dàng quản lý và truy vấn sau này. Ví dụ khi tôi: import foder data/khong-gia-dinh/ thì app sẽ tự động import tất cả các file html trong folder đó theo thứ tự là khong-gia-dinh là tuyển tập, part-1 là phần thuộc về tuyển tập đó, chapter-1 là bài viết thuộc về phần đó, và nội dung của chapter-1.html sẽ được lưu lại trong app để có thể đọc được sau này. Cũng cho phép tạo riêng tuyển tập ko có phần nào cả, chỉ có các bài viết thuộc về tuyển tập đó luôn cũng được, miễn sao app có thể linh hoạt để quản lý các bài viết theo kiểu thư mục như vậy để dễ dàng quản lý và truy vấn sau này. Hãy update app của tôi để có thể import theo folder như vậy để dễ dàng quản lý và truy vấn sau này. Cảm ơn bạn đã giúp tôi hoàn thiện app này.
 
-Hãy đưa ra check list ít nhất thêm 30 bước nữa để hoàn thiện app này theo yêu cầu của tôi, và hoàn thiện app của tôi trờ thành app siêu đỉnh nhất. Đưa là checklist 30 bước và thực hiện all các bước nếu các bước ko bị phụ thuộc thì hãy thực hiện song song trên các subagent để tiết kiệm thời gian, miễn sao hoàn thành tất cả các bước đó một cách nhanh nhất có thể, và hoàn chỉnh nhất có thể, sao cho tối ưu nhất có thể, nhưng vẫn phải ưu tiên độ chính xác và perfect nhất có thể, đừng bỏ qua bất kỳ chi tiết nào cả. Cảm ơn bạn đã giúp tôi hoàn thiện app này.
+Đặc biệt chú trọng vào quá trình deploy app lên máy chủ ec2 đó bằng docker, và việc update nâng cấp app sau này hãy tạo một hướng dẫn siêu chi tiết về app để tôi có thể dễ dàng deploy và update app sau này.
 
-Fix thêm bug này nữa:
-```
+Hãy suy nghĩ thật lỹ để thực hiện cho hợp lý nhé.
 
+----------
 
-1/1
+Giờ đang gặp lỗi khi deploy tốt nhất là bạn hãy giúp tôi deploy nó lên ec2, tôi đã để thông tin ssh vào folder ssh đã có sẵn file pem để ssh vào máy chủ ec2 đó, hãy giúp tôi deploy app này lên máy chủ ec2 đó một cách dễ dàng nhất có thể.
 
-Next.js 15.5.14 (outdated)
-Webpack
-Console Error
+Sửa lại docker-compose với docker sao cho đơn giản nhất có thể cài ít thứ nhất có thể vì máy t2.micro của Amazon Linux 2023 AMI 2023.10.20260330.0 x86_64 HVM kernel-6.1 x86_64 này rất yếu, nên hãy tối ưu app này để có thể chạy mượt mà trên máy chủ ec2 đó, đừng có cái nhiều hạn chế cài nhất có thể.
 
-A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+Hãy ssh vào, cài docker và docker-compose, sau đó deploy app này lên máy chủ ec2 đó một cách dễ dàng nhất có thể, sai ở đâu debug và sửa tới đó cho tới khi nào app này chạy được trên máy chủ ec2 đó một cách mượt mà, thực hiện test chuẩn chỉnh ko dừng lại cho tới khi nào app được deploy lên hoàn chỉnh.
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+Chắc chắn trong lúc deploy sẽ gặp lỗi nên hãy debug và fix lỗi tới đó luôn để app có thể chạy được trên máy chủ ec2 đó một cách mượt mà, thực hiện test chuẩn chỉnh ko dừng lại cho tới khi nào app được deploy lên hoàn chỉnh. Cách giao tiếp với server là commit code và push lên repo, và trên server thì pull code về "https://github.com/Clarence161095/read-en-jp-with-ipa-furigana.git" sau đó thực hiện trực tiếp trên ssh trên folder read-en-jp-with-ipa-furigana vì máy này sẽ còn chạy thêm 1 app nữa nên hãy cố gắng tiết kiệm ram nhất có thể nhé.
+Hãy thực hiện từng bước một.
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+Chuẩn chỉnh giờ hãy xoá các file deploy script cũ đi file docker-compose cũng như Dockerfile cũ đi để tránh nhầm lẫn, sau khi deploy thành công thì hãy tạo lại chuẩn chỉnh các file script sau. chỉ tạo trước docker và docker compose thôi.
 
-See more info here: https://nextjs.org/docs/messages/react-hydration-error
-
-
-  ...
-    <HotReload assetPrefix="" globalError={[...]}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.tsx">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="vi"
--                         style={{--furigana-plus-ruby-position:"over",--furigana-plus-ruby-align:"center"}}
-                        >
-                          ...
-                            <HomePage params={Promise} searchParams={Promise}>
-                              <div className="min-h-scre...">
-                                <Navbar>
-                                <main className="max-w-6xl ...">
-                                  <h2>
-                                  <form
-                                    onSubmit={function handleSearch}
-                                    className="mb-4"
--                                   style={{}}
-                                  >
-                                    <div
-                                      className="relative"
--                                     style={{}}
-                                    >
-                                  ...
-                  ...
-src/app/page.tsx (122:11) @ HomePage
-
-
-  120 |         {/* Search */}
-  121 |         <form onSubmit={handleSearch} className="mb-4">
-> 122 |           <div className="relative">
-      |           ^
-  123 |             <input
-  124 |               type="text"
-  125 |               placeholder="Tìm kiếm bài viết..."
-Call Stack
-19
-
-Show 17 ignore-listed frame(s)
-div
-<anonymous>
-HomePage
-src/app/page.tsx (122:11)
-1
-2
-Was this helpful?
-```
+Chú ý app và data đã chuẩn chỉnh nên đừng đụng nữa chỉ thực hiện deploy thôi nhé.

@@ -1,0 +1,1 @@
+ssh -i "ec2-2026-english-reading-app.pem" ec2-user@ec2-54-253-125-35.ap-southeast-2.compute.amazonaws.com
